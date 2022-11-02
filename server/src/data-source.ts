@@ -1,17 +1,24 @@
-import "reflect-metadata"
-import { DataSource } from "typeorm"
-
+import "reflect-metadata";
+import { DataSource } from "typeorm";
+import * as dotenv from "dotenv";
+import { User } from "./entity/User";
+import { Post } from "./entity/Post";
+import { Comment } from "./entity/Comment";
+import { Like } from "./entity/Like";
+import { Game } from "./entity/Game";
+import { Card } from "./entity/Card";
+dotenv.config();
 
 export const AppDataSource = new DataSource({
-    type: "postgres",
-    host: process.env.POSTGRES_HOST,
-    port: +process.env.POSTGRES_PORT,
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    synchronize: false,
-    logging: false,
-    entities: [],
-    migrations: [],
-    subscribers: [],
-})
+  type: "postgres",
+  host: process.env.POSTGRES_HOST,
+  port: +process.env.DOCKER_POSTGRES_PORTS!,
+  username: process.env.DOCKER_POSTGRES_USER,
+  password: process.env.DOCKER_POSTGRES_PASSWORD,
+  database: process.env.DOCKER_POSTGRES_DB,
+  synchronize: true,
+  logging: false,
+  entities: [User, Post, Like, Comment, Game, Card],
+  migrations: ["src/migrations/*{.ts,.js}"],
+  subscribers: ["src/subscribers/**/*{.ts,.js}"],
+});

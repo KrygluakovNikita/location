@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import "reflect-metadata";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 import { User } from "./User";
 
 export enum PaymentType {
@@ -6,12 +13,13 @@ export enum PaymentType {
   CARD = "card",
 }
 
-@Entity()
+@Entity({ name: "game" })
 export class Game {
   @PrimaryGeneratedColumn("uuid")
-  game_id: number;
+  game_id: string;
 
-  @ManyToOne(() => User, (user) => user.user_id)
+  @ManyToOne(() => User, (user) => user.games)
+  @JoinColumn({ name: "user_id" })
   user: User;
 
   @Column({ type: "timestamptz" })
