@@ -13,25 +13,35 @@ class UserService {
     }
 
     const hashPassword = await bcrypt.hash(dto.password, 3);
-    const activationLink = uuid.v4();
+    const activationLink: string = uuid.v4();
 
-    const userDto2 = new User();
-    userDto2.city = dto.city;
-    userDto2.password = hashPassword;
-    userDto2.activationLink = activationLink;
-    userDto2.photo = dto.photo;
-    userDto2.email = dto.email;
-    userDto2.nickname = dto.nickname;
+    const dbUser = new User();
+    dbUser.city = dto.city;
+    dbUser.password = hashPassword;
+    dbUser.activationLink = activationLink;
+    dbUser.photo = dto.photo;
+    dbUser.email = dto.email;
+    dbUser.nickname = dto.nickname;
 
-    const user = await userDto2.save();
+    const user = await dbUser.save();
 
-    // await mailService.sendActivationMail(dto.email, activationLink);
+    const url = `${process.env.API_URL}/api/activate/`;
+    await mailService.sendActivationMail(dto.email, url + activationLink);
     const userDto = new UserDto(user);
 
     const tokens = tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
     return { ...tokens, user: userDto };
+  }
+
+  async activate(activationLink) {
+    const user = await User.findOneBy({ activationLink });
+    if (!user) {
+      throw new Error('Неккоректная ссылка авторизации');
+    }
+    user.isActivated = true;
+    user.save();
   }
 }
 

@@ -16,23 +16,28 @@ class UserController {
       console.log(e);
     }
   }
-  async login(req, res, next) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
     } catch (e) {}
   }
-  async logout(req, res, next) {
+  async logout(req: Request, res: Response, next: NextFunction) {
     try {
     } catch (e) {}
   }
-  async activate(req, res, next) {
+  async activate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const activationLink = req.params.link;
+      await userService.activate(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async refresh(req: Request, res: Response, next: NextFunction) {
     try {
     } catch (e) {}
   }
-  async refresh(req, res, next) {
-    try {
-    } catch (e) {}
-  }
-  async getUsers(req, res, next) {
+  async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       res.json(User.find());
     } catch (e) {}
