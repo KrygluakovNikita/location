@@ -4,6 +4,7 @@
   "description": "Application 'Location'",
   "type": "commonjs",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/node": "^16.11.10",
     "@types/nodemailer": "^6.4.6",

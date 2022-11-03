@@ -2,12 +2,17 @@ import { User } from '../database/entity/User';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { IUser, UserDto } from '../dtos/user-dto';
-import tokenService from '../service/token-service';
+import tokenService, { ITokens } from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 
+export interface IClientData {
+  tokens: ITokens;
+  user: UserDto;
+}
+
 class UserService {
-  async registration(dto: IUser) {
+  async registration(dto: IUser): Promise<IClientData> {
     const candidate = await User.findOneBy({ email: dto.email });
     if (candidate) {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${dto.email} уже зарегистирован`);
@@ -28,12 +33,9 @@ class UserService {
 
     const url = `${process.env.API_URL}/api/activate/`;
     await mailService.sendActivationMail(dto.email, url + activationLink);
-    const userDto = new UserDto(user);
+    const userData = await this.updateTokens(user);
 
-    const tokens = tokenService.generateTokens(userDto);
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-    return { ...tokens, user: userDto };
+    return { ...userData };
   }
 
   async activate(activationLink) {
@@ -43,6 +45,28 @@ class UserService {
     }
     user.isActivated = true;
     user.save();
+  }
+
+  async login(email: string, password: string): Promise<IClientData> {
+    const user = await User.findOneBy({ email: email });
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден');
+    }
+    const isPassEquals = await bcrypt.compare(password, user.password);
+    if (!isPassEquals) {
+      throw ApiError.BadRequest('Неверный пароль');
+    }
+    const userData = await this.updateTokens(user);
+
+    return { ...userData };
+  }
+
+  async updateTokens(user: User): Promise<IClientData> {
+    const userDto = new UserDto(user);
+    const tokens = tokenService.generateTokens(userDto);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+
+    return { tokens, user: userDto };
   }
 }
 
