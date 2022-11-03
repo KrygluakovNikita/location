@@ -1,8 +1,9 @@
 const Router = require('express').Router;
-const userController = require('../controller/user-controller');
+import userController from '../controller/user-controller';
+import { body } from 'express-validator';
 const router = new Router();
 
-router.post('/registration', userController.registration);
+router.post('/registration', body('email').isEmail(), body('password').isString().isLength({ min: 3, max: 64 }), userController.registration);
 router.post('/login', userController.login);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);

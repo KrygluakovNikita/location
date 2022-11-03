@@ -2,10 +2,16 @@ import { User } from './../database/entity/User';
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
 import { IUser } from '../dtos/user-dto';
+import { validationResult } from 'express-validator';
+import ApiError from '../exeptions/api-error';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
+      }
       const { email, password, nickname, city, photo } = req.body;
       const userDto: IUser = { email, password, nickname, city, photo };
       const userData = await userService.registration(userDto);
@@ -50,4 +56,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+export default new UserController();
