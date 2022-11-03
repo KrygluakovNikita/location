@@ -9,11 +9,11 @@ class UserController {
       const { email, password, nickname, city, photo } = req.body;
       const userDto: IUser = { email, password, nickname, city, photo };
       const userData = await userService.registration(userDto);
-      res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
 
       return res.json(userData);
     } catch (e) {
-      console.log(e);
+      next(e);
     }
   }
   async login(req: Request, res: Response, next: NextFunction) {
@@ -22,7 +22,9 @@ class UserController {
   }
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-    } catch (e) {}
+    } catch (e) {
+      next(e);
+    }
   }
   async activate(req: Request, res: Response, next: NextFunction) {
     try {
@@ -30,17 +32,21 @@ class UserController {
       await userService.activate(activationLink);
       return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
-      console.log(e);
+      next(e);
     }
   }
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-    } catch (e) {}
+    } catch (e) {
+      next(e);
+    }
   }
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       res.json(User.find());
-    } catch (e) {}
+    } catch (e) {
+      next(e);
+    }
   }
 }
 

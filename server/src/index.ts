@@ -1,9 +1,10 @@
 const express = require('express');
 require('dotenv').config();
 import { AppDataSource } from './data-source';
-const authRouter = require('./router/authRouter');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+import authRouter from './router/authRouter';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import errorMiddleware from './midlewares/error-middleware';
 
 const app = express();
 
@@ -15,10 +16,11 @@ AppDataSource.initialize()
   })
   .catch(error => console.log(error));
 
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 app.use(cors());
 app.use('/api', authRouter);
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${PORT}`);
