@@ -4,12 +4,13 @@ import * as uuid from 'uuid';
 import { IUser, UserDto } from '../dtos/user-dto';
 import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
+import ApiError from '../exeptions/api-error';
 
 class UserService {
   async registration(dto: IUser) {
     const candidate = await User.findOneBy({ email: dto.email });
     if (candidate) {
-      throw new Error(`Пользователь с почтовым адресом ${dto.email} уже зарегистирован`);
+      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${dto.email} уже зарегистирован`);
     }
 
     const hashPassword = await bcrypt.hash(dto.password, 3);
@@ -38,7 +39,7 @@ class UserService {
   async activate(activationLink) {
     const user = await User.findOneBy({ activationLink });
     if (!user) {
-      throw new Error('Неккоректная ссылка авторизации');
+      throw ApiError.BadRequest('Неккоректная ссылка авторизации');
     }
     user.isActivated = true;
     user.save();
