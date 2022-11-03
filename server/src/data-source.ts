@@ -1,16 +1,17 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
-import * as dotenv from "dotenv";
-import { User } from "./entity/User";
-import { Post } from "./entity/Post";
-import { Comment } from "./entity/Comment";
-import { Like } from "./entity/Like";
-import { Game } from "./entity/Game";
-import { Card } from "./entity/Card";
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
+import { User } from './database/entity/User';
+import { Post } from './database/entity/Post';
+import { Comment } from './database/entity/Comment';
+import { Like } from './database/entity/Like';
+import { Game } from './database/entity/Game';
+import { Card } from './database/entity/Card';
+import { Token } from './database/entity/Token';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: "postgres",
+  type: 'postgres',
   host: process.env.POSTGRES_HOST,
   port: +process.env.DOCKER_POSTGRES_PORTS!,
   username: process.env.DOCKER_POSTGRES_USER,
@@ -18,7 +19,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DOCKER_POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: [User, Post, Like, Comment, Game, Card],
-  migrations: ["src/migrations/*{.ts,.js}"],
-  subscribers: ["src/subscribers/**/*{.ts,.js}"],
+  entities: [User, Post, Like, Comment, Game, Card, Token],
+  migrations: ['src/database/migrations/*{.ts,.js}'],
+  subscribers: ['src/database/subscribers/**/*{.ts,.js}'],
 });
