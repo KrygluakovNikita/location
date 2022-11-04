@@ -1,6 +1,7 @@
 import { Token } from '../database/entity/Token';
 import { User } from '../database/entity/User';
 import { UserDto } from '../dtos/user-dto';
+import ApiError from '../exeptions/api-error';
 const jwt = require('jsonwebtoken');
 
 export interface ITokens {
@@ -33,6 +34,14 @@ class TokenService {
     token.user = await User.findOneBy({ user_id: user_id });
     token.save();
     return token;
+  }
+
+  async removeToken(refreshToken: string) {
+    const { affected } = await Token.delete({ refreshToken: refreshToken });
+    if (!affected) {
+      throw ApiError.BadRequest('Ошибка при удалении refreshToken');
+    }
+    return true;
   }
 }
 
