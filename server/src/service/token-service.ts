@@ -2,7 +2,7 @@ import { Token } from '../database/entity/Token';
 import { User } from '../database/entity/User';
 import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 export interface ITokens {
   accessToken: string;
@@ -42,6 +42,32 @@ class TokenService {
       throw ApiError.BadRequest('Ошибка при удалении refreshToken');
     }
     return true;
+  }
+
+  async findToken(refreshToken: string): Promise<Token> {
+    const token = await Token.findOneBy({ refreshToken: refreshToken });
+
+    return token;
+  }
+
+  validateAccessToken(token) {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token): UserDto {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
+      return userData as UserDto;
+    } catch (e) {
+      return null;
+    }
   }
 }
 
