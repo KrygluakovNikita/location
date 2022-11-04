@@ -73,6 +73,28 @@ class UserService {
     const token = await tokenService.removeToken(refreshToken);
     return token;
   }
+
+  async refresh(refreshToken: string): Promise<IClientData> {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizedError();
+    }
+    const userData = tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await tokenService.findToken(refreshToken);
+    if (!userData || !tokenFromDb) {
+      throw ApiError.UnauthorizedError();
+    }
+
+    const user = await User.findOneBy({ user_id: userData.id });
+    const userDto = await this.updateTokens(user);
+
+    return { ...userDto };
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const users = await User.find();
+
+    return users;
+  }
 }
 
 export default new UserService();
