@@ -12,7 +12,7 @@ export class Game extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   game_id: string;
 
-  @ManyToOne(() => User, user => user.games)
+  @ManyToOne(() => User, (user) => user.games)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -27,5 +27,5 @@ export class Game extends BaseEntity {
     enum: PaymentType,
     default: PaymentType.CASH,
   })
-  paument_type: PaymentType;
+  payment_type: PaymentType;
 }
