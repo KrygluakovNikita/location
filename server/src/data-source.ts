@@ -7,7 +7,6 @@ import { Comment } from './database/entity/Comment';
 import { Like } from './database/entity/Like';
 import { Game } from './database/entity/Game';
 import { Card } from './database/entity/Card';
-import { Token } from './database/entity/Token';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -19,7 +18,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DOCKER_POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: [User, Post, Like, Comment, Game, Card, Token],
+  entities: [User, Post, Like, Comment, Game, Card],
   migrations: ['src/database/migrations/*{.ts,.js}'],
   subscribers: ['src/database/subscribers/**/*{.ts,.js}'],
 });

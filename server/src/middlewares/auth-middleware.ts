@@ -7,11 +7,11 @@ import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
 import tokenService from '../service/token-service';
 
-export interface IGetRoleInfoRequest extends Request {
+export interface IGetUserInfoRequest extends Request {
   user: UserDto; // or any other type
 }
 
-export function isAuth(req: IGetRoleInfoRequest, res: Response, next: NextFunction) {
+export function isAuth(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
   try {
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
@@ -31,13 +31,11 @@ export function isAuth(req: IGetRoleInfoRequest, res: Response, next: NextFuncti
 
     next();
   } catch (e) {
-    console.log('error');
-
     return next(ApiError.UnauthorizedError());
   }
 }
 
-export function isAdmin(req: IGetRoleInfoRequest, res: Response, next: NextFunction) {
+export function isAdmin(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
   if (req.user.role !== UserRole.ADMIN) {
     throw ApiError.AccessDenied();
   }

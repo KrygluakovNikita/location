@@ -15,6 +15,7 @@ class MailService {
       },
     } as SMTPTransport.Options);
   }
+
   async sendActivationMail(to: string, link: string) {
     const htmlForm = `
         <div>

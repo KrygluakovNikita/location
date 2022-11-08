@@ -2,12 +2,12 @@ import { User } from '../database/entity/User';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { IUser, UserDto } from '../dtos/user-dto';
-import tokenService, { ITokens } from '../service/token-service';
+import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 
 export interface IClientData {
-  tokens: ITokens;
+  accessToken: string;
   user: UserDto;
 }
 
@@ -31,7 +31,7 @@ class UserService {
 
     const user = await dbUser.save();
 
-    const url = `${process.env.API_URL}/api/activate/`;
+    const url = `${process.env.API_URL}/api/auth/activate/`;
     await mailService.sendActivationMail(dto.email, url + activationLink);
     const userData = await this.updateTokens(user);
 
@@ -63,31 +63,9 @@ class UserService {
 
   async updateTokens(user: User): Promise<IClientData> {
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    const accessToken = tokenService.generateAccessTokenToken(userDto);
 
-    return { tokens, user: userDto };
-  }
-
-  async logout(refreshToken: string) {
-    const token = await tokenService.removeToken(refreshToken);
-    return token;
-  }
-
-  async refresh(refreshToken: string): Promise<IClientData> {
-    if (!refreshToken) {
-      throw ApiError.UnauthorizedError();
-    }
-    const userData = tokenService.validateRefreshToken(refreshToken);
-    const tokenFromDb = await tokenService.findToken(refreshToken);
-    if (!userData || !tokenFromDb) {
-      throw ApiError.UnauthorizedError();
-    }
-
-    const user = await User.findOneBy({ user_id: userData.id });
-    const userDto = await this.updateTokens(user);
-
-    return { ...userDto };
+    return { accessToken, user: userDto };
   }
 
   async getAllUsers(): Promise<User[]> {

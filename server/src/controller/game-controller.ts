@@ -2,12 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import gameService from '../service/game-service';
 
 import { IGame } from '../dtos/game-dto';
+import { IGetUserInfoRequest } from '../middlewares/auth-middleware';
 
 class GameController {
-  async upload(req: Request, res: Response, next: NextFunction) {
+  async upload(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
     try {
-      const { user_id, date, hours, payment_type } = req.body as IGame;
-      const gameDto: IGame = { user_id, date, hours, payment_type };
+      const { date, hours, payment_type } = req.body as IGame;
+      const userId = req.user.id;
+      const gameDto: IGame = { user_id: userId, date, hours, payment_type };
       const game = await gameService.upload(gameDto);
 
       return res.json(game);
@@ -15,9 +17,9 @@ class GameController {
       next(e);
     }
   }
-  async getGamesByUserId(req: Request, res: Response, next: NextFunction) {
+  async getGamesByUserId(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.userId;
+      const userId = req.user.id;
 
       const games = await gameService.getGamesByUserId(userId);
 
