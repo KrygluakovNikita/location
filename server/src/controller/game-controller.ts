@@ -8,7 +8,7 @@ class GameController {
   async upload(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
     try {
       const { date, hours, paymentType } = req.body as IGame;
-      const userId = req.user.id;
+      const userId = req.user.userId;
       const gameDto: IGame = { userId, date, hours, paymentType };
       const game = await gameService.upload(gameDto);
 
@@ -19,7 +19,7 @@ class GameController {
   }
   async getGamesByUserId(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
     try {
-      const userId = req.user.id;
+      const userId = req.user.userId;
 
       const games = await gameService.getGamesByUserId(userId);
 

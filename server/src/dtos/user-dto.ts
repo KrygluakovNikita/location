@@ -7,12 +7,12 @@ import { User, UserRole } from '../database/entity/User';
 
 export class UserDto {
   email: string;
-  id: string;
+  userId: string;
   isActivated: boolean;
   role: UserRole;
   constructor(model: User) {
     this.email = model.email;
-    this.id = model.userId;
+    this.userId = model.userId;
     this.isActivated = model.isActivated;
     this.role = model.role;
   }
