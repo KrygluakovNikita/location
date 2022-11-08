@@ -17,11 +17,11 @@ class MailService {
   }
   async sendActivationMail(to: string, link: string) {
     const htmlForm = `
-              <div>
-      <h1>Активация электронной почты</h1>
-      <p>Используйте эту уникальную ссылку, чтобы подтвердить свой адрес электронной почты ${to} .</p>
-      <a href="${link}">${link}</a>
-    </div>
+        <div>
+          <h1>Активация электронной почты</h1>
+          <p>Используйте эту уникальную ссылку, чтобы подтвердить свой адрес электронной почты ${to} .</p>
+          <a href="${link}">${link}</a>
+        </div>
       `;
 
     await this.transporter.sendMail({
