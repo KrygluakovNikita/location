@@ -5,7 +5,6 @@ import { Comment } from './Comment';
 import { Game } from './Game';
 import { Like } from './Like';
 import { Post } from './Post';
-import { Token } from './Token';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -50,13 +49,6 @@ export class User extends BaseEntity {
   })
   @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
-
-  @OneToOne(type => Token, token => token.user, {
-    nullable: true,
-    cascade: true,
-  })
-  @JoinColumn()
-  refreshToken: Token | null;
 
   @Column({ type: 'text', unique: true, nullable: false })
   email: string;
