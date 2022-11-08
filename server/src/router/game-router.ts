@@ -1,8 +1,8 @@
-const Router = require('express').Router;
+import { Router } from 'express';
 import gameController from '../controller/game-controller';
 import { isAdmin, isAuth } from '../middlewares/auth-middleware';
 
-const router = new Router();
+const router = Router();
 
 router.post('/', isAuth, gameController.upload);
 router.get('/user', isAuth, gameController.getGamesByUserId);

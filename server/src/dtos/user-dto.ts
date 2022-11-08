@@ -9,11 +9,15 @@ export class UserDto {
   email: string;
   userId: string;
   isActivated: boolean;
+  nickname: string;
   role: UserRole;
+  photo: string;
   constructor(model: User) {
     this.email = model.email;
     this.userId = model.userId;
     this.isActivated = model.isActivated;
+    this.photo = model.photo;
+    this.nickname = model.nickname;
     this.role = model.role;
   }
 }

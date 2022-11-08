@@ -7,11 +7,11 @@ import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
 import tokenService from '../service/token-service';
 
-export interface IGetUserInfoRequest extends Request {
-  user: UserDto; // or any other type
+export interface IUserRequest extends Request {
+  user: UserDto;
 }
 
-export function isAuth(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
+export function isAuth(req: IUserRequest, res: Response, next: NextFunction) {
   try {
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
@@ -35,7 +35,7 @@ export function isAuth(req: IGetUserInfoRequest, res: Response, next: NextFuncti
   }
 }
 
-export function isAdmin(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
+export function isAdmin(req: IUserRequest, res: Response, next: NextFunction) {
   if (req.user.role !== UserRole.ADMIN) {
     throw ApiError.AccessDenied();
   }
