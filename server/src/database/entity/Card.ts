@@ -1,15 +1,15 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, PrimaryColumn } from 'typeorm';
 import { User } from './User';
 
 @Entity({ name: 'card' })
 export class Card extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  card_id: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'card_id' })
+  cardId: string;
 
   @ManyToOne(() => User, user => user.cards)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  userId: string;
 
   @Column()
   card_number: number;

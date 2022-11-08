@@ -7,9 +7,9 @@ import { IGetUserInfoRequest } from '../middlewares/auth-middleware';
 class GameController {
   async upload(req: IGetUserInfoRequest, res: Response, next: NextFunction) {
     try {
-      const { date, hours, payment_type } = req.body as IGame;
+      const { date, hours, paymentType } = req.body as IGame;
       const userId = req.user.id;
-      const gameDto: IGame = { user_id: userId, date, hours, payment_type };
+      const gameDto: IGame = { userId, date, hours, paymentType };
       const game = await gameService.upload(gameDto);
 
       return res.json(game);

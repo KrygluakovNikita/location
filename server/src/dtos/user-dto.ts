@@ -12,14 +12,14 @@ export class UserDto {
   role: UserRole;
   constructor(model: User) {
     this.email = model.email;
-    this.id = model.user_id;
+    this.id = model.userId;
     this.isActivated = model.isActivated;
     this.role = model.role;
   }
 }
 
 export interface IUser {
-  user_id?: string;
+  userId?: string;
 
   games?: Game[] | null;
 

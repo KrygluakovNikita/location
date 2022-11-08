@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, PrimaryColumn } from 'typeorm';
 import { User } from './User';
 
 export enum PaymentType {
@@ -9,12 +9,12 @@ export enum PaymentType {
 
 @Entity({ name: 'game' })
 export class Game extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  game_id: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'game_id' })
+  gameId: string;
 
   @ManyToOne(() => User, user => user.games)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  userId: string;
 
   @Column({ type: 'timestamptz', nullable: false })
   date: Date;
@@ -26,6 +26,7 @@ export class Game extends BaseEntity {
     type: 'enum',
     enum: PaymentType,
     default: PaymentType.CASH,
+    name: 'payment_type',
   })
-  payment_type: PaymentType;
+  paymentType: PaymentType;
 }
