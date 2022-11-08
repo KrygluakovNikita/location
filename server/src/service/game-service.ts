@@ -6,17 +6,11 @@ import UserError from '../exeptions/user-error';
 
 class GameService {
   async upload(data: IGame): Promise<Game> {
-    const user = await User.findOneBy({ user_id: data.user_id });
-
-    if (!user) {
-      throw UserError.UserNotFound();
-    }
-
     const game = new Game();
     game.date = data.date;
-    game.payment_type = data.payment_type;
+    game.paymentType = data.paymentType;
     game.hours = data.hours;
-    game.user = user;
+    game.userId = data.userId;
 
     await game.save();
 
@@ -24,7 +18,7 @@ class GameService {
   }
 
   async getGamesByUserId(userId: string): Promise<Game[]> {
-    const games = await Game.find({ loadRelationIds: true, where: { user: Equal(userId) } });
+    const games = await Game.find({ loadRelationIds: true, where: { userId: Equal(userId) } });
 
     return games;
   }

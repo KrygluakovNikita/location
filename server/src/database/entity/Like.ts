@@ -1,16 +1,16 @@
 import 'reflect-metadata';
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, Column, PrimaryColumn } from 'typeorm';
 import { Post } from './Post';
 import { User } from './User';
 
 @Entity({ name: 'like' })
 export class Like extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  like_id: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'like_id' })
+  likeId: string;
 
-  @ManyToOne(() => User, user => user.user_id)
+  @ManyToOne(() => User, user => user.userId)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  userId: string;
 
   @ManyToOne(() => Post, post => post.likes, { nullable: true })
   @JoinColumn({ name: 'post_id' })
