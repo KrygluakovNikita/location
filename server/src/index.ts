@@ -1,11 +1,10 @@
 const express = require('express');
 require('dotenv').config();
 import { AppDataSource } from './data-source';
-import authRouter from './router/auth-router';
-import gameRouter from './router/game-router';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import errorMiddleware from './midlewares/error-middleware';
+import errorMiddleware from './middlewares/error-middleware';
+import routes from './router/index';
 
 const app = express();
 
@@ -15,14 +14,13 @@ AppDataSource.initialize()
   .then(async () => {
     console.log(`Database init success!`);
   })
-  .catch((error) => console.log(error));
+  .catch(error => console.log(error));
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
-app.use('/auth', authRouter);
-app.use('/game', gameRouter);
+app.use('/api', routes);
 
 app.use(errorMiddleware);
 
