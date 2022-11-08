@@ -12,11 +12,11 @@ export class Game extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   game_id: string;
 
-  @ManyToOne(() => User, (user) => user.games)
+  @ManyToOne(() => User, user => user.games)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', nullable: false })
   date: Date;
 
   @Column('text')

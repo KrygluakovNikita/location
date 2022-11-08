@@ -3,7 +3,7 @@ import gameService from '../service/game-service';
 
 import { IGame } from '../dtos/game-dto';
 
-class GameContoller {
+class GameController {
   async upload(req: Request, res: Response, next: NextFunction) {
     try {
       const { user_id, date, hours, payment_type } = req.body as IGame;
@@ -37,4 +37,4 @@ class GameContoller {
   }
 }
 
-export default new GameContoller();
+export default new GameController();
