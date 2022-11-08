@@ -1,8 +1,8 @@
-const Router = require('express').Router;
+import { Router } from 'express';
 import userController from '../controller/user-controller';
 import { body } from 'express-validator';
 
-const router = new Router();
+const router = Router();
 
 router.post('/registration', body('email').isEmail(), body('password').isString().isLength({ min: 3, max: 64 }), userController.registration);
 router.post('/login', userController.login);

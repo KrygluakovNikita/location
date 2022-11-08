@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
-import { IUser } from '../dtos/user-dto';
+import { IUser, UserDto } from '../dtos/user-dto';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
+import { IUserRequest } from '../middlewares/auth-middleware';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
