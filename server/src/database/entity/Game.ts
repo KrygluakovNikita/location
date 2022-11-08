@@ -16,7 +16,7 @@ export class Game extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', nullable: false })
   date: Date;
 
   @Column('text')
@@ -27,5 +27,5 @@ export class Game extends BaseEntity {
     enum: PaymentType,
     default: PaymentType.CASH,
   })
-  paument_type: PaymentType;
+  payment_type: PaymentType;
 }

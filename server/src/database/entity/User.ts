@@ -67,10 +67,10 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   password: string;
 
-  @Column('text')
+  @Column({ type: 'text', unique: true, nullable: false })
   nickname: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: false })
   city: string;
 
   @Column({
