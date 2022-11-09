@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
-import { IUser, UserDto } from '../dtos/user-dto';
+import { IUser } from '../dtos/user-dto';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
-import { IUserRequest } from '../middlewares/auth-middleware';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
@@ -12,8 +11,12 @@ class UserController {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
       }
-      const { email, password, nickname, city, photo } = req.body as IUser;
+
+      const { email, password, nickname, city } = req.body as IUser;
+      const photo = req.file.filename;
+
       const userDto: IUser = { email, password, nickname, city, photo };
+
       const userData = await userService.registration(userDto);
 
       return res.json(userData);

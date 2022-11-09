@@ -2,7 +2,6 @@ import { Equal } from 'typeorm';
 import { Game } from '../database/entity/Game';
 import { User } from '../database/entity/User';
 import { IGame } from '../dtos/game-dto';
-import UserError from '../exeptions/user-error';
 
 class GameService {
   async upload(data: IGame): Promise<Game> {

@@ -5,8 +5,8 @@ import userRouter from './user-router';
 
 const routes = Router();
 
-routes.use('/auth', userRouter);
-routes.use('/user', authRouter);
+routes.use('/auth', authRouter);
 routes.use('/game', gameRouter);
+routes.use('/user', userRouter);
 
 export default routes;

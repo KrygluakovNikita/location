@@ -56,7 +56,7 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   photo: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: false, default: 'default.png' })
   password: string;
 
   @Column({ type: 'text', unique: true, nullable: false })

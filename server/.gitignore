@@ -1,6 +1,9 @@
 .env
 node_modules/
 
+public/*
+!public/default.png
+
 .idea/
 .vscode/
 build/
