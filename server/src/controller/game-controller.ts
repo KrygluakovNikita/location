@@ -1,7 +1,7 @@
+import { IUserRequest } from './../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
 import gameService from '../service/game-service';
 import { IGame } from '../dtos/game-dto';
-import { IUserRequest } from '../middlewares/auth-middleware';
 
 class GameController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {

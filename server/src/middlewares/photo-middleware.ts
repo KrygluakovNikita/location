@@ -13,7 +13,6 @@ const fileFilter = (_, file, cb) => {
 const storage = multer.diskStorage({
   destination: 'public',
   filename: (_, file, cb) => {
-    console.log(file);
     const fileName = uuidv4() + '.' + file.originalname.split('.')[-1];
     cb(null, fileName);
   },

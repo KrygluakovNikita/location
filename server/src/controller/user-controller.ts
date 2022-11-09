@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
-import { IUser } from '../dtos/user-dto';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
+import { IUser } from '../interfaces/user-interface';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
@@ -52,6 +52,29 @@ class UserController {
       const users = await userService.getAllUsers();
 
       return res.json(users);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+
+      await userService.resetPassword(email);
+
+      return res.json({ message: '' });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async resetToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const resetToken = req.params.token;
+      const data = await userService.resetToken(resetToken);
+
+      return res.json(data);
     } catch (e) {
       next(e);
     }

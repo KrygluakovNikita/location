@@ -1,6 +1,5 @@
 import { Equal } from 'typeorm';
-import { Game } from '../database/entity/Game';
-import { User } from '../database/entity/User';
+import { Game } from '../database/entity';
 import { IGame } from '../dtos/game-dto';
 
 class GameService {

@@ -65,6 +65,9 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   city: string;
 
+  @Column({ type: 'text', nullable: true })
+  phoneIP: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,
@@ -77,4 +80,7 @@ export class User extends BaseEntity {
 
   @Column({ type: 'boolean', default: false })
   isActivated: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  resetLink: string | null;
 }
