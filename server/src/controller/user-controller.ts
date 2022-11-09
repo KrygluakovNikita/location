@@ -63,7 +63,7 @@ class UserController {
 
       await userService.resetPassword(email);
 
-      return res.json({ message: '' });
+      return res.status(200);
     } catch (e) {
       next(e);
     }
