@@ -1,10 +1,10 @@
 const express = require('express');
 require('dotenv').config();
 import { AppDataSource } from './data-source';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import errorMiddleware from './middlewares/error-middleware';
 import routes from './router/index';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -16,10 +16,12 @@ AppDataSource.initialize()
   })
   .catch(error => console.log(error));
 
-app.use(cookieParser());
-app.use(express.json());
 app.use(cors());
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static('public'));
 app.use('/api', routes);
 
 app.use(errorMiddleware);
