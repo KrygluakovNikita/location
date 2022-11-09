@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { UserDto } from '../dtos/user-dto';
 
 class MailService {
   transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
@@ -16,7 +17,8 @@ class MailService {
     } as SMTPTransport.Options);
   }
 
-  async sendActivationMail(to: string, link: string) {
+  async sendActivationMail(to: string, activationLink: string): Promise<void> {
+    const link = `${process.env.API_URL}/api/auth/activate/${activationLink}`;
     const htmlForm = `
         <div>
           <h1>Активация электронной почты</h1>
@@ -25,12 +27,33 @@ class MailService {
         </div>
       `;
 
+    const subject = `Активация аккаунта на сайте: ${process.env.CLIENT_URL}`;
+
+    await this.sendMail(to, subject, htmlForm);
+  }
+
+  async resetPassword(to: string, resetLink: string): Promise<void> {
+    const link = `${process.env.API_URL}/api/user/reset/${resetLink}`;
+    const htmlForm = `
+        <div>
+          <h1>Восстановление пароля</h1>
+          <p>Используйте эту уникальную ссылку, чтобы восстановить свой пароль для данной электронной почты ${to} .</p>
+          <a href="${link}">${link}</a>
+        </div>
+      `;
+
+    const subject = `Восстановление пароля на сайте: ${process.env.CLIENT_URL}`;
+
+    await this.sendMail(to, subject, htmlForm);
+  }
+
+  async sendMail(to, subject, html): Promise<void> {
     await this.transporter.sendMail({
       from: process.env.SMPT_USER,
-      to: to,
-      subject: `Активация аккаунта на ${process.env.API_URL}`,
+      to,
+      subject,
       text: '',
-      html: htmlForm,
+      html,
     });
   }
 }

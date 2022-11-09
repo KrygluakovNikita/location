@@ -1,15 +1,11 @@
 // import { Request, Response, NextFunction } from 'express';
 
-import { NextFunction, Request, Response } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
-import { UserRole } from '../database/entity/User';
+import { NextFunction, Response } from 'express';
+import { UserRole } from '../database/entity';
 import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
+import { IUserRequest } from '../interfaces/user-interface';
 import tokenService from '../service/token-service';
-
-export interface IUserRequest extends Request {
-  user: UserDto;
-}
 
 export function isAuth(req: IUserRequest, res: Response, next: NextFunction) {
   try {
@@ -22,7 +18,7 @@ export function isAuth(req: IUserRequest, res: Response, next: NextFunction) {
     if (!accessToken) {
       return next(ApiError.UnauthorizedError());
     }
-    const { payload: userData } = tokenService.validateAccessToken(accessToken) as JwtPayload;
+    const userData = tokenService.validateAccessToken(accessToken);
 
     if (!userData) {
       return next(ApiError.UnauthorizedError());

@@ -1,12 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { User } from './database/entity/User';
-import { Post } from './database/entity/Post';
-import { Comment } from './database/entity/Comment';
-import { Like } from './database/entity/Like';
-import { Game } from './database/entity/Game';
-import { Card } from './database/entity/Card';
+import { Card, Comment, Game, Like, Post, User } from './database/entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
