@@ -8,7 +8,7 @@ export class Like extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'like_id' })
   likeId: string;
 
-  @ManyToOne(() => User, user => user.userId)
+  @ManyToOne(() => User, user => user.likes)
   @JoinColumn({ name: 'user_id' })
   userId: string;
 

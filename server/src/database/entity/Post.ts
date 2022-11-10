@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, BaseEntity } from 'typeorm';
 import { Comment } from './Comment';
 import { Like } from './Like';
 import { User } from './User';
@@ -7,13 +7,13 @@ import { User } from './User';
 @Entity({ name: 'post' })
 export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'post_id' })
-  posId: string;
+  postId: string;
 
   @ManyToOne(() => User, user => user.posts)
   @JoinColumn({ name: 'user_id' })
   userId: string;
 
-  @OneToMany(() => Comment, comment => comment.commentId, { nullable: true })
+  @OneToMany(() => Comment, comment => comment.posts, { nullable: true })
   @JoinColumn({ name: 'comment_id' })
   comments: Comment[] | null;
 

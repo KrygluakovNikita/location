@@ -28,6 +28,10 @@ class PostController {
   }
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
+      const postId = req.params.postId;
+      await postService.delete(postId);
+
+      return res.json({ message: 'Post deleted success' });
     } catch (e) {
       next(e);
     }
@@ -35,6 +39,10 @@ class PostController {
 
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
+      const postId = req.params.postId;
+      const post = await postService.getOne(postId);
+
+      return res.json(post);
     } catch (e) {
       next(e);
     }
@@ -47,6 +55,9 @@ class PostController {
   }
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
+      const posts = await postService.getAll();
+
+      return res.json(posts);
     } catch (e) {
       next(e);
     }

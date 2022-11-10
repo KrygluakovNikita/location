@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { Post } from './Post';
 import { User } from './User';
 
@@ -12,7 +12,7 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   userId: string;
 
-  @ManyToOne(() => Post, post => post.posId)
+  @ManyToOne(() => Post, post => post.postId)
   posts: Post;
 
   @Column('text')

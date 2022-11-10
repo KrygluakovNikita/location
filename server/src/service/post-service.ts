@@ -19,16 +19,27 @@ class PostService {
     return post;
   }
 
-  async getGamesByPosId(postId: string): Promise<Post[]> {
-    const games = await Post.find({ loadRelationIds: true, where: { posId: Equal(postId) } });
+  async getOne(postId: string): Promise<Post[]> {
+    const post = await Post.find({ loadRelationIds: true, where: { postId: Equal(postId) } });
 
-    return games;
+    return post;
   }
 
   async getAll(): Promise<Post[]> {
-    const games = await Post.find({ loadRelationIds: true });
+    try {
+      const posts = await Post.find({ loadRelationIds: true });
+      console.log(posts);
 
-    return games;
+      return posts;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async delete(postId: string): Promise<Post> {
+    const post = await Post.delete(postId);
+
+    return post.raw;
   }
 }
 
