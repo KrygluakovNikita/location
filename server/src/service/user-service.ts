@@ -1,4 +1,4 @@
-import { User } from '../database/entity';
+import { User, ResetToken } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -6,7 +6,6 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
-import { ResetToken } from '../database/entity/ResetToken';
 import { IResetPassword, IResetToken } from '../interfaces/token-interface';
 
 export interface IClientData {

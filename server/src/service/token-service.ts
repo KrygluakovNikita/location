@@ -2,7 +2,7 @@ import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Puid from 'puid';
 import { IResetToken } from '../interfaces/token-interface';
-import { ResetToken } from '../database/entity/ResetToken';
+import { ResetToken } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 
 class TokenService {

@@ -1,11 +1,6 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
-import { Card } from './Card';
-import { Comment } from './Comment';
-import { Game } from './Game';
-import { Like } from './Like';
-import { Post } from './Post';
-import { ResetToken } from './ResetToken';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity } from 'typeorm';
+import { Post, Like, Game, Comment, Card } from './index';
 
 export enum UserRole {
   ADMIN = 'admin',

@@ -1,8 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { Card, Comment, Game, Like, Post, User } from './database/entity';
-import { ResetToken } from './database/entity/ResetToken';
+import { Card, Comment, Game, Like, Post, User, ResetToken } from './database/entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
