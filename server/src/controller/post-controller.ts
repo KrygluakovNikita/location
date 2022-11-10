@@ -1,7 +1,7 @@
 import { IUserRequest } from './../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
 import postService from '../service/post-service';
-import { IPost } from '../interfaces/post-interface';
+import { IPost, IPostUpdate } from '../interfaces/post-interface';
 
 class PostController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {
@@ -21,6 +21,12 @@ class PostController {
   }
   async update(req: IUserRequest, res: Response, next: NextFunction) {
     try {
+      const { title, description, gameDate, location, postId } = req.body as IPostUpdate;
+
+      const postDto: IPostUpdate = { postId, title, description, gameDate, location };
+      const post = await postService.update(postDto);
+
+      return res.json(post);
     } catch (e) {
       next(e);
     }

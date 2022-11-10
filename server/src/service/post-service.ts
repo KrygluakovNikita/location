@@ -1,6 +1,7 @@
 import { Equal } from 'typeorm';
 import { Post, User } from '../database/entity';
-import { IPost } from '../interfaces/post-interface';
+import ApiError from '../exeptions/api-error';
+import { IPost, IPostUpdate } from '../interfaces/post-interface';
 
 class PostService {
   async upload(data: IPost): Promise<Post> {
@@ -37,6 +38,19 @@ class PostService {
     const post = await Post.delete(postId);
 
     return post.raw;
+  }
+
+  async update(postDto: IPostUpdate): Promise<Post> {
+    const previousPost = await Post.findOne({ where: { postId: postDto.postId }, relations: { user: true } });
+    if (!previousPost) {
+      throw ApiError.BadRequest('Такого поста не существует');
+    }
+
+    const data: Post = { ...previousPost, ...postDto } as Post;
+
+    const post = await Post.save(data);
+
+    return post;
   }
 }
 
