@@ -85,8 +85,6 @@ class UserService {
       throw ApiError.BadRequest(`Пользователя с такой почтой: ${email} не существует`);
     }
 
-    // const userDto = new UserDto(user);
-    // const resetLink = tokenService.createResetLink(userDto);
     const resetPin = tokenService.createPinCode();
 
     const resetToken = new ResetToken();

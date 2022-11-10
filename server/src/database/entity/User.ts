@@ -81,4 +81,7 @@ export class User extends BaseEntity {
 
   @Column({ type: 'boolean', default: false, name: 'is_activated' })
   isActivated: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  resetLink: string | null;
 }

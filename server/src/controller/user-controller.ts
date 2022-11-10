@@ -70,17 +70,6 @@ class UserController {
     }
   }
 
-  // async resetToken(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const resetToken = req.params.token;
-  //     const data = await userService.resetToken(resetToken);
-
-  //     return res.json(data);
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
-
   async verificationResetPin(req: Request, res: Response, next: NextFunction) {
     try {
       const { pin } = req.body;
