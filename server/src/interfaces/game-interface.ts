@@ -1,4 +1,4 @@
-import { PaymentType } from '../database/entity/Game';
+import { PaymentType } from '../database/entity';
 
 export interface IGame {
   userId: string;

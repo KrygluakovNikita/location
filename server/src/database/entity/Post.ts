@@ -11,13 +11,13 @@ export class Post extends BaseEntity {
 
   @ManyToOne(() => User, user => user.posts)
   @JoinColumn({ name: 'user_id' })
-  userId: User;
+  userId: string;
 
   @OneToMany(() => Comment, comment => comment.commentId, { nullable: true })
   @JoinColumn({ name: 'comment_id' })
   comments: Comment[] | null;
 
-  @ManyToOne(() => Like, like => like.post, { nullable: true })
+  @OneToMany(() => Like, like => like.post, { nullable: true })
   @JoinColumn({ name: 'like_id' })
   likes: Comment;
 
@@ -27,15 +27,15 @@ export class Post extends BaseEntity {
   @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'post_date' })
   postDate: Date;
 
-  @Column({ type: 'timestamptz', name: 'game_date' })
+  @Column({ type: 'timestamptz', name: 'game_date', nullable: true })
   gameDate: Date;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   location: string;
 
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'text' })
-  image: string;
+  @Column({ type: 'text', nullable: true })
+  photo: string;
 }

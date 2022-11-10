@@ -1,6 +1,6 @@
+import { IGame } from './../interfaces/game-interface';
 import { Equal } from 'typeorm';
 import { Game } from '../database/entity';
-import { IGame } from '../dtos/game-dto';
 
 class GameService {
   async upload(data: IGame): Promise<Game> {

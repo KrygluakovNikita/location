@@ -1,0 +1,56 @@
+import { IUserRequest } from './../interfaces/user-interface';
+import { Request, Response, NextFunction } from 'express';
+import postService from '../service/post-service';
+import { IPost } from '../interfaces/post-interface';
+
+class PostController {
+  async upload(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { title, description, postDate = null, gameDate, location = null } = req.body as IPost;
+
+      const photo = req.file.filename;
+      const { userId } = req.user;
+      const postDto: IPost = { title, description, postDate, gameDate, location, photo, userId };
+      console.log(postDto);
+
+      const userData = await postService.upload(postDto);
+
+      return res.json(userData);
+    } catch (e) {
+      next(e);
+    }
+  }
+  async update(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  }
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  }
+  async search(req: Request, res: Response, next: NextFunction) {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  }
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  }
+}
+
+export default new PostController();

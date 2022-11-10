@@ -7,9 +7,9 @@ const router = Router();
 
 router.post(
   '/registration',
-  multerUploadPhoto,
   body('email').isEmail(),
   body('password').isString().isLength({ min: 3, max: 64 }),
+  multerUploadPhoto,
   userController.registration
 );
 router.post('/login', userController.login);
