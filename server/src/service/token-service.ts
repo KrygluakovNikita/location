@@ -1,5 +1,9 @@
 import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import Puid from 'puid';
+import { IResetToken } from '../interfaces/token-interface';
+import { ResetToken } from '../database/entity/ResetToken';
+import ApiError from '../exeptions/api-error';
 
 class TokenService {
   generateAccessTokenToken(payload: UserDto): string {
@@ -36,6 +40,37 @@ class TokenService {
     } catch (e) {
       return null;
     }
+  }
+
+  generateResetToken() {
+    const payload = { isReset: true };
+    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
+
+    return accessToken;
+  }
+
+  createPinCode(): string {
+    const puid = new Puid();
+    const pin = puid.generate().slice(3, 9);
+
+    return pin;
+  }
+
+  async verificationResetPin(pin: string): Promise<IResetToken> {
+    const resetToken = await ResetToken.findOneBy({ pin });
+
+    if (!resetToken) {
+      throw ApiError.BadRequest(`Не верный пин код`);
+    }
+
+    const token = this.generateResetToken();
+
+    resetToken.resetToken = token;
+    resetToken.isReset = false;
+
+    await resetToken.save();
+
+    return { resetToken: token };
   }
 }
 

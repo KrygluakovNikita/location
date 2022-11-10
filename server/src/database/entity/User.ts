@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, OneToOne, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
 import { Card } from './Card';
 import { Comment } from './Comment';
 import { Game } from './Game';
 import { Like } from './Like';
 import { Post } from './Post';
+import { ResetToken } from './ResetToken';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -65,7 +66,7 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   city: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, name: 'phone_ip' })
   phoneIP: string;
 
   @Column({
@@ -75,12 +76,9 @@ export class User extends BaseEntity {
   })
   role: UserRole;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, name: 'activation_link' })
   activationLink: string | null;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, name: 'is_activated' })
   isActivated: boolean;
-
-  @Column({ type: 'text', nullable: true })
-  resetLink: string | null;
 }

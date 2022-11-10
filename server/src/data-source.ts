@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { Card, Comment, Game, Like, Post, User } from './database/entity';
+import { ResetToken } from './database/entity/ResetToken';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DOCKER_POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: [User, Post, Like, Comment, Game, Card],
+  entities: [User, Post, Like, Comment, Game, Card, ResetToken],
   migrations: ['src/database/migrations/*{.ts,.js}'],
   subscribers: ['src/database/subscribers/**/*{.ts,.js}'],
 });
