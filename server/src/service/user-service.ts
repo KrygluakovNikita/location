@@ -7,6 +7,7 @@ import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
 import { IResetPassword, IResetToken } from '../interfaces/token-interface';
+import { Equal } from 'typeorm';
 
 export interface IClientData {
   accessToken: string;
@@ -79,16 +80,23 @@ class UserService {
   }
 
   async resetPassword(email: string) {
-    const { userId } = await User.findOneBy({ email });
-    if (!userId) {
+    const user = await User.findOneBy({ email });
+    if (!user) {
       throw ApiError.BadRequest(`Пользователя с такой почтой: ${email} не существует`);
+    }
+
+    let resetToken = new ResetToken();
+
+    const candidate = await ResetToken.findOneBy({ user: Equal(user.userId) });
+    if (candidate) {
+      resetToken = candidate;
     }
 
     const resetPin = tokenService.createPinCode();
 
-    const resetToken = new ResetToken();
-    resetToken.userId = userId;
+    resetToken.user = user;
     resetToken.pin = resetPin;
+
     await resetToken.save();
 
     await mailService.resetPassword(email, resetPin);
@@ -101,12 +109,13 @@ class UserService {
   }
 
   async updatePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
-    const token = await ResetToken.findOneBy({ resetToken });
+    const token = await ResetToken.findOne({ where: { resetToken: Equal(resetToken) }, relations: { user: true } });
+
     if (!token) {
       throw ApiError.BadRequest(`Не верный токен для восстановления пароля`);
     }
 
-    const user = await User.findOneBy({ userId: token.userId });
+    const user = await User.findOneBy({ userId: token.user.userId });
 
     await ResetToken.delete(token.resetId);
 

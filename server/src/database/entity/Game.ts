@@ -13,8 +13,8 @@ export class Game extends BaseEntity {
   gameId: string;
 
   @ManyToOne(() => User, user => user.games)
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @Column({ type: 'timestamptz', nullable: false })
   date: Date;

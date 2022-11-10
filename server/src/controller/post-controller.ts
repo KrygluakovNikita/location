@@ -11,7 +11,6 @@ class PostController {
       const photo = req.file.filename;
       const { userId } = req.user;
       const postDto: IPost = { title, description, postDate, gameDate, location, photo, userId };
-      console.log(postDto);
 
       const userData = await postService.upload(postDto);
 

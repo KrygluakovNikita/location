@@ -9,10 +9,11 @@ export class Comment extends BaseEntity {
   commentId: string;
 
   @ManyToOne(() => User, user => user.comments)
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @ManyToOne(() => Post, post => post.postId)
+  @JoinColumn({ name: 'posts' })
   posts: Post;
 
   @Column('text')

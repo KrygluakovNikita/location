@@ -1,12 +1,14 @@
 import { Equal } from 'typeorm';
-import { Post } from '../database/entity';
+import { Post, User } from '../database/entity';
 import { IPost } from '../interfaces/post-interface';
 
 class PostService {
   async upload(data: IPost): Promise<Post> {
     const post = new Post();
 
-    post.userId = data.userId;
+    const user = await User.findOneBy({ userId: data.userId });
+
+    post.user = user;
     post.title = data.title;
     post.description = data.description;
     post.postDate = new Date(Date.now());
@@ -20,20 +22,15 @@ class PostService {
   }
 
   async getOne(postId: string): Promise<Post[]> {
-    const post = await Post.find({ loadRelationIds: true, where: { postId: Equal(postId) } });
+    const post = await Post.find({ where: { postId: Equal(postId) }, relations: { user: true } });
 
     return post;
   }
 
   async getAll(): Promise<Post[]> {
-    try {
-      const posts = await Post.find({ loadRelationIds: true });
-      console.log(posts);
+    const posts = await Post.find({ relations: { user: true } });
 
-      return posts;
-    } catch (err) {
-      console.log(err);
-    }
+    return posts;
   }
 
   async delete(postId: string): Promise<Post> {

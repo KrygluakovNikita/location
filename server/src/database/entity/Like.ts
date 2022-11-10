@@ -9,10 +9,10 @@ export class Like extends BaseEntity {
   likeId: string;
 
   @ManyToOne(() => User, user => user.likes)
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @ManyToOne(() => Post, post => post.likes, { nullable: true })
-  @JoinColumn({ name: 'post_id' })
+  @JoinColumn({ name: 'post' })
   post: Post;
 }

@@ -8,9 +8,9 @@ export class ResetToken extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'reset_id' })
   resetId: string;
 
-  @OneToOne(() => User, user => user.userId, { nullable: false })
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @OneToOne(() => User, user => user.resetToken, { nullable: false })
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @Column({ type: 'varchar', length: 6, unique: true })
   pin: string;

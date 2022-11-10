@@ -10,15 +10,15 @@ export class Post extends BaseEntity {
   postId: string;
 
   @ManyToOne(() => User, user => user.posts)
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @OneToMany(() => Comment, comment => comment.posts, { nullable: true })
-  @JoinColumn({ name: 'comment_id' })
+  @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
 
   @OneToMany(() => Like, like => like.post, { nullable: true })
-  @JoinColumn({ name: 'like_id' })
+  @JoinColumn({ name: 'likes' })
   likes: Comment;
 
   @Column({ type: 'text' })

@@ -1,5 +1,6 @@
+import { ResetToken } from './ResetToken';
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
 import { Post, Like, Game, Comment, Card } from './index';
 
 export enum UserRole {
@@ -12,39 +13,43 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'user_id' })
   userId: string;
 
-  @OneToMany(type => Game, game => game.userId, {
+  @OneToMany(type => Game, game => game.user, {
     nullable: true,
     cascade: true,
   })
   @JoinColumn({ name: 'games' })
   games: Game[] | null;
 
-  @OneToMany(type => Card, card => card.userId, {
+  @OneToMany(type => Card, card => card.user, {
     nullable: true,
     cascade: true,
   })
   @JoinColumn({ name: 'cards' })
   cards: Card[] | null;
 
-  @OneToMany(type => Like, like => like.userId, {
+  @OneToMany(type => Like, like => like.user, {
     nullable: true,
     cascade: true,
   })
   @JoinColumn({ name: 'likes' })
   likes: Like[] | null;
 
-  @OneToMany(type => Post, post => post.userId, {
+  @OneToMany(type => Post, post => post.user, {
     nullable: true,
   })
   @JoinColumn({ name: 'posts' })
   posts: Post[] | null;
 
-  @OneToMany(type => Comment, comment => comment.userId, {
+  @OneToMany(type => Comment, comment => comment.user, {
     nullable: true,
     cascade: true,
   })
   @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
+
+  @OneToOne(() => ResetToken, token => token.user, { nullable: true })
+  @JoinColumn({ name: 'reset_token' })
+  resetToken: User;
 
   @Column({ type: 'text', unique: true, nullable: false })
   email: string;
