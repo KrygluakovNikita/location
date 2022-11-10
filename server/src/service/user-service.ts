@@ -1,4 +1,4 @@
-import { User } from '../database/entity';
+import { User, ResetToken } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -6,6 +6,7 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
+import { IResetPassword, IResetToken } from '../interfaces/token-interface';
 
 export interface IClientData {
   accessToken: string;
@@ -19,7 +20,7 @@ class UserService {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${dto.email} уже зарегистирован`);
     }
 
-    const hashPassword = await bcrypt.hash(dto.password, 3);
+    const hashPassword = await this.hashPassword(dto.password);
     const activationLink: string = uuid.v4();
 
     const dbUser = new User();
@@ -78,33 +79,48 @@ class UserService {
   }
 
   async resetPassword(email: string) {
-    const user = await User.findOneBy({ email });
-    if (!user) {
+    const { userId } = await User.findOneBy({ email });
+    if (!userId) {
       throw ApiError.BadRequest(`Пользователя с такой почтой: ${email} не существует`);
     }
 
-    const userDto = new UserDto(user);
-    const resetLink = tokenService.createResetLink(userDto);
+    const resetPin = tokenService.createPinCode();
 
-    user.resetLink = resetLink;
-    await user.save();
+    const resetToken = new ResetToken();
+    resetToken.userId = userId;
+    resetToken.pin = resetPin;
+    await resetToken.save();
 
-    await mailService.resetPassword(email, resetLink);
+    await mailService.resetPassword(email, resetPin);
   }
 
-  async resetToken(resetToken: string): Promise<IClientData> {
-    const { email } = tokenService.validateResetToken(resetToken);
+  async verificationResetPin(pin: string): Promise<IResetToken> {
+    const resetToken = await tokenService.verificationResetPin(pin);
 
-    const user = await User.findOneBy({ email });
-    if (!user) {
-      throw ApiError.BadRequest(`Пользователя с такой почтой: ${email} не существует`);
+    return resetToken;
+  }
+
+  async updatePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
+    const token = await ResetToken.findOneBy({ resetToken });
+    if (!token) {
+      throw ApiError.BadRequest(`Не верный токен для восстановления пароля`);
     }
-    user.resetLink = null;
+
+    const user = await User.findOneBy({ userId: token.userId });
+
+    await ResetToken.delete(token.resetId);
+
+    user.password = await this.hashPassword(newPassword);
+
     await user.save();
 
-    const userData = await this.updateTokens(user);
+    const userDto = new UserDto(user);
 
-    return userData;
+    return userDto;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 3);
   }
 }
 

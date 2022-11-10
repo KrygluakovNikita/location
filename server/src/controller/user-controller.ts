@@ -3,6 +3,7 @@ import userService from '../service/user-service';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
+import { IResetPassword } from '../interfaces/token-interface';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
@@ -63,18 +64,31 @@ class UserController {
 
       await userService.resetPassword(email);
 
-      return res.status(200);
+      return res.status(200).end();
     } catch (e) {
       next(e);
     }
   }
 
-  async resetToken(req: Request, res: Response, next: NextFunction) {
+  async verificationResetPin(req: Request, res: Response, next: NextFunction) {
     try {
-      const resetToken = req.params.token;
-      const data = await userService.resetToken(resetToken);
+      const { pin } = req.body;
+      const data = await userService.verificationResetPin(pin);
 
-      return res.json(data);
+      return res.json(data).status(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async updatePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { newPassword, resetToken } = req.body as IResetPassword;
+      const dto: IResetPassword = { newPassword, resetToken };
+
+      const data = await userService.updatePassword(dto);
+
+      return res.json(data).status(200);
     } catch (e) {
       next(e);
     }

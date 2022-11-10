@@ -32,13 +32,12 @@ class MailService {
     await this.sendMail(to, subject, htmlForm);
   }
 
-  async resetPassword(to: string, resetLink: string): Promise<void> {
-    const link = `${process.env.API_URL}/api/user/reset/${resetLink}`;
+  async resetPassword(to: string, resetPin: string): Promise<void> {
     const htmlForm = `
         <div>
           <h1>Восстановление пароля</h1>
-          <p>Используйте эту уникальную ссылку, чтобы восстановить свой пароль для данной электронной почты ${to} .</p>
-          <a href="${link}">${link}</a>
+          <p>Пин код для восстановления пароля для почты: ${to}</p>
+          <p>${resetPin}</p>
         </div>
       `;
 
