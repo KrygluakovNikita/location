@@ -115,6 +115,12 @@ class UserService {
       throw ApiError.BadRequest(`Не верный токен для восстановления пароля`);
     }
 
+    const validToken = await tokenService.validateResetToken(token.resetToken);
+
+    if (!validToken) {
+      throw ApiError.BadRequest(`Токен неверный или устарел`);
+    }
+
     const user = await User.findOneBy({ userId: token.user.userId });
 
     await ResetToken.delete(token.resetId);

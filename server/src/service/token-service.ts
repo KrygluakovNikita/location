@@ -44,7 +44,7 @@ class TokenService {
 
   generateResetToken(userDto: UserDto) {
     const payload = { ...userDto, isReset: true };
-    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
+    const accessToken = jwt.sign({ payload }, process.env.JWT_RESET_SECRET, { expiresIn: '20m' });
 
     return accessToken;
   }
