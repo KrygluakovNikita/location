@@ -8,7 +8,7 @@ import { IResetPassword } from '../interfaces/token-interface';
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
     try {
-      const errors = validationResult(req);
+      const errors = validationResult(req.body);
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
       }

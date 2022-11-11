@@ -8,8 +8,8 @@ export class Card extends BaseEntity {
   cardId: string;
 
   @ManyToOne(() => User, user => user.cards)
-  @JoinColumn({ name: 'user_id' })
-  userId: string;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
   @Column()
   card_number: number;

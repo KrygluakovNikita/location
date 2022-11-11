@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, BaseEntity } from 'typeorm';
 import { Comment } from './Comment';
 import { Like } from './Like';
 import { User } from './User';
@@ -7,18 +7,18 @@ import { User } from './User';
 @Entity({ name: 'post' })
 export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'post_id' })
-  posId: string;
+  postId: string;
 
   @ManyToOne(() => User, user => user.posts)
-  @JoinColumn({ name: 'user_id' })
-  userId: User;
+  @JoinColumn({ name: 'user' })
+  user: User;
 
-  @OneToMany(() => Comment, comment => comment.commentId, { nullable: true })
-  @JoinColumn({ name: 'comment_id' })
+  @OneToMany(() => Comment, comment => comment.posts, { nullable: true })
+  @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
 
-  @ManyToOne(() => Like, like => like.post, { nullable: true })
-  @JoinColumn({ name: 'like_id' })
+  @OneToMany(() => Like, like => like.post, { nullable: true })
+  @JoinColumn({ name: 'likes' })
   likes: Comment;
 
   @Column({ type: 'text' })
@@ -27,15 +27,15 @@ export class Post extends BaseEntity {
   @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'post_date' })
   postDate: Date;
 
-  @Column({ type: 'timestamptz', name: 'game_date' })
+  @Column({ type: 'timestamptz', name: 'game_date', nullable: true })
   gameDate: Date;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   location: string;
 
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'text' })
-  image: string;
+  @Column({ type: 'text', nullable: true })
+  photo: string;
 }

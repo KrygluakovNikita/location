@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { UserDto } from '../dtos/user-dto';
 
 class MailService {
   transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;

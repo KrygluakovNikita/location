@@ -1,14 +1,17 @@
+import { IGame } from './../interfaces/game-interface';
 import { Equal } from 'typeorm';
-import { Game } from '../database/entity';
-import { IGame } from '../dtos/game-dto';
+import { Game, User } from '../database/entity';
 
 class GameService {
   async upload(data: IGame): Promise<Game> {
     const game = new Game();
+
+    const user = await User.findOneBy({ userId: data.userId });
+
     game.date = data.date;
     game.paymentType = data.paymentType;
     game.hours = data.hours;
-    game.userId = data.userId;
+    game.user = user;
 
     await game.save();
 
@@ -16,7 +19,9 @@ class GameService {
   }
 
   async getGamesByUserId(userId: string): Promise<Game[]> {
-    const games = await Game.find({ loadRelationIds: true, where: { userId: Equal(userId) } });
+    const user = await User.findOneBy({ userId });
+
+    const games = await Game.findBy({ user: Equal(user.userId) });
 
     return games;
   }

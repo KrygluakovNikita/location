@@ -2,7 +2,7 @@ import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Puid from 'puid';
 import { IResetToken } from '../interfaces/token-interface';
-import { ResetToken } from '../database/entity';
+import { ResetToken, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 
 class TokenService {
@@ -42,9 +42,9 @@ class TokenService {
     }
   }
 
-  generateResetToken() {
-    const payload = { isReset: true };
-    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
+  generateResetToken(userDto: UserDto) {
+    const payload = { ...userDto, isReset: true };
+    const accessToken = jwt.sign({ payload }, process.env.JWT_RESET_SECRET, { expiresIn: '20m' });
 
     return accessToken;
   }
@@ -57,13 +57,21 @@ class TokenService {
   }
 
   async verificationResetPin(pin: string): Promise<IResetToken> {
-    const resetToken = await ResetToken.findOneBy({ pin });
+    const resetToken = await ResetToken.findOne({
+      where: { pin },
+      relations: {
+        user: true,
+      },
+    });
 
     if (!resetToken) {
       throw ApiError.BadRequest(`Не верный пин код`);
     }
 
-    const token = this.generateResetToken();
+    const user = await User.findOneBy({ userId: resetToken.user.userId });
+    const userDto = new UserDto(user);
+
+    const token = this.generateResetToken(userDto);
 
     resetToken.resetToken = token;
     resetToken.isReset = false;
