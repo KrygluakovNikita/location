@@ -23,13 +23,13 @@ class PostService {
   }
 
   async getOne(postId: string): Promise<Post[]> {
-    const post = await Post.find({ where: { postId: Equal(postId) }, relations: { user: true } });
+    const post = await Post.find({ where: { postId: Equal(postId) }, relations: { user: true, comments: true } });
 
     return post;
   }
 
   async getAll(): Promise<Post[]> {
-    const posts = await Post.find({ relations: { user: true } });
+    const posts = await Post.find({ relations: { user: true, comments: true } });
 
     return posts;
   }
@@ -41,16 +41,16 @@ class PostService {
   }
 
   async update(postDto: IPostUpdate): Promise<Post> {
-    const previousPost = await Post.findOne({ where: { postId: postDto.postId }, relations: { user: true } });
-    if (!previousPost) {
+    const post = await Post.findOne({ where: { postId: postDto.postId } });
+    if (!post) {
       throw ApiError.BadRequest('Такого поста не существует');
     }
 
-    const data: Post = { ...previousPost, ...postDto } as Post;
+    const data: Post = { ...post, ...postDto } as Post;
 
-    const post = await Post.save(data);
+    const result = await Post.save(data);
 
-    return post;
+    return result;
   }
 }
 

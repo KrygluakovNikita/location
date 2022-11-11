@@ -5,3 +5,4 @@ export * from './Like';
 export * from './Post';
 export * from './User';
 export * from './ResetToken';
+export * from './Reply';

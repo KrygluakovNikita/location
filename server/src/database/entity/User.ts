@@ -2,6 +2,7 @@ import { ResetToken } from './ResetToken';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
 import { Post, Like, Game, Comment, Card } from './index';
+import { Reply } from './Reply';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -42,10 +43,15 @@ export class User extends BaseEntity {
 
   @OneToMany(type => Comment, comment => comment.user, {
     nullable: true,
-    cascade: true,
   })
   @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
+
+  @OneToMany(type => Reply, reply => reply.reply, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'replies' })
+  replies: Reply[] | null;
 
   @OneToOne(() => ResetToken, token => token.user, { nullable: true })
   @JoinColumn({ name: 'reset_token' })

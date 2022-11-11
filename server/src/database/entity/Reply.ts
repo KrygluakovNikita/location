@@ -1,21 +1,21 @@
-import { Reply } from './Reply';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, OneToMany, Index } from 'typeorm';
+import { Comment } from './Comment';
 import { Post } from './Post';
 import { User } from './User';
 
-@Entity({ name: 'comment' })
-export class Comment extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid', { name: 'comment_id' })
-  commentId: string;
+@Entity({ name: 'reply' })
+export class Reply extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid', { name: 'reply_id' })
+  replyId: string;
 
   @ManyToOne(() => User, user => user.comments, { nullable: false })
   @JoinColumn({ name: 'user' })
   user: User;
 
-  @ManyToOne(() => Post, post => post.comments, { nullable: true })
-  @JoinColumn({ name: 'post' })
-  post: Post;
+  @ManyToOne(() => Comment, comment => comment.answers, { nullable: true })
+  @JoinColumn({ name: 'comment' })
+  comment: Comment;
 
   @Column({ type: 'text', nullable: false })
   message: string;
@@ -23,7 +23,7 @@ export class Comment extends BaseEntity {
   @Column({ type: 'timestamptz', default: new Date(Date.now()), nullable: false })
   date: string;
 
-  @OneToMany(() => Reply, reply => reply.comment, { nullable: true, cascade: true })
-  @JoinColumn({ name: 'answers' })
-  answers: Reply[];
+  @ManyToOne(type => User, { nullable: true })
+  @JoinColumn({ name: 'reply' })
+  reply: User | null;
 }

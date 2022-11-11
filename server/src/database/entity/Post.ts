@@ -13,7 +13,7 @@ export class Post extends BaseEntity {
   @JoinColumn({ name: 'user' })
   user: User;
 
-  @OneToMany(() => Comment, comment => comment.posts, { nullable: true })
+  @OneToMany(() => Comment, comment => comment.post, { nullable: true })
   @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
 
