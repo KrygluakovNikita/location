@@ -24,10 +24,10 @@ export class Post extends BaseEntity {
   @Column({ type: 'text' })
   title: string;
 
-  @Column({ type: 'timestamp', default: new Date(Date.now()), name: 'post_date' })
+  @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'post_date' })
   postDate: Date;
 
-  @Column({ type: 'timestamp', name: 'game_date', nullable: true })
+  @Column({ type: 'timestamptz', name: 'game_date', nullable: true })
   gameDate: Date;
 
   @Column({ type: 'text', nullable: true })
