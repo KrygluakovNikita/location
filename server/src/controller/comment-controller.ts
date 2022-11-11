@@ -2,13 +2,13 @@ import { IUserRequest } from './../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
 import commentService from '../service/comment-service';
 import { IComment, ICommentUpdate } from '../interfaces/comment-interface';
+import { UserDto } from '../dtos/user-dto';
 
 class CommentController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const postId = req.params.postId;
       const { date, message } = req.body as IComment;
-      console.log(req.user);
 
       const { userId } = req.user;
 
@@ -35,11 +35,13 @@ class CommentController {
 
   async update(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.user;
+      const { role, userId, email } = req.user as UserDto;
+      const user = { role, userId, email };
+
       const commentId = req.params.commentId;
       const { message } = req.body;
 
-      const commentDto: ICommentUpdate = { userId, commentId, message };
+      const commentDto: ICommentUpdate = { user, commentId, message };
       const post = await commentService.update(commentDto);
 
       return res.json(post);
@@ -50,11 +52,13 @@ class CommentController {
 
   async delete(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.user;
+      const { role, userId, email } = req.user as UserDto;
+      const user = { role, userId, email };
+
       const commentId = req.params.commentId;
       const { message } = req.body;
 
-      const commentDto: ICommentUpdate = { userId, commentId, message };
+      const commentDto: ICommentUpdate = { user, commentId, message };
       await commentService.delete(commentDto);
 
       return res.json({ message: 'Комментарий удалён' });

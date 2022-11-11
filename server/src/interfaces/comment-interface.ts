@@ -1,4 +1,5 @@
 import { Reply } from '../database/entity';
+import { UserDto } from '../dtos/user-dto';
 
 export interface IComment {
   userId?: string;
@@ -9,7 +10,7 @@ export interface IComment {
 }
 
 export interface ICommentUpdate {
-  userId: string;
+  user: UserDto;
   commentId?: string;
   message: string;
 }
