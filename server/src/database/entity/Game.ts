@@ -16,7 +16,7 @@ export class Game extends BaseEntity {
   @JoinColumn({ name: 'user' })
   user: User;
 
-  @Column({ type: 'timestamptz', nullable: false })
+  @Column({ type: 'timestamp', nullable: false })
   date: Date;
 
   @Column('text')
