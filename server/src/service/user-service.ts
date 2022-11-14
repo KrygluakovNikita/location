@@ -8,6 +8,7 @@ import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
 import { IResetPassword, IResetToken } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
+import Puid from 'puid';
 
 export interface IClientData {
   accessToken: string;
@@ -87,12 +88,14 @@ class UserService {
 
     let resetToken = new ResetToken();
 
-    const candidate = await ResetToken.findOneBy({ user: Equal(user.userId) });
-    if (candidate) {
-      resetToken = candidate;
+    const token = await ResetToken.findOneBy({ user: Equal(user.userId) });
+    if (token) {
+      await ResetToken.delete(token.resetId);
     }
 
-    const resetPin = tokenService.createPinCode();
+    const puid = new Puid();
+    const pin = puid.generate().slice(3, 9);
+    const resetPin = pin;
 
     resetToken.user = user;
     resetToken.pin = resetPin;
@@ -103,7 +106,7 @@ class UserService {
   }
 
   async verificationResetPin(pin: string): Promise<IResetToken> {
-    const resetToken = await tokenService.verificationResetPin(pin);
+    const resetToken = await tokenService.generateResetPin(pin);
 
     return resetToken;
   }
