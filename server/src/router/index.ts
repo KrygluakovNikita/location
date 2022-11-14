@@ -5,6 +5,7 @@ import userRouter from './user-router';
 import postRouter from './post-router';
 import commentRouter from './comment-router';
 import replyRouter from './reply-router';
+import likeRouter from './like-router';
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use('/user', userRouter);
 routes.use('/post', postRouter);
 routes.use('/comment', commentRouter);
 routes.use('/reply', replyRouter);
+routes.use('/like', likeRouter);
 
 export default routes;

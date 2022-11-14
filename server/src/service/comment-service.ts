@@ -8,7 +8,14 @@ class CommentService {
     const comment = new Comment();
 
     const user = await User.findOneBy({ userId: data.userId });
+    if (!user) {
+      throw ApiError.BadRequest('Такого пользоваетля не существует');
+    }
+
     const post = await Post.findOneBy({ postId: data.postId });
+    if (!post) {
+      throw ApiError.BadRequest('Такого поста не существует');
+    }
 
     comment.post = post;
     comment.user = user;
