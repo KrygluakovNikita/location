@@ -106,8 +106,8 @@ class UserService {
     await mailService.resetPassword(email, resetPin);
   }
 
-  async verificationResetPin(pin: string): Promise<IResetToken> {
-    const resetToken = await tokenService.generateResetPin(pin);
+  async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
+    const resetToken = await tokenService.verificationResetPin(pin, email);
 
     return resetToken;
   }

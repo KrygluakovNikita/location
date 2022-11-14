@@ -72,8 +72,8 @@ class UserController {
 
   async verificationResetPin(req: Request, res: Response, next: NextFunction) {
     try {
-      const { pin } = req.body;
-      const data = await userService.verificationResetPin(pin);
+      const { pin, email } = req.body;
+      const data = await userService.verificationResetPin(pin, email);
 
       return res.json(data).status(200);
     } catch (e) {

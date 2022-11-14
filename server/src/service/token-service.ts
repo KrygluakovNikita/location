@@ -48,7 +48,7 @@ class TokenService {
     return accessToken;
   }
 
-  async generateResetPin(pin: string): Promise<IResetToken> {
+  async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
     const resetToken = await ResetToken.findOne({
       where: { pin },
       relations: {
@@ -61,6 +61,10 @@ class TokenService {
     }
 
     const user = await User.findOneBy({ userId: resetToken.user.userId });
+    if (user.email !== email) {
+      throw ApiError.BadRequest('Вы не можете восстановить не свой пароль');
+    }
+
     const userDto = new UserDto(user);
 
     const token = this.generateResetToken(userDto);
