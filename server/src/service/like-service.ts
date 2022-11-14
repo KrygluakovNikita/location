@@ -1,6 +1,6 @@
 import { Equal } from 'typeorm';
 import { ILike } from '../controller/like-controller';
-import { Comment, Like, Post, Reply, User, UserRole } from '../database/entity';
+import { Like, Post, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 

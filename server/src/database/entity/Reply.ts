@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, OneToMany, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { Comment } from './Comment';
-import { Post } from './Post';
 import { User } from './User';
 
 @Entity({ name: 'reply' })

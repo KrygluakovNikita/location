@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, Column, PrimaryColumn, OneToOne } from 'typeorm';
-import { Post } from './Post';
+import { Entity, PrimaryGeneratedColumn, JoinColumn, BaseEntity, Column, OneToOne } from 'typeorm';
+
 import { User } from './User';
 
 @Entity({ name: 'reset_token' })
