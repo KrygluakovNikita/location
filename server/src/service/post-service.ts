@@ -2,6 +2,7 @@ import { Equal } from 'typeorm';
 import { Post, User } from '../database/entity';
 import { PostDto } from '../dtos/post-dto';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 import { IPost, IPostUpdate } from '../interfaces/post-interface';
 
 class PostService {
@@ -9,6 +10,10 @@ class PostService {
     const post = new Post();
 
     const user = await User.findOneBy({ userId: data.userId });
+
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
 
     post.user = user;
     post.title = data.title;

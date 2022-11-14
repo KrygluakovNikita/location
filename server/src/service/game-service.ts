@@ -2,12 +2,21 @@ import { IGame } from './../interfaces/game-interface';
 import { Equal } from 'typeorm';
 import { Game, User } from '../database/entity';
 import { GameDto } from '../dtos/game-dto';
+import UserError from '../exeptions/user-error';
 
 class GameService {
   async upload(data: IGame): Promise<GameDto> {
     const game = new Game();
 
     const user = await User.findOneBy({ userId: data.userId });
+
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    if (!user.isActivated) {
+      throw UserError.EmailIsNotActivated();
+    }
 
     game.date = data.date;
     game.paymentType = data.paymentType;

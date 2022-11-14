@@ -1,6 +1,7 @@
 import { Equal } from 'typeorm';
 import { Comment, Reply, User, UserRole } from '../database/entity';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 import { IReply, IReplyWithUser } from '../interfaces/reply-interface';
 
 class ReplyService {
@@ -9,7 +10,7 @@ class ReplyService {
 
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользователя не существует');
+      throw UserError.UserNotFound();
     }
 
     const comment = await Comment.findOne({ where: { commentId: Equal(data.commentId) }, relations: { user: true } });
@@ -50,6 +51,11 @@ class ReplyService {
   }
 
   async update({ replyId, message, user }: IReplyWithUser): Promise<Reply> {
+    const candidate = await User.findOneBy({ userId: user.userId });
+    if (!candidate) {
+      throw UserError.UserNotFound();
+    }
+
     const reply = await Reply.findOne({ where: { replyId: Equal(replyId) }, relations: { user: true } });
     if (!reply) {
       throw ApiError.BadRequest('Такого ответа на комментарий не существует');

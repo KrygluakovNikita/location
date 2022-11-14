@@ -2,12 +2,13 @@ import { Equal } from 'typeorm';
 import { ILike } from '../controller/like-controller';
 import { Comment, Like, Post, Reply, User, UserRole } from '../database/entity';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 
 class ReplyService {
   async upload(data: ILike): Promise<Like> {
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользователя не существует');
+      throw UserError.UserNotFound();
     }
 
     const post = await Post.findOneBy({ postId: data.postId });
@@ -43,7 +44,7 @@ class ReplyService {
   async getByUserId(userId: string): Promise<Like[]> {
     const user = await User.findOneBy({ userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользователя не существует');
+      throw UserError.UserNotFound();
     }
 
     const likes = await Like.find({ where: { user: Equal(userId) }, relations: { post: true } });
@@ -54,7 +55,7 @@ class ReplyService {
   async deleteByPostId(data: ILike): Promise<void> {
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользователя не существует');
+      throw UserError.UserNotFound();
     }
 
     const post = await Post.findOneBy({ postId: data.postId });

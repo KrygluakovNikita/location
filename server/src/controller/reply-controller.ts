@@ -35,8 +35,7 @@ class ReplyController {
 
   async update(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { role, userId, email } = req.user as UserDto;
-      const user = { role, userId, email };
+      const user = req.user;
 
       const replyId = req.params.replyId;
       const { message } = req.body;
@@ -52,8 +51,7 @@ class ReplyController {
 
   async delete(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { role, userId, email } = req.user as UserDto;
-      const user = { role, userId, email };
+      const user = req.user;
 
       const replyId = req.params.replyId;
       const { message } = req.body;

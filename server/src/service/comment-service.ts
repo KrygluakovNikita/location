@@ -2,6 +2,7 @@ import { Equal } from 'typeorm';
 import { Comment, Post, User, UserRole } from '../database/entity';
 import { CommentDto } from '../dtos/comment-dto';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 import { IComment, ICommentWithUser } from '../interfaces/comment-interface';
 
 class CommentService {
@@ -10,7 +11,7 @@ class CommentService {
 
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользоваетля не существует');
+      throw UserError.UserNotFound();
     }
 
     const post = await Post.findOneBy({ postId: data.postId });
@@ -43,6 +44,11 @@ class CommentService {
   }
 
   async update({ commentId, message, user }: ICommentWithUser): Promise<CommentDto> {
+    const candidate = await User.findOneBy({ userId: user.userId });
+    if (!candidate) {
+      throw UserError.UserNotFound();
+    }
+
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true, answers: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');
@@ -61,6 +67,11 @@ class CommentService {
   }
 
   async delete({ commentId, user }: ICommentWithUser): Promise<void> {
+    const candidate = await User.findOneBy({ userId: user.userId });
+    if (!candidate) {
+      throw UserError.UserNotFound();
+    }
+
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');
