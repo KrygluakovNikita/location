@@ -21,7 +21,7 @@ export class Comment extends BaseEntity {
   message: string;
 
   @Column({ type: 'timestamptz', default: new Date(Date.now()), nullable: false })
-  date: string;
+  date: Date;
 
   @OneToMany(() => Reply, reply => reply.comment, { nullable: true, cascade: true })
   @JoinColumn({ name: 'answers' })
