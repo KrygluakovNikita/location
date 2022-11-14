@@ -1,15 +1,17 @@
 import { Equal } from 'typeorm';
 import { Comment, Post, User, UserRole } from '../database/entity';
+import { CommentDto } from '../dtos/comment-dto';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 import { IComment, ICommentWithUser } from '../interfaces/comment-interface';
 
 class CommentService {
-  async upload(data: IComment): Promise<Comment> {
+  async upload(data: IComment): Promise<CommentDto> {
     const comment = new Comment();
 
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
-      throw ApiError.BadRequest('Такого пользоваетля не существует');
+      throw UserError.UserNotFound();
     }
 
     const post = await Post.findOneBy({ postId: data.postId });
@@ -23,21 +25,30 @@ class CommentService {
 
     await comment.save();
 
-    return comment;
+    const result = new CommentDto(comment);
+
+    return result;
   }
 
-  async getByPostId(postId: string): Promise<Comment[]> {
+  async getByPostId(postId: string): Promise<CommentDto[]> {
     const post = await Post.findOneBy({ postId });
     if (!post) {
       throw ApiError.BadRequest('Такого события не существует');
     }
 
-    const comments = await Comment.find({ where: { post: Equal(post.postId) }, relations: { user: true, answers: true } });
+    const comments = await Comment.find({ where: { post: Equal(post.postId) }, relations: { user: true, answers: { user: true, userReply: true } } });
 
-    return comments;
+    const result = comments.map(comment => new CommentDto(comment));
+
+    return result;
   }
 
-  async update({ commentId, message, user }: ICommentWithUser): Promise<Comment> {
+  async update({ commentId, message, user }: ICommentWithUser): Promise<CommentDto> {
+    const candidate = await User.findOneBy({ userId: user.userId });
+    if (!candidate) {
+      throw UserError.UserNotFound();
+    }
+
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true, answers: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');
@@ -50,11 +61,17 @@ class CommentService {
     comment.message = message;
 
     await comment.save();
+    const result = new CommentDto(comment);
 
-    return comment;
+    return result;
   }
 
   async delete({ commentId, user }: ICommentWithUser): Promise<void> {
+    const candidate = await User.findOneBy({ userId: user.userId });
+    if (!candidate) {
+      throw UserError.UserNotFound();
+    }
+
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');

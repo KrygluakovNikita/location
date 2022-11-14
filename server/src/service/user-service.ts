@@ -8,6 +8,8 @@ import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
 import { IResetPassword, IResetToken } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
+import Puid from 'puid';
+import UserError from '../exeptions/user-error';
 
 export interface IClientData {
   accessToken: string;
@@ -16,9 +18,9 @@ export interface IClientData {
 
 class UserService {
   async registration(dto: IUser): Promise<IClientData> {
-    const candidate = await User.findOneBy({ email: dto.email });
+    const candidate = await User.findOne({ where: [{ email: dto.email }, { nickname: dto.nickname }] });
     if (candidate) {
-      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${dto.email} уже зарегистирован`);
+      throw UserError.UniqValues();
     }
 
     const hashPassword = await this.hashPassword(dto.password);
@@ -53,12 +55,12 @@ class UserService {
   async login(email: string, password: string): Promise<IClientData> {
     const user = await User.findOneBy({ email: email });
     if (!user) {
-      throw ApiError.BadRequest('Пользователь не найден');
+      throw UserError.UserNotFound();
     }
 
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
-      throw ApiError.BadRequest('Неверный пароль');
+      throw UserError.IncorrectPassword();
     }
 
     const userData = await this.updateTokens(user);
@@ -82,17 +84,19 @@ class UserService {
   async resetPassword(email: string) {
     const user = await User.findOneBy({ email });
     if (!user) {
-      throw ApiError.BadRequest(`Пользователя с такой почтой: ${email} не существует`);
+      throw UserError.UserNotFound();
     }
 
     let resetToken = new ResetToken();
 
-    const candidate = await ResetToken.findOneBy({ user: Equal(user.userId) });
-    if (candidate) {
-      resetToken = candidate;
+    const token = await ResetToken.findOneBy({ user: Equal(user.userId) });
+    if (token) {
+      await ResetToken.delete(token.resetId);
     }
 
-    const resetPin = tokenService.createPinCode();
+    const puid = new Puid();
+    const pin = puid.generate().slice(3, 9);
+    const resetPin = pin;
 
     resetToken.user = user;
     resetToken.pin = resetPin;
@@ -103,7 +107,7 @@ class UserService {
   }
 
   async verificationResetPin(pin: string): Promise<IResetToken> {
-    const resetToken = await tokenService.verificationResetPin(pin);
+    const resetToken = await tokenService.generateResetPin(pin);
 
     return resetToken;
   }

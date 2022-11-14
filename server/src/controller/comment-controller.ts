@@ -35,9 +35,7 @@ class CommentController {
 
   async update(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { role, userId, email } = req.user as UserDto;
-      const user = { role, userId, email };
-
+      const user = req.user;
       const commentId = req.params.commentId;
       const { message } = req.body;
 
@@ -52,8 +50,7 @@ class CommentController {
 
   async delete(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { role, userId, email } = req.user as UserDto;
-      const user = { role, userId, email };
+      const user = req.user;
 
       const commentId = req.params.commentId;
       const { message } = req.body;

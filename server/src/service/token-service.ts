@@ -1,6 +1,5 @@
 import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import Puid from 'puid';
 import { IResetToken } from '../interfaces/token-interface';
 import { ResetToken, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
@@ -49,14 +48,7 @@ class TokenService {
     return accessToken;
   }
 
-  createPinCode(): string {
-    const puid = new Puid();
-    const pin = puid.generate().slice(3, 9);
-
-    return pin;
-  }
-
-  async verificationResetPin(pin: string): Promise<IResetToken> {
+  async generateResetPin(pin: string): Promise<IResetToken> {
     const resetToken = await ResetToken.findOne({
       where: { pin },
       relations: {

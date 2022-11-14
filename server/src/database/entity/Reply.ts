@@ -21,7 +21,7 @@ export class Reply extends BaseEntity {
   message: string;
 
   @Column({ type: 'timestamptz', default: new Date(Date.now()), nullable: false })
-  date: string;
+  date: Date;
 
   @ManyToOne(type => User, { nullable: true })
   @JoinColumn({ name: 'user_reply' })

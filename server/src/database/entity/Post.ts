@@ -19,7 +19,7 @@ export class Post extends BaseEntity {
 
   @OneToMany(() => Like, like => like.post, { nullable: true })
   @JoinColumn({ name: 'likes' })
-  likes: Comment;
+  likes: Like[] | null;
 
   @Column({ type: 'text' })
   title: string;
