@@ -24,6 +24,6 @@ export class Reply extends BaseEntity {
   date: string;
 
   @ManyToOne(type => User, { nullable: true })
-  @JoinColumn({ name: 'reply' })
-  reply: User | null;
+  @JoinColumn({ name: 'user_reply' })
+  userReply: User | null;
 }

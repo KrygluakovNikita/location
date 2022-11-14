@@ -1,15 +1,13 @@
-import { Reply } from '../database/entity';
 import { UserDto } from '../dtos/user-dto';
 
 export interface IComment {
   userId?: string;
   postId?: string;
   message: string;
-  date: Date;
-  answers?: Reply[];
+  date?: Date;
 }
 
-export interface ICommentUpdate {
+export interface ICommentWithUser {
   user: UserDto;
   commentId?: string;
   message: string;
