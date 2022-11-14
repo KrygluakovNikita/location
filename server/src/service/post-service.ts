@@ -1,10 +1,11 @@
 import { Equal } from 'typeorm';
 import { Post, User } from '../database/entity';
+import { PostDto } from '../dtos/post-dto';
 import ApiError from '../exeptions/api-error';
 import { IPost, IPostUpdate } from '../interfaces/post-interface';
 
 class PostService {
-  async upload(data: IPost): Promise<Post> {
+  async upload(data: IPost): Promise<PostDto> {
     const post = new Post();
 
     const user = await User.findOneBy({ userId: data.userId });
@@ -19,10 +20,12 @@ class PostService {
 
     await post.save();
 
-    return post;
+    const result = new PostDto(post);
+
+    return result;
   }
 
-  async getOne(postId: string): Promise<Post> {
+  async getOne(postId: string): Promise<PostDto> {
     const post = await Post.findOne({
       where: { postId: Equal(postId) },
       relations: {
@@ -31,34 +34,46 @@ class PostService {
           user: true,
           answers: { userReply: true, user: true },
         },
-        likes: true,
+        likes: { user: true },
+      },
+    });
+    const result = new PostDto(post);
+
+    return result;
+  }
+
+  async getAll(): Promise<PostDto[]> {
+    const posts = await Post.find({
+      relations: {
+        user: true,
+        comments: {
+          user: true,
+          answers: { userReply: true, user: true },
+        },
+        likes: { user: true },
       },
     });
 
-    return post;
+    const result = posts.map(post => new PostDto(post));
+
+    return result;
   }
 
-  async getAll(): Promise<Post[]> {
-    const posts = await Post.find({ relations: { user: true, comments: { answers: { userReply: true, user: true }, user: true }, likes: true } });
+  async delete(postId: string): Promise<void> {
+    await Post.delete(postId);
 
-    return posts;
+    return;
   }
 
-  async delete(postId: string): Promise<Post> {
-    const post = await Post.delete(postId);
-
-    return post.raw;
-  }
-
-  async update(postDto: IPostUpdate): Promise<Post> {
+  async update(postDto: IPostUpdate): Promise<PostDto> {
     const post = await Post.findOne({ where: { postId: postDto.postId } });
     if (!post) {
       throw ApiError.BadRequest('Такого поста не существует');
     }
 
     const data: Post = { ...post, ...postDto } as Post;
-
-    const result = await Post.save(data);
+    const updatedPost = await Post.save(data);
+    const result = new PostDto(updatedPost);
 
     return result;
   }
