@@ -22,14 +22,14 @@ class PostService {
     return post;
   }
 
-  async getOne(postId: string): Promise<Post[]> {
-    const post = await Post.find({
+  async getOne(postId: string): Promise<Post> {
+    const post = await Post.findOne({
       where: { postId: Equal(postId) },
       relations: {
         user: true,
         comments: {
           user: true,
-          answers: true,
+          answers: { userReply: true, user: true },
         },
       },
     });
@@ -38,7 +38,7 @@ class PostService {
   }
 
   async getAll(): Promise<Post[]> {
-    const posts = await Post.find({ relations: { user: true, comments: { answers: { user: true }, user: true } } });
+    const posts = await Post.find({ relations: { user: true, comments: { answers: { userReply: true, user: true }, user: true } } });
 
     return posts;
   }

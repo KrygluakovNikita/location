@@ -11,11 +11,8 @@ class ReplyService {
     if (!user) {
       throw ApiError.BadRequest('Такого пользователя не существует');
     }
-    console.log(data);
 
     const comment = await Comment.findOne({ where: { commentId: Equal(data.commentId) }, relations: { user: true } });
-    console.log(comment);
-    console.log(await Comment.find());
 
     if (!comment) {
       throw ApiError.BadRequest('Такого сообщения не существует');

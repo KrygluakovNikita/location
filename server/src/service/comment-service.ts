@@ -31,7 +31,7 @@ class CommentService {
   }
 
   async update({ commentId, message, user }: ICommentWithUser): Promise<Comment> {
-    const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
+    const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true, answers: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');
     }
