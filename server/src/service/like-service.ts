@@ -15,6 +15,11 @@ class ReplyService {
       throw ApiError.BadRequest('Такого поста не существует');
     }
 
+    const available = await Like.findOne({ where: { user: Equal(user.userId), post: Equal(post.postId) } });
+    if (available) {
+      throw ApiError.BadRequest('Нельзя ставить два лайка');
+    }
+
     const like = new Like();
     like.post = post;
     like.user = user;

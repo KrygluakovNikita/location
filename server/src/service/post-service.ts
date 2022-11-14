@@ -31,6 +31,7 @@ class PostService {
           user: true,
           answers: { userReply: true, user: true },
         },
+        likes: true,
       },
     });
 
@@ -38,7 +39,7 @@ class PostService {
   }
 
   async getAll(): Promise<Post[]> {
-    const posts = await Post.find({ relations: { user: true, comments: { answers: { userReply: true, user: true }, user: true } } });
+    const posts = await Post.find({ relations: { user: true, comments: { answers: { userReply: true, user: true }, user: true }, likes: true } });
 
     return posts;
   }

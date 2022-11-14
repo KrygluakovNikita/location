@@ -23,9 +23,9 @@ class LikeController {
   }
   async getByPostId(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.user;
+      const postId = req.params.postId;
 
-      const likes = await likeService.getByPostId(userId);
+      const likes = await likeService.getByPostId(postId);
 
       return res.json(likes);
     } catch (e) {

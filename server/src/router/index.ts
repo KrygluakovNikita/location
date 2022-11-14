@@ -5,7 +5,7 @@ import userRouter from './user-router';
 import postRouter from './post-router';
 import commentRouter from './comment-router';
 import replyRouter from './reply-router';
-import likeRouter from './auth-router';
+import likeRouter from './like-router';
 
 const routes = Router();
 
