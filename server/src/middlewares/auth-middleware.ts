@@ -1,5 +1,3 @@
-// import { Request, Response, NextFunction } from 'express';
-
 import { NextFunction, Response } from 'express';
 import { UserRole } from '../database/entity';
 import { UserDto } from '../dtos/user-dto';

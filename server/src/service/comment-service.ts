@@ -1,7 +1,7 @@
 import { Equal } from 'typeorm';
-import { Comment, Game, Post, User, UserRole } from '../database/entity';
+import { Comment, Post, User, UserRole } from '../database/entity';
 import ApiError from '../exeptions/api-error';
-import { IComment, ICommentUpdate } from '../interfaces/comment-interface';
+import { IComment, ICommentWithUser } from '../interfaces/comment-interface';
 
 class CommentService {
   async upload(data: IComment): Promise<Comment> {
@@ -30,7 +30,7 @@ class CommentService {
     return comments;
   }
 
-  async update({ commentId, message, user }: ICommentUpdate): Promise<Comment> {
+  async update({ commentId, message, user }: ICommentWithUser): Promise<Comment> {
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');
@@ -47,7 +47,7 @@ class CommentService {
     return comment;
   }
 
-  async delete({ commentId, user }: ICommentUpdate): Promise<void> {
+  async delete({ commentId, user }: ICommentWithUser): Promise<void> {
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
     if (!comment) {
       throw ApiError.BadRequest('Такого комментария не существует');

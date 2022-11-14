@@ -47,7 +47,7 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'comments' })
   comments: Comment[] | null;
 
-  @OneToMany(type => Reply, reply => reply.reply, {
+  @OneToMany(type => Reply, reply => reply.userReply, {
     nullable: true,
   })
   @JoinColumn({ name: 'replies' })
