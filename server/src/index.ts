@@ -5,7 +5,6 @@ import cors from 'cors';
 import errorMiddleware from './middlewares/error-middleware';
 import routes from './router/index';
 import bodyParser from 'body-parser';
-import qrService from './service/qr-service';
 
 const app = express();
 

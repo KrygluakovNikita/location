@@ -16,7 +16,7 @@ class ReplyService {
     const comment = await Comment.findOne({ where: { commentId: Equal(data.commentId) }, relations: { user: true } });
 
     if (!comment) {
-      throw ApiError.BadRequest('Такого сообщения не существует');
+      throw ApiError.NotFound();
     }
 
     if (data.userReplyId) {
@@ -42,7 +42,7 @@ class ReplyService {
   async getByCommentId(commentId: string): Promise<Reply[]> {
     const comment = await Comment.findOneBy({ commentId });
     if (!comment) {
-      throw ApiError.BadRequest('Такого комментария не существует');
+      throw ApiError.NotFound();
     }
 
     const replies = await Reply.find({ where: { comment: Equal(comment.commentId) }, relations: { user: true } });
@@ -58,11 +58,11 @@ class ReplyService {
 
     const reply = await Reply.findOne({ where: { replyId: Equal(replyId) }, relations: { user: true } });
     if (!reply) {
-      throw ApiError.BadRequest('Такого ответа на комментарий не существует');
+      throw ApiError.NotFound();
     }
 
     if (reply.user.userId !== user.userId && user.role !== UserRole.ADMIN) {
-      throw ApiError.BadRequest('Вы не можете изменить не свой ответ на комментарий');
+      throw UserError.NotAllow();
     }
 
     reply.message = message;
@@ -75,11 +75,11 @@ class ReplyService {
   async delete({ replyId, user }: IReplyWithUser): Promise<void> {
     const comment = await Reply.findOne({ where: { replyId: Equal(replyId) }, relations: { user: true } });
     if (!comment) {
-      throw ApiError.BadRequest('Такого ответа на комментария не существует');
+      throw ApiError.NotFound();
     }
 
     if (comment.user.userId !== user.userId && user.role !== UserRole.ADMIN) {
-      throw ApiError.BadRequest('Вы не можете удалить не свой овтет на комментарий');
+      throw UserError.NotAllow();
     }
 
     await Reply.delete(replyId);

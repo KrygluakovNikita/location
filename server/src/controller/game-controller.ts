@@ -17,6 +17,7 @@ class GameController {
       next(e);
     }
   }
+
   async getGamesByUserId(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const { userId } = req.user;
@@ -28,6 +29,20 @@ class GameController {
       next(e);
     }
   }
+
+  async getByGameId(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const gameId = req.params.gameId;
+      const { userId } = req.user;
+
+      const games = await gameService.getByGameId(userId, gameId);
+
+      return res.json(games);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const games = await gameService.getAllGames();

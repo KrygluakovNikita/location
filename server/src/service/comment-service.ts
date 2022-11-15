@@ -16,7 +16,7 @@ class CommentService {
 
     const post = await Post.findOneBy({ postId: data.postId });
     if (!post) {
-      throw ApiError.BadRequest('Такого поста не существует');
+      throw ApiError.NotFound();
     }
 
     comment.post = post;
@@ -33,7 +33,7 @@ class CommentService {
   async getByPostId(postId: string): Promise<CommentDto[]> {
     const post = await Post.findOneBy({ postId });
     if (!post) {
-      throw ApiError.BadRequest('Такого события не существует');
+      throw ApiError.NotFound();
     }
 
     const comments = await Comment.find({ where: { post: Equal(post.postId) }, relations: { user: true, answers: { user: true, userReply: true } } });
@@ -51,11 +51,11 @@ class CommentService {
 
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true, answers: true } });
     if (!comment) {
-      throw ApiError.BadRequest('Такого комментария не существует');
+      throw ApiError.NotFound();
     }
 
     if (comment.user.userId !== user.userId && user.role !== UserRole.ADMIN) {
-      throw ApiError.BadRequest('Вы не можете изменить не свой комментарий');
+      throw UserError.NotAllow();
     }
 
     comment.message = message;
@@ -74,11 +74,11 @@ class CommentService {
 
     const comment = await Comment.findOne({ where: { commentId: Equal(commentId) }, relations: { user: true } });
     if (!comment) {
-      throw ApiError.BadRequest('Такого комментария не существует');
+      throw ApiError.NotFound();
     }
 
     if (comment.user.userId !== user.userId && user.role !== UserRole.ADMIN) {
-      throw ApiError.BadRequest('Вы не можете удалить не свой комментарий');
+      throw UserError.NotAllow();
     }
 
     await Comment.delete(commentId);
