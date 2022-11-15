@@ -1,6 +1,5 @@
 import { IUserRequest } from '../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
-import { UserDto } from '../dtos/user-dto';
 import { IReply, IReplyWithUser } from '../interfaces/reply-interface';
 import replyService from '../service/reply-service';
 

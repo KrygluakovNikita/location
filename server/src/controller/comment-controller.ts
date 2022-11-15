@@ -2,7 +2,6 @@ import { IUserRequest } from './../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
 import commentService from '../service/comment-service';
 import { IComment, ICommentWithUser } from '../interfaces/comment-interface';
-import { UserDto } from '../dtos/user-dto';
 
 class CommentController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {

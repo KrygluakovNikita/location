@@ -73,7 +73,7 @@ class PostService {
   async update(postDto: IPostUpdate): Promise<PostDto> {
     const post = await Post.findOne({ where: { postId: postDto.postId } });
     if (!post) {
-      throw ApiError.BadRequest('Такого поста не существует');
+      throw ApiError.NotFound();
     }
 
     const data: Post = { ...post, ...postDto } as Post;

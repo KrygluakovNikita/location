@@ -6,14 +6,21 @@ class ApiError extends Error {
     this.status = status;
     this.errors = errors;
   }
+
   static UnauthorizedError() {
-    return new ApiError(401, "Пользователь не авторизован");
+    return new ApiError(401, 'Пользователь не авторизован');
   }
+
   static BadRequest(message, errors = []) {
     return new ApiError(400, message, errors);
   }
+
   static AccessDenied() {
-    return new ApiError(403, "У вас недостаточно прав!");
+    return new ApiError(403, 'У вас недостаточно прав!');
+  }
+
+  static NotFound() {
+    return new ApiError(404, 'Данные к которым вы обращаетесь не найдены');
   }
 }
 export default ApiError;

@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IResetToken } from '../interfaces/token-interface';
 import { ResetToken, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
+import UserError from '../exeptions/user-error';
 
 class TokenService {
   generateAccessTokenToken(payload: UserDto): string {
@@ -62,7 +63,7 @@ class TokenService {
 
     const user = await User.findOneBy({ userId: resetToken.user.userId });
     if (user.email !== email) {
-      throw ApiError.BadRequest('Вы не можете восстановить не свой пароль');
+      throw UserError.NotAllow();
     }
 
     const userDto = new UserDto(user);

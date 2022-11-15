@@ -1,6 +1,6 @@
 import { Equal } from 'typeorm';
 import { ILike } from '../controller/like-controller';
-import { Comment, Like, Post, Reply, User, UserRole } from '../database/entity';
+import { Like, Post, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 
@@ -13,12 +13,12 @@ class ReplyService {
 
     const post = await Post.findOneBy({ postId: data.postId });
     if (!post) {
-      throw ApiError.BadRequest('Такого поста не существует');
+      throw ApiError.NotFound();
     }
 
     const available = await Like.findOne({ where: { user: Equal(user.userId), post: Equal(post.postId) } });
     if (available) {
-      throw ApiError.BadRequest('Нельзя ставить два лайка');
+      throw ApiError.NotFound();
     }
 
     const like = new Like();
@@ -33,7 +33,7 @@ class ReplyService {
   async getByPostId(postId: string): Promise<Like[]> {
     const post = await Post.findOneBy({ postId });
     if (!post) {
-      throw ApiError.BadRequest('Такого поста не существует');
+      throw ApiError.NotFound();
     }
 
     const likes = await Like.find({ where: { post: Equal(postId) }, relations: { user: true } });
@@ -60,7 +60,7 @@ class ReplyService {
 
     const post = await Post.findOneBy({ postId: data.postId });
     if (!post) {
-      throw ApiError.BadRequest('Такого поста не существует');
+      throw ApiError.NotFound();
     }
 
     await Like.delete({ user: Equal(user.userId), post: Equal(post.postId) });

@@ -1,8 +1,9 @@
 import { IGame } from './../interfaces/game-interface';
 import { Equal } from 'typeorm';
-import { Game, User } from '../database/entity';
-import { GameDto } from '../dtos/game-dto';
+import { Game, User, UserRole } from '../database/entity';
+import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
 import UserError from '../exeptions/user-error';
+import qr from 'qrcode';
 
 class GameService {
   async upload(data: IGame): Promise<GameDto> {
@@ -38,12 +39,38 @@ class GameService {
     return result;
   }
 
+  async getByGameId(userId: string, gameId: string): Promise<GameDtoWithQr> {
+    const user = await User.findOneBy({ userId });
+
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true } });
+    if (game.user.userId !== userId || user.role !== UserRole.ADMIN) {
+      throw UserError.NotAllow();
+    }
+
+    const qrCode = await this.generateQrCode(game.gameId);
+
+    const result = new GameDtoWithQr(game, qrCode);
+
+    return result;
+  }
+
   async getAllGames(): Promise<GameDto[]> {
     const games = await Game.find({ relations: { user: true } });
 
     const result = games.map(game => new GameDto(game));
 
     return result;
+  }
+
+  async generateQrCode(gameId: string) {
+    const link = `${process.env.CLIENT_URL_GAME}/${gameId}`;
+    const qrCode = await qr.toDataURL(link);
+
+    return qrCode;
   }
 }
 
