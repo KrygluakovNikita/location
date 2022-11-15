@@ -1,6 +1,6 @@
 import { IGame } from './../interfaces/game-interface';
 import { Equal } from 'typeorm';
-import { Game, User } from '../database/entity';
+import { Game, User, UserRole } from '../database/entity';
 import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
 import UserError from '../exeptions/user-error';
 import qr from 'qrcode';
@@ -47,7 +47,7 @@ class GameService {
     }
 
     const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true } });
-    if (game.user.userId !== userId) {
+    if (game.user.userId !== userId || user.role !== UserRole.ADMIN) {
       throw UserError.NotAllow();
     }
 
