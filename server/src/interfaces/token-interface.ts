@@ -1,5 +1,5 @@
 export interface IResetToken {
-  resetToken: string;
+  Token: string;
 }
 
 export interface IResetPassword {

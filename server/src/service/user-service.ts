@@ -1,4 +1,4 @@
-import { User, ResetToken } from '../database/entity';
+import { User, Token } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -87,11 +87,11 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
-    let resetToken = new ResetToken();
+    let resetToken = new Token();
 
-    const token = await ResetToken.findOneBy({ user: Equal(user.userId) });
+    const token = await Token.findOneBy({ user: Equal(user.userId) });
     if (token) {
-      await ResetToken.delete(token.resetId);
+      await Token.delete(token.resetId);
     }
 
     const puid = new Puid();
@@ -107,19 +107,19 @@ class UserService {
   }
 
   async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
-    const resetToken = await tokenService.verificationResetPin(pin, email);
+    const Token = await tokenService.verificationResetPin(pin, email);
 
-    return resetToken;
+    return Token;
   }
 
   async updatePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
-    const token = await ResetToken.findOne({ where: { resetToken: Equal(resetToken) }, relations: { user: true } });
+    const token = await Token.findOne({ where: { token: Equal(resetToken) }, relations: { user: true } });
 
     if (!token) {
       throw ApiError.BadRequest(`Не верный токен для восстановления пароля`);
     }
 
-    const validToken = await tokenService.validateResetToken(token.resetToken);
+    const validToken = await tokenService.validateResetToken(token.token);
 
     if (!validToken) {
       throw ApiError.BadRequest(`Токен неверный или устарел`);
@@ -127,7 +127,7 @@ class UserService {
 
     const user = await User.findOneBy({ userId: token.user.userId });
 
-    await ResetToken.delete(token.resetId);
+    await Token.delete(token.resetId);
 
     user.password = await this.hashPassword(newPassword);
 

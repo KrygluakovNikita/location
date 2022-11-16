@@ -1,7 +1,7 @@
 import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IResetToken } from '../interfaces/token-interface';
-import { ResetToken, User } from '../database/entity';
+import { Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 
@@ -50,7 +50,7 @@ class TokenService {
   }
 
   async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
-    const resetToken = await ResetToken.findOne({
+    const resetToken = await Token.findOne({
       where: { pin },
       relations: {
         user: true,
@@ -70,12 +70,12 @@ class TokenService {
 
     const token = this.generateResetToken(userDto);
 
-    resetToken.resetToken = token;
-    resetToken.isReset = false;
+    resetToken.token = token;
+    resetToken.isResetPassword = false;
 
     await resetToken.save();
 
-    return { resetToken: token };
+    return { Token: token };
   }
 }
 

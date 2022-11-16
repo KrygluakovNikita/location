@@ -1,4 +1,4 @@
-import { ResetToken } from './ResetToken';
+import { Token } from './Token';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
 import { Post, Like, Game, Comment, Card } from './index';
@@ -53,7 +53,7 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'replies' })
   replies: Reply[] | null;
 
-  @OneToOne(() => ResetToken, token => token.user, { nullable: true })
+  @OneToOne(() => Token, token => token.user, { nullable: true })
   @JoinColumn({ name: 'reset_token' })
   resetToken: User;
 
