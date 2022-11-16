@@ -15,8 +15,6 @@ export class PostDto {
   location: string;
   photo: string;
   constructor(model: Post) {
-    console.log(model);
-
     this.postId = model.postId;
     this.user = new UserDto(model.user);
     this.likes = model?.likes?.map(like => new LikeDto(like)) ?? [];

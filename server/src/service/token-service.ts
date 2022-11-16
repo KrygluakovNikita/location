@@ -45,11 +45,7 @@ class TokenService {
 
   validateChangePasswordToken(token: string): UserDto {
     try {
-      console.log(token);
-      console.log(process.env.JWT_CHANGE_PASSWORD_SECRET);
-
       const { payload } = jwt.verify(token, process.env.JWT_CHANGE_PASSWORD_SECRET) as JwtPayload;
-      console.log(payload);
       if (!payload) {
         throw ApiError.BadRequest(`Токен неверный или устарел`);
       }
