@@ -95,10 +95,9 @@ class UserController {
     }
   }
 
-  async changePassword(req: Request, res: Response, next: NextFunction) {
+  async changePassword(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { email } = req.body;
-
+      const { email } = req.user;
       await userService.changePassword(email);
 
       return res.status(200).end();
@@ -107,9 +106,10 @@ class UserController {
     }
   }
 
-  async verificationChangePasswordPin(req: Request, res: Response, next: NextFunction) {
+  async verificationChangePasswordPin(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { pin, email } = req.body;
+      const { pin } = req.body;
+      const { email } = req.user;
       const data = await userService.verificationChangePasswordPin(pin, email);
 
       return res.json(data).status(200);
@@ -157,9 +157,11 @@ class UserController {
     }
   }
 
-  async verificationChangeEmailPin(req: Request, res: Response, next: NextFunction) {
+  async verificationChangeEmailPin(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { pin, previousEmail, newEmail } = req.body;
+      const { pin, newEmail } = req.body;
+      const { email: previousEmail } = req.user;
+
       const dto: IUpdateEmail = { pin, previousEmail, newEmail };
       const data = await userService.verificationChangeEmailPin(dto);
 

@@ -200,6 +200,11 @@ class UserService {
     const pin = this.generatePinCode();
 
     const changeToken = new Token();
+    const previousToken = await Token.findOneBy({ user: Equal(user.userId) });
+    if (previousToken) {
+      await Token.delete(previousToken.tokenId);
+    }
+
     changeToken.user = user;
     changeToken.pin = pin;
     changeToken.isChangePassword = true;
@@ -215,6 +220,11 @@ class UserService {
     const isPass = tokenService.validateChangeEmailPin(pin, previousEmail);
     if (!isPass) {
       throw ApiError.BadRequest('Ошибка при обновлении почты');
+    }
+
+    const candidate = await User.findOneBy({ email: newEmail });
+    if (candidate) {
+      throw UserError.UniqValues();
     }
 
     const user = await User.findOne({ where: { email: previousEmail } });
