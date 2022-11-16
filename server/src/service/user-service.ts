@@ -6,7 +6,7 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
-import { IChangeEmail, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
+import { IChangeEmail, IChangePassword, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
@@ -112,11 +112,17 @@ class UserService {
   }
 
   async updateResetPassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
-    const token = tokenService.validateResetPasswordToken(resetToken);
+    try {
+      const payload = tokenService.validateResetPasswordToken(resetToken);
 
-    const userDto = await this.updatePassword(token, newPassword);
+      const userDto = await this.updatePassword(payload, newPassword);
 
-    return userDto;
+      return userDto;
+    } catch (err) {
+      if (err instanceof ApiError || err instanceof UserError) throw err;
+
+      throw ApiError.ServerError();
+    }
   }
 
   async updatePassword(userDto: UserDto, newPassword: string) {
@@ -160,8 +166,8 @@ class UserService {
     return { token };
   }
 
-  async updateChangePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
-    const token = tokenService.validateChangePasswordToken(resetToken);
+  async updateChangePassword({ changeToken, newPassword }: IChangePassword): Promise<UserDto> {
+    const token = tokenService.validateChangePasswordToken(changeToken);
 
     const userDto = await this.updatePassword(token, newPassword);
 

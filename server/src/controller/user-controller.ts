@@ -1,4 +1,4 @@
-import { IUpdateEmail } from './../interfaces/token-interface';
+import { IChangePassword, IUpdateEmail } from './../interfaces/token-interface';
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
 import { validationResult } from 'express-validator';
@@ -120,8 +120,8 @@ class UserController {
 
   async updateChangedPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const { newPassword, resetToken } = req.body as IResetPassword;
-      const dto: IResetPassword = { newPassword, resetToken };
+      const { changeToken, newPassword } = req.body as IChangePassword;
+      const dto: IChangePassword = { newPassword, changeToken };
 
       const data = await userService.updateChangePassword(dto);
 

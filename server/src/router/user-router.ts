@@ -10,9 +10,9 @@ router.post('/reset-password/', userController.resetPassword);
 router.post('/reset-password/verification', userController.verificationResetPin);
 router.post('/reset-password/update-password', userController.updateResetedPassword);
 
-router.post('/change-password/', userController.changePassword);
-router.post('/change-password/verification', userController.verificationChangePasswordPin);
-router.post('/change-password/update-password', userController.updateChangedPassword);
+router.post('/change-password/', isAuth, userController.changePassword);
+router.post('/change-password/verification', isAuth, userController.verificationChangePasswordPin);
+router.post('/change-password/update-password', isAuth, userController.updateChangedPassword);
 
 router.post('/change-email/', isAuth, userController.changeEmail);
 router.post('/change-email/update-email', isAuth, userController.updateEmail);

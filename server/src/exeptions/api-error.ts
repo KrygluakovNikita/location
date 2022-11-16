@@ -22,5 +22,9 @@ class ApiError extends Error {
   static NotFound() {
     return new ApiError(404, 'Данные к которым вы обращаетесь не найдены');
   }
+
+  static ServerError() {
+    return new ApiError(500, 'Ошибка на стороне сервера');
+  }
 }
 export default ApiError;

@@ -5,6 +5,11 @@ export interface IResetPassword {
   resetToken: string;
 }
 
+export interface IChangePassword {
+  changeToken: string;
+  newPassword: string;
+}
+
 export interface IUserToken {
   token: Token;
   user: User;
