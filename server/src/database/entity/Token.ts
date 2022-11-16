@@ -5,8 +5,8 @@ import { User } from './User';
 
 @Entity({ name: 'token' })
 export class Token extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid', { name: 'reset_id' })
-  resetId: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'token_id' })
+  tokenId: string;
 
   @OneToOne(() => User, user => user.resetToken, { nullable: false })
   @JoinColumn({ name: 'user' })
