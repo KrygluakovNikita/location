@@ -81,12 +81,48 @@ class UserController {
     }
   }
 
-  async updatePassword(req: Request, res: Response, next: NextFunction) {
+  async updateResetedPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { newPassword, resetToken } = req.body as IResetPassword;
       const dto: IResetPassword = { newPassword, resetToken };
 
-      const data = await userService.updatePassword(dto);
+      const data = await userService.updateResetPassword(dto);
+
+      return res.json(data).status(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+
+      await userService.changePassword(email);
+
+      return res.status(200).end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async verificationChangePasswordPin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { pin, email } = req.body;
+      const data = await userService.verificationChangePasswordPin(pin, email);
+
+      return res.json(data).status(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async updateChangedPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { newPassword, resetToken } = req.body as IResetPassword;
+      const dto: IResetPassword = { newPassword, resetToken };
+
+      const data = await userService.updateChangePassword(dto);
 
       return res.json(data).status(200);
     } catch (e) {

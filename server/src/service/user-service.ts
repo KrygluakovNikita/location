@@ -1,4 +1,4 @@
-import { User, ResetToken } from '../database/entity';
+import { User, Token } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -6,7 +6,7 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
-import { IResetPassword, IResetToken } from '../interfaces/token-interface';
+import { IResetPassword } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
@@ -87,55 +87,92 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
-    let resetToken = new ResetToken();
+    let resetToken = new Token();
 
-    const token = await ResetToken.findOneBy({ user: Equal(user.userId) });
+    const token = await Token.findOneBy({ user: Equal(user.userId) });
     if (token) {
-      await ResetToken.delete(token.resetId);
+      await Token.delete(token.tokenId);
     }
 
-    const puid = new Puid();
-    const pin = puid.generate().slice(3, 9);
-    const resetPin = pin;
+    const resetPin = this.generatePinCode();
 
     resetToken.user = user;
     resetToken.pin = resetPin;
+    resetToken.isResetPassword = true;
 
     await resetToken.save();
 
     await mailService.resetPassword(email, resetPin);
   }
 
-  async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
+  async verificationResetPin(pin: string, email: string): Promise<string> {
     const resetToken = await tokenService.verificationResetPin(pin, email);
 
     return resetToken;
   }
 
-  async updatePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
-    const token = await ResetToken.findOne({ where: { resetToken: Equal(resetToken) }, relations: { user: true } });
+  async updateResetPassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
+    const token = tokenService.validateResetPasswordToken(resetToken);
 
-    if (!token) {
-      throw ApiError.BadRequest(`Не верный токен для восстановления пароля`);
-    }
+    const userDto = await this.updatePassword(token, newPassword);
 
-    const validToken = await tokenService.validateResetToken(token.resetToken);
+    return userDto;
+  }
 
-    if (!validToken) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
-    }
-
-    const user = await User.findOneBy({ userId: token.user.userId });
-
-    await ResetToken.delete(token.resetId);
+  async updatePassword(userDto: UserDto, newPassword: string) {
+    const user = await User.findOneBy({ userId: userDto.userId });
 
     user.password = await this.hashPassword(newPassword);
 
     await user.save();
 
-    const userDto = new UserDto(user);
+    const result = new UserDto(user);
+
+    return result;
+  }
+
+  async changePassword(email: string) {
+    const user = await User.findOneBy({ email });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    let changeToken = new Token();
+
+    const token = await Token.findOneBy({ user: Equal(user.userId) });
+    if (token) {
+      await Token.delete(token.tokenId);
+    }
+
+    const resetPin = this.generatePinCode();
+
+    changeToken.user = user;
+    changeToken.pin = resetPin;
+    changeToken.isChangePassword = true;
+
+    await changeToken.save();
+    await mailService.changePassword(email, resetPin);
+  }
+
+  async verificationChangePasswordPin(pin: string, email: string): Promise<string> {
+    const token = await tokenService.verificationChangePasswordPin(pin, email);
+
+    return token;
+  }
+
+  async updateChangePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
+    const token = tokenService.validateChangePasswordToken(resetToken);
+
+    const userDto = await this.updatePassword(token, newPassword);
 
     return userDto;
+  }
+
+  generatePinCode(): string {
+    const puid = new Puid();
+    const pin = puid.generate().slice(3, 9);
+
+    return pin;
   }
 
   async hashPassword(password: string): Promise<string> {

@@ -4,5 +4,5 @@ export * from './Game';
 export * from './Like';
 export * from './Post';
 export * from './User';
-export * from './ResetToken';
+export * from './Token';
 export * from './Reply';

@@ -45,6 +45,20 @@ class MailService {
     await this.sendMail(to, subject, htmlForm);
   }
 
+  async changePassword(to: string, resetPin: string): Promise<void> {
+    const htmlForm = `
+        <div>
+          <h1>Изменение пароля</h1>
+          <p>Пин код для изменения пароля для почты: ${to}</p>
+          <p>${resetPin}</p>
+        </div>
+      `;
+
+    const subject = `Изменение пароля на сайте: ${process.env.CLIENT_URL}`;
+
+    await this.sendMail(to, subject, htmlForm);
+  }
+
   async sendMail(to, subject, html): Promise<void> {
     await this.transporter.sendMail({
       from: process.env.SMPT_USER,

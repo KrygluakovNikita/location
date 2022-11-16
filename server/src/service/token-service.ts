@@ -1,9 +1,10 @@
 import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { IResetToken } from '../interfaces/token-interface';
-import { ResetToken, User } from '../database/entity';
+import { Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
+import { Equal } from 'typeorm';
+import { IUserToken } from '../interfaces/token-interface';
 
 class TokenService {
   generateAccessTokenToken(payload: UserDto): string {
@@ -24,7 +25,7 @@ class TokenService {
 
   createResetLink(payload: UserDto): string | null {
     try {
-      const userData = jwt.sign({ payload }, process.env.JWT_RESET_SECRET, { expiresIn: '30m' });
+      const userData = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '30m' });
 
       return userData;
     } catch (e) {
@@ -32,50 +33,112 @@ class TokenService {
     }
   }
 
-  validateResetToken(token: string): UserDto | null {
+  validateResetPasswordToken(token: string): UserDto | null {
     try {
-      const { payload: userData } = jwt.verify(token, process.env.JWT_RESET_SECRET) as JwtPayload;
+      const { payload } = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET) as JwtPayload;
+      if (!payload) {
+        throw ApiError.BadRequest(`Токен неверный или устарел`);
+      }
 
-      return userData as UserDto;
+      return payload as UserDto;
     } catch (e) {
       return null;
     }
   }
 
-  generateResetToken(userDto: UserDto) {
+  validateChangePasswordToken(token: string): UserDto | null {
+    try {
+      const { payload } = jwt.verify(token, process.env.JWT_CHANGE_PASSWORD_SECRET) as JwtPayload;
+      if (!payload) {
+        throw ApiError.BadRequest(`Токен неверный или устарел`);
+      }
+
+      return payload as UserDto;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  generateResetPasswordToken(userDto: UserDto) {
     const payload = { ...userDto, isReset: true };
-    const accessToken = jwt.sign({ payload }, process.env.JWT_RESET_SECRET, { expiresIn: '20m' });
+    const accessToken = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '20m' });
 
     return accessToken;
   }
 
-  async verificationResetPin(pin: string, email: string): Promise<IResetToken> {
-    const resetToken = await ResetToken.findOne({
-      where: { pin },
+  generateChangePasswordToken(userDto: UserDto) {
+    const payload = { ...userDto, isReset: true };
+    const accessToken = jwt.sign({ payload }, process.env.JWT_CHANGE_PASSWORD_SECRET, { expiresIn: '20m' });
+
+    return accessToken;
+  }
+
+  async verificationResetPin(pin: string, email: string): Promise<string> {
+    try {
+      const { token: resetToken, user } = await this.findToken(pin, email);
+
+      if (!resetToken.isResetPassword) {
+        throw ApiError.BadRequest('Вы не можете восстановить пароль, так как вы выбрали другую операцию');
+      }
+
+      const userDto = new UserDto(user);
+
+      const token = this.generateResetPasswordToken(userDto);
+
+      await Token.delete(resetToken.tokenId);
+
+      return token;
+    } catch (err) {
+      if (err instanceof ApiError || err instanceof UserError) {
+        throw err;
+      }
+
+      throw ApiError.BadRequest('Не предвиденная ошибка');
+    }
+  }
+
+  async findToken(pin: string, email: string): Promise<IUserToken> {
+    const token = await Token.findOne({
+      where: { pin: Equal(pin) },
       relations: {
         user: true,
       },
     });
 
-    if (!resetToken) {
+    if (!token) {
       throw ApiError.BadRequest(`Не верный пин код`);
     }
 
-    const user = await User.findOneBy({ userId: resetToken.user.userId });
+    const user = await User.findOneBy({ userId: token.user.userId });
     if (user.email !== email) {
       throw UserError.NotAllow();
     }
 
-    const userDto = new UserDto(user);
+    return { token, user };
+  }
 
-    const token = this.generateResetToken(userDto);
+  async verificationChangePasswordPin(pin: string, email: string): Promise<string> {
+    try {
+      const { token, user } = await this.findToken(pin, email);
 
-    resetToken.resetToken = token;
-    resetToken.isReset = false;
+      if (!token.isChangePassword) {
+        throw ApiError.BadRequest('Вы не можете изменить пароль, так как вы выбрали другую операцию');
+      }
 
-    await resetToken.save();
+      const userDto = new UserDto(user);
 
-    return { resetToken: token };
+      const changePasswordToken = this.generateChangePasswordToken(userDto);
+
+      await Token.delete(token.tokenId);
+
+      return changePasswordToken;
+    } catch (err) {
+      if (err instanceof ApiError || err instanceof UserError) {
+        throw err;
+      }
+
+      throw ApiError.BadRequest('Не предвиденная ошибка');
+    }
   }
 }
 
