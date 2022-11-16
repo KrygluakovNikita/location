@@ -1,9 +1,10 @@
+import { IChangePassword, IUpdateEmail } from './../interfaces/token-interface';
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
-import { IUser } from '../interfaces/user-interface';
-import { IResetPassword } from '../interfaces/token-interface';
+import { IUser, IUserRequest } from '../interfaces/user-interface';
+import { IChangeEmail, IResetPassword } from '../interfaces/token-interface';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
@@ -94,10 +95,9 @@ class UserController {
     }
   }
 
-  async changePassword(req: Request, res: Response, next: NextFunction) {
+  async changePassword(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { email } = req.body;
-
+      const { email } = req.user;
       await userService.changePassword(email);
 
       return res.status(200).end();
@@ -106,9 +106,10 @@ class UserController {
     }
   }
 
-  async verificationChangePasswordPin(req: Request, res: Response, next: NextFunction) {
+  async verificationChangePasswordPin(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { pin, email } = req.body;
+      const { pin } = req.body;
+      const { email } = req.user;
       const data = await userService.verificationChangePasswordPin(pin, email);
 
       return res.json(data).status(200);
@@ -119,10 +120,50 @@ class UserController {
 
   async updateChangedPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const { newPassword, resetToken } = req.body as IResetPassword;
-      const dto: IResetPassword = { newPassword, resetToken };
+      const { changeToken, newPassword } = req.body as IChangePassword;
+      const dto: IChangePassword = { newPassword, changeToken };
 
       const data = await userService.updateChangePassword(dto);
+
+      return res.json(data).status(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async changeEmail(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { password } = req.body;
+      const { userId } = req.user;
+
+      const data = await userService.changeEmail(userId, password);
+
+      return res.json(data).end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async updateEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token, newEmail } = req.body as IChangeEmail;
+      const dto: IChangeEmail = { token, newEmail };
+
+      await userService.updateEmail(dto);
+
+      return res.end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async verificationChangeEmailPin(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { pin, newEmail } = req.body;
+      const { email: previousEmail } = req.user;
+
+      const dto: IUpdateEmail = { pin, previousEmail, newEmail };
+      const data = await userService.verificationChangeEmailPin(dto);
 
       return res.json(data).status(200);
     } catch (e) {

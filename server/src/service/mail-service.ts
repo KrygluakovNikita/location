@@ -31,12 +31,12 @@ class MailService {
     await this.sendMail(to, subject, htmlForm);
   }
 
-  async resetPassword(to: string, resetPin: string): Promise<void> {
+  async resetPassword(to: string, pin: string): Promise<void> {
     const htmlForm = `
         <div>
           <h1>Восстановление пароля</h1>
           <p>Пин код для восстановления пароля для почты: ${to}</p>
-          <p>${resetPin}</p>
+          <b>${pin}</b>
         </div>
       `;
 
@@ -45,16 +45,30 @@ class MailService {
     await this.sendMail(to, subject, htmlForm);
   }
 
-  async changePassword(to: string, resetPin: string): Promise<void> {
+  async changePassword(to: string, pin: string): Promise<void> {
     const htmlForm = `
         <div>
           <h1>Изменение пароля</h1>
           <p>Пин код для изменения пароля для почты: ${to}</p>
-          <p>${resetPin}</p>
+          <b>${pin}</b>
         </div>
       `;
 
     const subject = `Изменение пароля на сайте: ${process.env.CLIENT_URL}`;
+
+    await this.sendMail(to, subject, htmlForm);
+  }
+
+  async changeEmail(to: string, pin: string): Promise<void> {
+    const htmlForm = `
+        <div>
+          <h1>Изменение почты</h1>
+          <p>Пин код для изменение почты</p>
+          <b>${pin}</b>
+        </div>
+      `;
+
+    const subject = `Изменение почты на сайте: ${process.env.CLIENT_URL}`;
 
     await this.sendMail(to, subject, htmlForm);
   }
