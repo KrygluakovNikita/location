@@ -14,8 +14,8 @@ router.post('/change-password/', userController.changePassword);
 router.post('/change-password/verification', userController.verificationChangePasswordPin);
 router.post('/change-password/update-password', userController.updateChangedPassword);
 
-// router.post('/change-email/', userController.resetPassword);
-// router.post('/change-email/verification', userController.verificationResetPin);
-// router.post('/change-email/update-email', userController.updatePassword);
+router.post('/change-email/', isAuth, userController.changeEmail);
+router.post('/change-email/update-email', isAuth, userController.updateEmail);
+router.post('/change-email/verification', isAuth, userController.verificationChangeEmailPin);
 
 export default router;

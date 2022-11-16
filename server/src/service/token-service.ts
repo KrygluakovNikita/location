@@ -4,7 +4,7 @@ import { Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 import { Equal } from 'typeorm';
-import { IUserToken } from '../interfaces/token-interface';
+import { IChangeEmailToken, IUserToken } from '../interfaces/token-interface';
 
 class TokenService {
   generateAccessTokenToken(payload: UserDto): string {
@@ -13,17 +13,20 @@ class TokenService {
     return accessToken;
   }
 
-  validateAccessToken(token: string): UserDto | null {
+  validateAccessToken(token: string): UserDto {
     try {
-      const { payload: userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as JwtPayload;
+      const { payload } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as JwtPayload;
+      if (!payload) {
+        throw ApiError.BadRequest(`Токен неверный или устарел`);
+      }
 
-      return userData as UserDto;
+      return payload as UserDto;
     } catch (e) {
       return null;
     }
   }
 
-  createResetLink(payload: UserDto): string | null {
+  createResetLink(payload: UserDto): string {
     try {
       const userData = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '30m' });
 
@@ -33,7 +36,7 @@ class TokenService {
     }
   }
 
-  validateResetPasswordToken(token: string): UserDto | null {
+  validateResetPasswordToken(token: string): UserDto {
     try {
       const { payload } = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET) as JwtPayload;
       if (!payload) {
@@ -46,7 +49,7 @@ class TokenService {
     }
   }
 
-  validateChangePasswordToken(token: string): UserDto | null {
+  validateChangePasswordToken(token: string): UserDto {
     try {
       const { payload } = jwt.verify(token, process.env.JWT_CHANGE_PASSWORD_SECRET) as JwtPayload;
       if (!payload) {
@@ -60,17 +63,15 @@ class TokenService {
   }
 
   generateResetPasswordToken(userDto: UserDto) {
-    const payload = { ...userDto, isReset: true };
-    const accessToken = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '20m' });
+    const token = jwt.sign({ userDto }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '20m' });
 
-    return accessToken;
+    return token;
   }
 
   generateChangePasswordToken(userDto: UserDto) {
-    const payload = { ...userDto, isReset: true };
-    const accessToken = jwt.sign({ payload }, process.env.JWT_CHANGE_PASSWORD_SECRET, { expiresIn: '20m' });
+    const token = jwt.sign({ userDto }, process.env.JWT_CHANGE_PASSWORD_SECRET, { expiresIn: '20m' });
 
-    return accessToken;
+    return token;
   }
 
   async verificationResetPin(pin: string, email: string): Promise<string> {
@@ -139,6 +140,41 @@ class TokenService {
 
       throw ApiError.BadRequest('Не предвиденная ошибка');
     }
+  }
+
+  validateChangeEmailToken(token: string): IChangeEmailToken {
+    try {
+      const { payload } = jwt.verify(token, process.env.JWT_CHANGE_EMAIL_SECRET) as JwtPayload;
+      if (!payload) {
+        throw ApiError.BadRequest(`Токен неверный или устарел`);
+      }
+
+      return payload as IChangeEmailToken;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async validateChangeEmailPin(pin, email): Promise<boolean> {
+    const user = await User.findOneBy({ email });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const token = await Token.findOne({ where: { pin, user: Equal(user.userId) } });
+    if (!token) {
+      throw ApiError.BadRequest(`Неверный токен`);
+    }
+    await Token.delete(token.tokenId);
+
+    return true;
+  }
+
+  generateChangeEmailToken(user_id: string): string {
+    const payload: IChangeEmailToken = { user_id, isChangeEmail: true };
+    const token = jwt.sign({ payload }, process.env.JWT_CHANGE_EMAIL_SECRET, { expiresIn: '20m' });
+
+    return token;
   }
 }
 

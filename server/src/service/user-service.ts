@@ -6,7 +6,7 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IUser } from '../interfaces/user-interface';
-import { IResetPassword } from '../interfaces/token-interface';
+import { IChangeEmail, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
@@ -58,8 +58,8 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
-    const isPassEquals = await bcrypt.compare(password, user.password);
-    if (!isPassEquals) {
+    const isPasswordsEquals = await bcrypt.compare(password, user.password);
+    if (!isPasswordsEquals) {
       throw UserError.IncorrectPassword();
     }
 
@@ -105,10 +105,10 @@ class UserService {
     await mailService.resetPassword(email, resetPin);
   }
 
-  async verificationResetPin(pin: string, email: string): Promise<string> {
-    const resetToken = await tokenService.verificationResetPin(pin, email);
+  async verificationResetPin(pin: string, email: string): Promise<IToken> {
+    const token = await tokenService.verificationResetPin(pin, email);
 
-    return resetToken;
+    return { token };
   }
 
   async updateResetPassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
@@ -154,16 +154,76 @@ class UserService {
     await mailService.changePassword(email, resetPin);
   }
 
-  async verificationChangePasswordPin(pin: string, email: string): Promise<string> {
+  async verificationChangePasswordPin(pin: string, email: string): Promise<IToken> {
     const token = await tokenService.verificationChangePasswordPin(pin, email);
 
-    return token;
+    return { token };
   }
 
   async updateChangePassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
     const token = tokenService.validateChangePasswordToken(resetToken);
 
     const userDto = await this.updatePassword(token, newPassword);
+
+    return userDto;
+  }
+
+  async changeEmail(userId: string, password: string): Promise<IToken> {
+    const user = await User.findOneBy({ userId });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const isPasswordsEquals = bcrypt.compare(password, user.password);
+    if (!isPasswordsEquals) {
+      throw UserError.IncorrectPassword();
+    }
+
+    const token = tokenService.generateChangeEmailToken(userId);
+
+    return { token };
+  }
+
+  async updateEmail({ token, newEmail }: IChangeEmail): Promise<void> {
+    const data = tokenService.validateChangeEmailToken(token);
+    //check token and exteptions
+
+    if (!data.isChangeEmail) {
+      throw ApiError.BadRequest('Вы не можете изменить почту');
+    }
+
+    const user = await User.findOneBy({ userId: data.user_id });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const pin = this.generatePinCode();
+
+    const changeToken = new Token();
+    changeToken.user = user;
+    changeToken.pin = pin;
+    changeToken.isChangePassword = true;
+
+    changeToken.save();
+
+    await mailService.changeEmail(newEmail, pin);
+
+    return;
+  }
+
+  async verificationChangeEmailPin({ pin, previousEmail, newEmail }: IUpdateEmail): Promise<UserDto> {
+    const isPass = tokenService.validateChangeEmailPin(pin, previousEmail);
+    if (!isPass) {
+      throw ApiError.BadRequest('Ошибка при обновлении почты');
+    }
+
+    const user = await User.findOne({ where: { email: previousEmail } });
+    user.isActivated = true;
+    user.email = newEmail;
+
+    await user.save();
+
+    const userDto = new UserDto(user);
 
     return userDto;
   }
