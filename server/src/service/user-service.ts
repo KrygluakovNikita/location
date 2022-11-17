@@ -10,6 +10,7 @@ import { IChangeEmail, IChangePassword, IResetPassword, IToken, IUpdateEmail } f
 import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
+import jwtService from './jwt-service';
 
 export interface IClientData {
   accessToken: string;
@@ -70,7 +71,7 @@ class UserService {
 
   async updateTokens(user: User): Promise<IClientData> {
     const userDto = new UserDto(user);
-    const accessToken = tokenService.generateAccessTokenToken(userDto);
+    const accessToken = jwtService.generateAccessTokenToken(userDto);
 
     return { accessToken, user: userDto };
   }
@@ -113,7 +114,7 @@ class UserService {
 
   async updateResetPassword({ resetToken, newPassword }: IResetPassword): Promise<UserDto> {
     try {
-      const payload = tokenService.validateResetPasswordToken(resetToken);
+      const payload = jwtService.validateResetPasswordToken(resetToken);
 
       const userDto = await this.updatePassword(payload, newPassword);
 
@@ -167,7 +168,7 @@ class UserService {
   }
 
   async updateChangePassword({ changeToken, newPassword }: IChangePassword): Promise<UserDto> {
-    const token = tokenService.validateChangePasswordToken(changeToken);
+    const token = jwtService.validateChangePasswordToken(changeToken);
 
     const userDto = await this.updatePassword(token, newPassword);
 
@@ -185,13 +186,13 @@ class UserService {
       throw UserError.IncorrectPassword();
     }
 
-    const token = tokenService.generateChangeEmailToken(userId);
+    const token = jwtService.generateChangeEmailToken(userId);
 
     return { token };
   }
 
   async updateEmail({ token, newEmail }: IChangeEmail): Promise<void> {
-    const data = tokenService.validateChangeEmailToken(token);
+    const data = jwtService.validateChangeEmailToken(token);
     //check token and exteptions
 
     if (!data.isChangeEmail) {

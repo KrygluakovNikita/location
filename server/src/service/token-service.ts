@@ -1,73 +1,12 @@
 import { UserDto } from '../dtos/user-dto';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 import { Equal } from 'typeorm';
-import { IChangeEmailToken, IUserToken } from '../interfaces/token-interface';
+import { IUserToken } from '../interfaces/token-interface';
+import jwtService from './jwt-service';
 
 class TokenService {
-  generateAccessTokenToken(payload: UserDto): string {
-    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '16h' });
-
-    return accessToken;
-  }
-
-  validateAccessToken(token: string): UserDto {
-    try {
-      const { payload } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as JwtPayload;
-
-      return payload as UserDto;
-    } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
-    }
-  }
-
-  createResetLink(payload: UserDto): string {
-    try {
-      const userData = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '30m' });
-
-      return userData;
-    } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
-    }
-  }
-
-  validateResetPasswordToken(token: string): UserDto {
-    try {
-      const { payload } = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET) as JwtPayload;
-
-      return payload as UserDto;
-    } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
-    }
-  }
-
-  validateChangePasswordToken(token: string): UserDto {
-    try {
-      const { payload } = jwt.verify(token, process.env.JWT_CHANGE_PASSWORD_SECRET) as JwtPayload;
-      if (!payload) {
-        throw ApiError.BadRequest(`Токен неверный или устарел`);
-      }
-
-      return payload as UserDto;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  generateResetPasswordToken(payload: UserDto) {
-    const token = jwt.sign({ payload }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '20m' });
-
-    return token;
-  }
-
-  generateChangePasswordToken(payload: UserDto) {
-    const token = jwt.sign({ payload }, process.env.JWT_CHANGE_PASSWORD_SECRET, { expiresIn: '20m' });
-
-    return token;
-  }
-
   async verificationResetPin(pin: string, email: string): Promise<string> {
     try {
       const { token: resetToken, user } = await this.findToken(pin, email);
@@ -78,7 +17,7 @@ class TokenService {
 
       const userDto = new UserDto(user);
 
-      const token = this.generateResetPasswordToken(userDto);
+      const token = jwtService.generateResetPasswordToken(userDto);
 
       await Token.delete(resetToken.tokenId);
 
@@ -122,7 +61,7 @@ class TokenService {
 
       const userDto = new UserDto(user);
 
-      const changePasswordToken = this.generateChangePasswordToken(userDto);
+      const changePasswordToken = jwtService.generateChangePasswordToken(userDto);
 
       await Token.delete(token.tokenId);
 
@@ -133,16 +72,6 @@ class TokenService {
       }
 
       throw ApiError.BadRequest('Не предвиденная ошибка');
-    }
-  }
-
-  validateChangeEmailToken(token: string): IChangeEmailToken {
-    try {
-      const { payload } = jwt.verify(token, process.env.JWT_CHANGE_EMAIL_SECRET) as JwtPayload;
-
-      return payload as IChangeEmailToken;
-    } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
     }
   }
 
@@ -159,13 +88,6 @@ class TokenService {
     await Token.delete(token.tokenId);
 
     return true;
-  }
-
-  generateChangeEmailToken(user_id: string): string {
-    const payload: IChangeEmailToken = { user_id, isChangeEmail: true };
-    const token = jwt.sign({ payload }, process.env.JWT_CHANGE_EMAIL_SECRET, { expiresIn: '20m' });
-
-    return token;
   }
 }
 
