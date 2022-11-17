@@ -60,11 +60,17 @@ export class User extends BaseEntity {
   @Column({ type: 'text', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: 'default.png' })
   photo: string;
 
-  @Column({ type: 'text', nullable: false, default: 'default.png' })
-  password: string;
+  @Column({ type: 'text', nullable: true })
+  password: string | null;
+
+  @Column({ type: 'boolean', default: false, name: 'is_google' })
+  isGoogle: boolean;
+
+  @Column({ type: 'text', name: 'google_id', nullable: true })
+  googleId: string | null;
 
   @Column({ type: 'text', unique: true, nullable: false })
   nickname: string;

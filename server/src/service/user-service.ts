@@ -5,7 +5,7 @@ import { UserDto } from '../dtos/user-dto';
 import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
-import { IUser } from '../interfaces/user-interface';
+import { IGoogleDto, IUser } from '../interfaces/user-interface';
 import { IChangeEmail, IChangePassword, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
@@ -254,6 +254,16 @@ class UserService {
 
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 3);
+  }
+
+  async findOrCreateForGoogle(googleDto: IGoogleDto) {
+    const candidate = await User.findOne({ where: { googleId: googleDto.sub } });
+    if (!candidate) {
+      return 'token_for_registration';
+    }
+    const userDto = this.updateTokens(candidate);
+
+    return userDto;
   }
 }
 
