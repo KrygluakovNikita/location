@@ -3,7 +3,7 @@ import { UserRole } from '../database/entity';
 import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
 import { IUserRequest } from '../interfaces/user-interface';
-import tokenService from '../service/token-service';
+import jwtService from '../service/jwt-service';
 
 export function isAuth(req: IUserRequest, res: Response, next: NextFunction) {
   try {
@@ -16,7 +16,7 @@ export function isAuth(req: IUserRequest, res: Response, next: NextFunction) {
     if (!accessToken) {
       return next(ApiError.UnauthorizedError());
     }
-    const userData = tokenService.validateAccessToken(accessToken);
+    const userData = jwtService.validateAccessToken(accessToken);
 
     if (!userData) {
       return next(ApiError.UnauthorizedError());
