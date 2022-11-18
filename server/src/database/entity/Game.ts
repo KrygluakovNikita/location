@@ -29,4 +29,7 @@ export class Game extends BaseEntity {
     name: 'payment_type',
   })
   paymentType: PaymentType;
+
+  @Column({ type: 'boolean', default: false })
+  isPayed: boolean;
 }

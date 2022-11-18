@@ -7,8 +7,10 @@ export class GameDto {
   date: Date;
   hours: string;
   paymentType: PaymentType;
+  isPayed: boolean;
   constructor(model: Game) {
     this.gameId = model.gameId;
+    this.isPayed = model.isPayed;
     this.user = new UserDto(model.user);
     this.date = model.date;
     this.hours = model.hours;
