@@ -10,7 +10,7 @@ const LOGIN_FAILED = '/login/failed';
 router.get('/logout', (req, res, next) => {
   req.logout(function (err) {
     if (err) {
-      console.log(err);
+      next(err);
     }
   });
   res.redirect(CLIENT_URL);

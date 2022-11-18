@@ -11,12 +11,15 @@ passport.use(
       callbackURL: '/api/oauth/google/callback',
     },
     async function (accessToken, refreshToken, profile, done) {
-      const googleDto: IGoogleDto = profile._json;
-      console.log(googleDto);
+      try {
+        const googleDto: IGoogleDto = profile._json;
 
-      const result = await userService.findOrCreateForGoogle(googleDto);
+        const result = await userService.findOrCreateForGoogle(googleDto);
 
-      done(null, result);
+        done(null, result);
+      } catch (err) {
+        done(null, false, err);
+      }
     }
   )
 );

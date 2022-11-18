@@ -46,3 +46,10 @@ export interface IGoogleDto {
   email_verified: boolean;
   locale: string;
 }
+
+export interface IGoogleRegistration {
+  nickname: string;
+  city: string;
+  photo: string;
+  registrationToken: string;
+}

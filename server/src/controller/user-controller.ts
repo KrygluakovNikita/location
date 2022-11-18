@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user-service';
 import { validationResult } from 'express-validator';
 import ApiError from '../exeptions/api-error';
-import { IUser, IUserRequest } from '../interfaces/user-interface';
+import { IGoogleRegistration, IUser, IUserRequest } from '../interfaces/user-interface';
 import { IChangeEmail, IResetPassword } from '../interfaces/token-interface';
 
 class UserController {
@@ -164,6 +164,20 @@ class UserController {
 
       const dto: IUpdateEmail = { pin, previousEmail, newEmail };
       const data = await userService.verificationChangeEmailPin(dto);
+
+      return res.json(data).status(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async registrationForGoogle(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { nickname, city, registrationToken } = req.body as IGoogleRegistration;
+      const photo = req.file.filename;
+      const dto: IGoogleRegistration = { nickname, city, registrationToken, photo };
+
+      const data = await userService.registrationForGoogle(dto);
 
       return res.json(data).status(200);
     } catch (e) {

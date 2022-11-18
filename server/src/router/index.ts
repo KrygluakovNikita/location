@@ -6,7 +6,7 @@ import postRouter from './post-router';
 import commentRouter from './comment-router';
 import replyRouter from './reply-router';
 import likeRouter from './like-router';
-import googleRouter from './google-router';
+import googleRouter from './oauth-router';
 const routes = Router();
 
 routes.use('/auth', authRouter);
