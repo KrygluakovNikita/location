@@ -19,7 +19,7 @@ export interface IUser {
 
   comments?: Comment[] | null;
 
-  photo?: string;
+  photo?: string | null;
 
   role?: UserRole;
 

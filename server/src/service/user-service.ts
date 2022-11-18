@@ -31,7 +31,7 @@ class UserService {
     dbUser.city = dto.city;
     dbUser.password = hashPassword;
     dbUser.activationLink = activationLink;
-    dbUser.photo = dto.photo ?? null;
+    if (dto.photo) dbUser.photo = dto.photo;
     dbUser.email = dto.email;
     dbUser.nickname = dto.nickname;
 
@@ -289,11 +289,7 @@ class UserService {
     dbUser.nickname = googleDto.nickname;
     dbUser.googleId = data.sub;
 
-    if (googleDto.photo) {
-      dbUser.photo = googleDto.photo;
-    } else {
-      dbUser.photo = data.picture ?? null;
-    }
+    if (googleDto.photo) dbUser.photo = googleDto.photo;
 
     dbUser.isActivated = data.email_verified;
     if (!data.email_verified) {

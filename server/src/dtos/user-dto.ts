@@ -6,7 +6,11 @@ export class UserDto {
   role: UserRole;
   isActivated: boolean;
   nickname: string;
+  photo: string;
+  isGoogle: boolean;
   constructor(model: User) {
+    this.isGoogle = model.isGoogle;
+    this.photo = model.photo;
     this.nickname = model.nickname;
     this.isActivated = model.isActivated;
     this.email = model.email;

@@ -15,7 +15,10 @@ class UserController {
       }
 
       const { email, password, nickname, city } = req.body as IUser;
-      const photo = req.file.filename;
+      let photo = null;
+      if (req?.file?.filename) {
+        photo = req.file.filename;
+      }
 
       const userDto: IUser = { email, password, nickname, city, photo };
 
@@ -174,7 +177,11 @@ class UserController {
   async registrationForGoogle(req: Request, res: Response, next: NextFunction) {
     try {
       const { nickname, city, registrationToken } = req.body as IGoogleRegistration;
-      const photo = req.file.filename;
+      let photo = null;
+      if (req?.file?.filename) {
+        photo = req.file.filename;
+      }
+
       const dto: IGoogleRegistration = { nickname, city, registrationToken, photo };
 
       const data = await userService.registrationForGoogle(dto);
