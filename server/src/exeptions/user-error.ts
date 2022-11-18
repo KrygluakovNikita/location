@@ -7,23 +7,27 @@ class UserError extends Error {
     this.errors = errors;
   }
   static UserNotFound() {
-    return new UserError(401, 'Пользователь не найден');
+    return new UserError(406, 'Пользователь не найден');
   }
 
   static EmailIsNotActivated() {
-    return new UserError(401, 'Пользователь не подтвердил email');
+    return new UserError(400, 'Пользователь не подтвердил email');
   }
 
   static UniqValues() {
-    return new UserError(401, 'Пользователь с таким почтовым адресом уже зарегистирован или данный никнейм уже занят');
+    return new UserError(400, 'Пользователь с таким почтовым адресом уже зарегистирован или данный никнейм уже занят');
   }
 
   static IncorrectPassword() {
-    return new UserError(401, 'Неверный пароль');
+    return new UserError(400, 'Неверный пароль');
   }
 
   static NotAllow() {
-    return new UserError(401, 'Вы не можете взаимодейстовать с данными другого пользователя');
+    return new UserError(403, 'Вы не можете взаимодейстовать с данными другого пользователя');
+  }
+
+  static GoogleUser() {
+    return new UserError(403, 'Данное действие запрещено пользователю создавшему аккаунт через гугл');
   }
 }
 export default UserError;

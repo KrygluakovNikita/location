@@ -88,6 +88,10 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
+    if (user.isGoogle) {
+      throw UserError.GoogleUser();
+    }
+
     let resetToken = new Token();
 
     const token = await Token.findOneBy({ user: Equal(user.userId) });
@@ -144,6 +148,10 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
+    if (user.isGoogle) {
+      throw UserError.GoogleUser();
+    }
+
     let changeToken = new Token();
 
     const token = await Token.findOneBy({ user: Equal(user.userId) });
@@ -181,6 +189,10 @@ class UserService {
       throw UserError.UserNotFound();
     }
 
+    if (user.isGoogle) {
+      throw UserError.GoogleUser();
+    }
+
     const isPasswordsEquals = bcrypt.compare(password, user.password);
     if (!isPasswordsEquals) {
       throw UserError.IncorrectPassword();
@@ -200,9 +212,6 @@ class UserService {
     }
 
     const user = await User.findOneBy({ userId: data.user_id });
-    if (!user) {
-      throw UserError.UserNotFound();
-    }
 
     const pin = this.generatePinCode();
 
