@@ -1,10 +1,14 @@
 import { Router } from 'express';
 import userController from '../controller/user-controller';
 import { isAdmin, isAuth } from '../middlewares/auth-middleware';
+import { multerUploadPhoto } from '../middlewares/photo-middleware';
 
 const router = Router();
 
 router.get('/', isAuth, isAdmin, userController.getUsers);
+
+router.post('/update-photo', multerUploadPhoto, isAuth, userController.updatePhoto);
+router.post('/delete-photo', isAuth, userController.deletePhoto);
 
 router.post('/reset-password/', userController.resetPassword);
 router.post('/reset-password/verification', userController.verificationResetPin);

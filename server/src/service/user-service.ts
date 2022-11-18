@@ -1,4 +1,4 @@
-import { User, Token } from '../database/entity';
+import { User, Token, DB_DEFAULT_PHOTO } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -11,6 +11,8 @@ import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
 import jwtService from './jwt-service';
+import { unlink } from 'fs/promises';
+import path from 'path';
 
 export interface IClientData {
   accessToken: string;
@@ -311,6 +313,51 @@ class UserService {
 
     const userDto = this.updateTokens(user);
     return userDto;
+  }
+
+  async updatePhoto(userId: string, newPhoto: string): Promise<void> {
+    const user = await User.findOneBy({ userId });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const previousPhoto = user.photo;
+
+    if (previousPhoto !== DB_DEFAULT_PHOTO) {
+      const p = path.join(__dirname, '../../public/', previousPhoto);
+      await unlink(p);
+
+      if (newPhoto) {
+        user.photo = newPhoto;
+      } else {
+        user.photo = DB_DEFAULT_PHOTO;
+      }
+    } else {
+      user.photo = newPhoto;
+    }
+
+    user.save();
+
+    return;
+  }
+
+  async deletePhoto(userId: string): Promise<void> {
+    const user = await User.findOneBy({ userId });
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    if (user.photo !== DB_DEFAULT_PHOTO) {
+      const p = path.join(__dirname, '../../public/', user.photo);
+      await unlink(p);
+
+      user.photo = DB_DEFAULT_PHOTO;
+    } else {
+      user.photo = DB_DEFAULT_PHOTO;
+    }
+
+    user.save();
+    return;
   }
 }
 

@@ -191,6 +191,31 @@ class UserController {
       next(e);
     }
   }
+  async updatePhoto(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.user;
+
+      const newPhoto = req.file?.filename;
+
+      await userService.updatePhoto(userId, newPhoto);
+
+      return res.end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async deletePhoto(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.user;
+
+      await userService.deletePhoto(userId);
+
+      return res.end();
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new UserController();
