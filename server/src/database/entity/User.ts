@@ -9,6 +9,8 @@ export enum UserRole {
   USER = 'user',
 }
 
+export const DB_DEFAULT_PHOTO = 'default.png';
+
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'user_id' })
@@ -60,7 +62,7 @@ export class User extends BaseEntity {
   @Column({ type: 'text', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'text', default: 'default.png' })
+  @Column({ type: 'text', default: DB_DEFAULT_PHOTO })
   photo: string;
 
   @Column({ type: 'text', nullable: true })
@@ -77,9 +79,6 @@ export class User extends BaseEntity {
 
   @Column({ type: 'text', nullable: false })
   city: string;
-
-  @Column({ type: 'text', nullable: true, name: 'phone_ip' })
-  phoneIP: string;
 
   @Column({
     type: 'enum',
