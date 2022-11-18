@@ -2,6 +2,7 @@ import { UserDto } from '../dtos/user-dto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../exeptions/api-error';
 import { IChangeEmailToken } from '../interfaces/token-interface';
+import { IGoogleDto } from '../interfaces/user-interface';
 
 class JWTService {
   generateAccessTokenToken(payload: UserDto): string {
@@ -78,6 +79,25 @@ class JWTService {
   generateChangeEmailToken(user_id: string): string {
     const payload: IChangeEmailToken = { user_id, isChangeEmail: true };
     const token = jwt.sign({ payload }, process.env.JWT_CHANGE_EMAIL_SECRET, { expiresIn: '20m' });
+
+    return token;
+  }
+
+  validateGoogleRegistrationToken(token: string): IGoogleDto {
+    try {
+      const { payload } = jwt.verify(token, process.env.JWT_GOOGLE_REGISTRATION_SECRET) as JwtPayload;
+      if (!payload) {
+        throw ApiError.BadRequest(`Токен неверный или устарел`);
+      }
+
+      return payload as IGoogleDto;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  generateGoogleRegistrationToken(payload: IGoogleDto) {
+    const token = jwt.sign({ payload }, process.env.JWT_GOOGLE_REGISTRATION_SECRET, { expiresIn: '20m' });
 
     return token;
   }

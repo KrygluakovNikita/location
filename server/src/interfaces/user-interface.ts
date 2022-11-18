@@ -19,7 +19,7 @@ export interface IUser {
 
   comments?: Comment[] | null;
 
-  photo?: string;
+  photo?: string | null;
 
   role?: UserRole;
 
@@ -34,4 +34,22 @@ export interface IUser {
   nickname: string;
 
   city: string;
+}
+
+export interface IGoogleDto {
+  sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+  locale: string;
+}
+
+export interface IGoogleRegistration {
+  nickname: string;
+  city: string;
+  photo: string;
+  registrationToken: string;
 }

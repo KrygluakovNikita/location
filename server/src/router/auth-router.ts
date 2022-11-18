@@ -12,6 +12,8 @@ router.post(
   multerUploadPhoto,
   userController.registration
 );
+
+router.post('/registration/google', multerUploadPhoto, userController.registrationForGoogle);
 router.post('/login', userController.login);
 router.get('/activate/:link', userController.activate);
 

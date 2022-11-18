@@ -5,7 +5,7 @@ import { UserDto } from '../dtos/user-dto';
 import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
-import { IUser } from '../interfaces/user-interface';
+import { IGoogleDto, IGoogleRegistration, IUser } from '../interfaces/user-interface';
 import { IChangeEmail, IChangePassword, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
@@ -31,7 +31,7 @@ class UserService {
     dbUser.city = dto.city;
     dbUser.password = hashPassword;
     dbUser.activationLink = activationLink;
-    dbUser.photo = dto.photo;
+    if (dto.photo) dbUser.photo = dto.photo;
     dbUser.email = dto.email;
     dbUser.nickname = dto.nickname;
 
@@ -254,6 +254,54 @@ class UserService {
 
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 3);
+  }
+
+  async findOrCreateForGoogle(googleDto: IGoogleDto) {
+    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] });
+    if (!candidate) {
+      const isEmailDuplicate = await User.findOneBy({ email: googleDto.email });
+      if (isEmailDuplicate) {
+        throw UserError.UniqValues();
+      }
+
+      const registrationToken = jwtService.generateGoogleRegistrationToken(googleDto);
+
+      return { registrationToken };
+    }
+
+    const userDto = this.updateTokens(candidate);
+
+    return userDto;
+  }
+
+  async registrationForGoogle(googleDto: IGoogleRegistration) {
+    const data = jwtService.validateGoogleRegistrationToken(googleDto.registrationToken);
+
+    const candidate = await User.findOneBy({ email: data.email });
+    if (candidate) {
+      throw UserError.UniqValues();
+    }
+
+    const dbUser = new User();
+    dbUser.city = googleDto.city;
+    dbUser.isGoogle = true;
+    dbUser.email = data.email;
+    dbUser.nickname = googleDto.nickname;
+    dbUser.googleId = data.sub;
+
+    if (googleDto.photo) dbUser.photo = googleDto.photo;
+
+    dbUser.isActivated = data.email_verified;
+    if (!data.email_verified) {
+      const activationLink: string = uuid.v4();
+      dbUser.activationLink = activationLink;
+      await mailService.sendActivationMail(data.email, activationLink);
+    }
+
+    const user = await dbUser.save();
+
+    const userDto = this.updateTokens(user);
+    return userDto;
   }
 }
 
