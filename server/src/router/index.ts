@@ -7,6 +7,7 @@ import commentRouter from './comment-router';
 import replyRouter from './reply-router';
 import likeRouter from './like-router';
 import googleRouter from './oauth-router';
+import yookassa from './yookassa-router';
 const routes = Router();
 
 routes.use('/auth', authRouter);
@@ -17,5 +18,6 @@ routes.use('/comment', commentRouter);
 routes.use('/reply', replyRouter);
 routes.use('/like', likeRouter);
 routes.use('/oauth', googleRouter);
+routes.use('/yookassa', yookassa);
 
 export default routes;

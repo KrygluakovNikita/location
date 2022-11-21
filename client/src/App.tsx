@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { Payment } from './utils/Payment';
 import { Login } from './pages/Login';
 
 function App() {
@@ -30,14 +31,15 @@ function App() {
     getUser();
   }, []);
 
+  Payment();
   return (
     <div className='container'>
-      <Login />
+      {/* <Login />
       {user && (
         <div>
           <p>{JSON.stringify(user)}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
