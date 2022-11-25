@@ -1,8 +1,7 @@
 import { Token } from './Token';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
-import { Post, Like, Game, Comment, Card } from './index';
-import { Reply } from './Reply';
+import { Post, Like, Game, Comment, Card, Reply } from './index';
 
 export enum UserRole {
   ADMIN = 'admin',

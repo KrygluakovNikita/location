@@ -1,23 +1,34 @@
 import { Request } from 'express';
-import { Card, Comment, Game, Like, Post, UserRole } from '../database/entity';
+import { Card, Game, UserRole } from '../database/entity';
+import { CommentDto } from '../dtos/comment-dto';
+import { GameDto } from '../dtos/game-dto';
+import { LikeDto } from '../dtos/like-dto';
+import { PostDto } from '../dtos/post-dto';
 import { UserDto } from '../dtos/user-dto';
 
 export interface IUserRequest extends Request {
   user: UserDto;
 }
 
+export interface CardDto {
+  cardId: string;
+  card_number: number;
+  mmyy: string;
+  cvv: number;
+}
+
 export interface IUser {
   userId?: string;
 
-  games?: Game[] | null;
+  games?: GameDto[] | null;
 
-  cards?: Card[] | null;
+  cards?: CardDto[] | null;
 
-  likes?: Like[] | null;
+  likes?: LikeDto[] | null;
 
-  posts?: Post[] | null;
+  posts?: PostDto[] | null;
 
-  comments?: Comment[] | null;
+  comments?: CommentDto[] | null;
 
   photo?: string | null;
 
