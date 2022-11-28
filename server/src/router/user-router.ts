@@ -7,6 +7,9 @@ const router = Router();
 
 router.get('/', isAuth, isAdmin, userController.getUsers);
 
+router.post('/logout', isAuth, userController.logout);
+router.get('/refresh', userController.refresh);
+
 router.post('/update-photo', multerUploadPhoto, isAuth, userController.updatePhoto);
 router.post('/delete-photo', isAuth, userController.deletePhoto);
 

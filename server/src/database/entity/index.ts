@@ -6,3 +6,4 @@ export * from './Post';
 export * from './User';
 export * from './Token';
 export * from './Reply';
+export * from './RefreshToken';

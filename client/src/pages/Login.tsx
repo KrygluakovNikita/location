@@ -5,7 +5,7 @@ export const Login = () => {
     window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL, '_self');
   };
   const logout = () => {
-    window.open('http://localhost:8080/api/oauth/logout', '_self');
+    window.open('http://localhost:8000/api/oauth/logout', '_self');
   };
   return (
     <div>

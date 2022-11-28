@@ -22,7 +22,12 @@ class UserController {
 
       const userDto: IUser = { email, password, nickname, city, photo };
 
-      const userData = await userService.registration(userDto);
+      const { userData, refreshToken } = await userService.registration(userDto);
+
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
 
       return res.json(userData);
     } catch (e) {
@@ -33,7 +38,40 @@ class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
-      const userData = await userService.login(email, password);
+      const { userData, refreshToken } = await userService.login(email, password);
+
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+
+      return res.json(userData);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { refreshToken } = req.cookies;
+      const token = await userService.logout(refreshToken);
+      res.clearCookie('refreshToken');
+
+      return res.json(token);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { refreshToken: token } = req.cookies;
+      const { userData, refreshToken } = await userService.refresh(token);
+
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
 
       return res.json(userData);
     } catch (e) {
@@ -184,9 +222,14 @@ class UserController {
 
       const dto: IGoogleRegistration = { nickname, city, registrationToken, photo };
 
-      const data = await userService.registrationForGoogle(dto);
+      const { userData, refreshToken } = await userService.registrationForGoogle(dto);
 
-      return res.json(data).status(200);
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+
+      return res.json(userData).status(200);
     } catch (e) {
       next(e);
     }

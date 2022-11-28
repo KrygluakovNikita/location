@@ -1,8 +1,8 @@
 import { Token } from './Token';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
-import { Post, Like, Game, Comment, Card } from './index';
-import { Reply } from './Reply';
+import { Post, Like, Game, Comment, Card, Reply } from './index';
+import { RefreshToken } from './RefreshToken';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -77,7 +77,7 @@ export class User extends BaseEntity {
   @Column({ type: 'text', unique: true, nullable: false })
   nickname: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   city: string;
 
   @Column({
@@ -95,4 +95,11 @@ export class User extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   resetLink: string | null;
+
+  @OneToOne(type => RefreshToken, token => token.user, {
+    nullable: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  refreshToken: RefreshToken | null;
 }
