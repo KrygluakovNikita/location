@@ -4,11 +4,31 @@ import ApiError from '../exeptions/api-error';
 import { IChangeEmailToken } from '../interfaces/token-interface';
 import { IGoogleDto } from '../interfaces/user-interface';
 
+export interface ITokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 class JWTService {
-  generateAccessTokenToken(payload: UserDto): string {
+  generateAccessTokenToken(payload: UserDto): ITokens {
     const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '16h' });
 
-    return accessToken;
+    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  validateRefreshToken(token): UserDto {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
+      return userData as UserDto;
+    } catch (e) {
+      return null;
+    }
   }
 
   validateAccessToken(token: string): UserDto {

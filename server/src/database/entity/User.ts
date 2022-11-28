@@ -2,6 +2,7 @@ import { Token } from './Token';
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, BaseEntity, OneToOne } from 'typeorm';
 import { Post, Like, Game, Comment, Card, Reply } from './index';
+import { RefreshToken } from './RefreshToken';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -94,4 +95,11 @@ export class User extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   resetLink: string | null;
+
+  @OneToOne(type => RefreshToken, token => token.user, {
+    nullable: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  refreshToken: RefreshToken | null;
 }

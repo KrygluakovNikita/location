@@ -19,8 +19,13 @@ export interface IClientData {
   user: UserDto;
 }
 
+export interface IServerData {
+  refreshToken: string;
+  userData: IClientData;
+}
+
 class UserService {
-  async registration(dto: IUser): Promise<IClientData> {
+  async registration(dto: IUser): Promise<IServerData> {
     const candidate = await User.findOne({ where: [{ email: dto.email }, { nickname: dto.nickname }] });
     if (candidate) {
       throw UserError.UniqValues();
@@ -40,9 +45,9 @@ class UserService {
     const user = await dbUser.save();
 
     await mailService.sendActivationMail(dto.email, activationLink);
-    const userData = await this.updateTokens(user);
+    const result = await this.updateTokens(user);
 
-    return { ...userData };
+    return result;
   }
 
   async activate(activationLink: string): Promise<void> {
@@ -55,7 +60,7 @@ class UserService {
     user.save();
   }
 
-  async login(email: string, password: string): Promise<IClientData> {
+  async login(email: string, password: string): Promise<IServerData> {
     const user = await User.findOneBy({ email: email });
     if (!user) {
       throw UserError.UserNotFound();
@@ -66,16 +71,37 @@ class UserService {
       throw UserError.IncorrectPassword();
     }
 
-    const userData = await this.updateTokens(user);
+    const result = await this.updateTokens(user);
 
-    return userData;
+    return result;
   }
 
-  async updateTokens(user: User): Promise<IClientData> {
-    const userDto = new UserDto(user);
-    const accessToken = jwtService.generateAccessTokenToken(userDto);
+  async logout(refreshToken: string) {
+    const token = await tokenService.removeToken(refreshToken);
 
-    return { accessToken, user: userDto };
+    return token;
+  }
+
+  async refresh(token: string): Promise<IServerData> {
+    const data = jwtService.validateRefreshToken(token);
+    const tokenFromDb = await tokenService.findRefreshToken(token);
+    if (!data || !tokenFromDb) {
+      throw ApiError.UnauthorizedError();
+    }
+
+    const user = await User.findOneBy({ userId: data.userId });
+    const result = await this.updateTokens(user);
+
+    return result;
+  }
+
+  async updateTokens(user: User): Promise<IServerData> {
+    const userDto = new UserDto(user);
+    const { accessToken, refreshToken } = jwtService.generateAccessTokenToken(userDto);
+
+    const result: IServerData = { refreshToken, userData: { accessToken, user: userDto } };
+
+    return result;
   }
 
   async getAllUsers(): Promise<User[]> {

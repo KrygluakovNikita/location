@@ -1,5 +1,5 @@
 import { UserDto } from '../dtos/user-dto';
-import { Token, User } from '../database/entity';
+import { RefreshToken, Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 import { Equal } from 'typeorm';
@@ -88,6 +88,39 @@ class TokenService {
     await Token.delete(token.tokenId);
 
     return true;
+  }
+
+  async saveToken(userId: string, refreshToken: string): Promise<RefreshToken> {
+    const tokenData = await RefreshToken.findOneBy({
+      user: Equal(userId),
+    });
+    if (tokenData) {
+      tokenData.refreshToken = refreshToken;
+      await tokenData.save();
+
+      return tokenData;
+    }
+    const token = new RefreshToken();
+
+    token.refreshToken = refreshToken;
+    token.user = await User.findOneBy({ userId });
+
+    token.save();
+    return token;
+  }
+
+  async removeToken(refreshToken: string) {
+    const { affected } = await RefreshToken.delete({ refreshToken });
+    if (!affected) {
+      throw ApiError.BadRequest('Ошибка при удалении refreshToken');
+    }
+    return;
+  }
+
+  async findRefreshToken(refreshToken: string): Promise<RefreshToken> {
+    const token = await RefreshToken.findOneBy({ refreshToken });
+
+    return token;
   }
 }
 
