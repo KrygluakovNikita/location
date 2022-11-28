@@ -5,9 +5,8 @@ import { UserDto } from '../reducers/UserSlice';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: customFetchBase,
-  tagTypes: ['User'],
   endpoints: build => ({
-    getUsers: build.query<void, UserDto[]>({
+    getUsers: build.query<UserDto[], void>({
       query: () => ({ url: `user/`, method: 'GET' }),
     }),
   }),

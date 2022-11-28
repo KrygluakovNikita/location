@@ -11,9 +11,9 @@ export interface ITokens {
 
 class JWTService {
   generateAccessTokenToken(payload: UserDto): ITokens {
-    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '16h' });
+    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '15s' });
 
-    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
+    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, { expiresIn: '40s' });
 
     return {
       accessToken,

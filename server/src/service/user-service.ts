@@ -294,7 +294,7 @@ class UserService {
   }
 
   async findOrCreateForGoogle(googleDto: IGoogleDto) {
-    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] });
+    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] }); /////////////////////
     if (!candidate) {
       const isEmailDuplicate = await User.findOneBy({ email: googleDto.email });
       if (isEmailDuplicate) {
@@ -311,7 +311,7 @@ class UserService {
     return userDto;
   }
 
-  async registrationForGoogle(googleDto: IGoogleRegistration) {
+  async registrationForGoogle(googleDto: IGoogleRegistration): Promise<IServerData> {
     const data = jwtService.validateGoogleRegistrationToken(googleDto.registrationToken);
 
     const candidate = await User.findOneBy({ email: data.email });
@@ -338,6 +338,7 @@ class UserService {
     const user = await dbUser.save();
 
     const userDto = this.updateTokens(user);
+
     return userDto;
   }
 

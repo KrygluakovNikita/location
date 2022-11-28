@@ -15,9 +15,12 @@ passport.use(
         const googleDto: IGoogleDto = profile._json;
 
         const result = await userService.findOrCreateForGoogle(googleDto);
+        console.log(result);
 
         done(null, result);
       } catch (err) {
+        console.log(err);
+
         done(null, false, err);
       }
     }

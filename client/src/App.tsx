@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Login } from './pages/Login';
+import { useGetUsersQuery } from './store/api/UserApi';
 
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getUser = () => {
-      fetch('http://localhost:8080/api/oauth/login/success', {
+      fetch('http://localhost:8000/api/oauth/login/success', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -30,6 +31,8 @@ function App() {
     getUser();
   }, []);
 
+  const { data, isLoading } = useGetUsersQuery();
+
   return (
     <div className='container'>
       <Login />
@@ -37,6 +40,13 @@ function App() {
         <div>
           <p>{JSON.stringify(user)}</p>
         </div>
+      )}
+      {!isLoading ? (
+        <div>
+          <p>{JSON.stringify(data)}</p>
+        </div>
+      ) : (
+        <p>Loading...</p>
       )}
     </div>
   );

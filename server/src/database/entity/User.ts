@@ -77,7 +77,7 @@ export class User extends BaseEntity {
   @Column({ type: 'text', unique: true, nullable: false })
   nickname: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   city: string;
 
   @Column({

@@ -7,7 +7,7 @@ import routes from './router/index';
 import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
-
+import cookieParser from 'cookie-parser';
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -18,11 +18,16 @@ AppDataSource.initialize()
   })
   .catch(error => console.log(error));
 
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(express.static('public'));
 app.use(cookieSession({ secret: process.env.GOOGLE_CLIENT_SECRET }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(
   cors({
     origin: 'http://localhost:3000',
@@ -31,10 +36,6 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(express.static('public'));
 app.use('/api', routes);
 
 app.use(errorMiddleware);
