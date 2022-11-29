@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { Login } from './pages/Login';
-import { useGetUsersQuery } from './store/api/UserApi';
+import React, { useEffect, useState } from "react";
+import { Login } from "./pages/Login";
+import { useGetUsersQuery } from "./store/api/UserApi";
 
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getUser = () => {
-      fetch('http://localhost:8000/api/oauth/login/success', {
-        method: 'GET',
-        credentials: 'include',
+      fetch("http://localhost:8000/api/oauth/login/success", {
+        method: "GET",
+        credentials: "include",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Credentials': 'true',
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": "true",
         },
       })
-        .then(response => {
+        .then((response) => {
           if (response.status === 200) return response.json();
-          throw new Error('authentication has been failed!');
+          throw new Error("authentication has been failed!");
         })
-        .then(resObject => {
+        .then((resObject) => {
           setUser(resObject.user);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     };
@@ -34,7 +33,7 @@ function App() {
   const { data, isLoading } = useGetUsersQuery();
 
   return (
-    <div className='container'>
+    <div>
       <Login />
       {user && (
         <div>

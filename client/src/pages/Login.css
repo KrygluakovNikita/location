@@ -1,0 +1,105 @@
+.login-card {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+  width: 60%;
+  max-width: 680px;
+}
+
+.login-hello {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 35px;
+}
+
+.accent {
+  color: #e33940;
+}
+
+.login-text {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 128%;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.login-input {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07),
+    1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  padding: 10px;
+  margin: 10px 0;
+}
+input {
+  outline: none;
+  border: 0;
+  width: 100%;
+}
+
+.login-forgot {
+  display: flex;
+  justify-content: end;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-decoration-line: underline;
+  margin-bottom: 15px;
+  color: #3b3a39;
+}
+
+.login-button {
+  background: #e33940;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px 15px;
+  margin: 0 80px;
+  color: white;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.login-google {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+  color: #3b3a39;
+}
+.login-registration {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
