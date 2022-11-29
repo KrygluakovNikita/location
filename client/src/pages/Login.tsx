@@ -1,36 +1,74 @@
-import React from "react";
-import "./Login.css";
+import React, { useRef, useState } from 'react';
+import './Login.css';
+import GoogleImg from '../images/Google.svg';
+import LogoImg from '../images/Logo.svg';
+import { validateEmail } from '../utils/validation';
 
 export const Login = () => {
-  const google = () => {
-    window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL, "_self");
+  const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement);
+  const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement);
+  const defaultColor = 'black';
+
+  const GoogleHandler = () => {
+    window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL, '_self');
   };
-  const logout = () => {
-    window.open("http://localhost:8000/api/oauth/logout", "_self");
+
+  const LogoutHandler = () => {
+    window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL_LOGOUT, '_self');
+  };
+
+  const LoginHandler = () => {
+    if (!validateEmail(emailRef.current.value)) {
+      emailRef.current.style.color = 'red';
+    } else if (passwordRef.current.value.length < 6) {
+      passwordRef.current.style.color = 'red';
+    } else {
+      //////////////login method//////////////
+    }
+  };
+
+  const changeEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    emailRef.current.value = e.target.value;
+    emailRef.current.style.color = defaultColor;
+  };
+
+  const changePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    passwordRef.current.value = e.target.value;
+    passwordRef.current.style.color = defaultColor;
   };
 
   return (
     <div className='login-card'>
-      <div className='login-title'>Локация</div>
-      <div className='login-hello accent'>Добро пожаловать в Локацию</div>
-      <div className='login-text'>Войдите, чтобы продолжить</div>
-      <div className='login-input'>
-        <input placeholder='Email' />
-      </div>
-      <div className='login-input'>
-        <input placeholder='Пароль' />
-      </div>
-      <div className='login-forgot'>Забыли пароль?</div>
-      <div className='login-button'>
-        <a onClick={() => {}}>Войти</a>
-      </div>
-      <p className='login-google'>или войти с помощью</p>
-      {/* <img/> google*/}
-      <div className='login-registration'>
-        <p>Нет аккаунта?</p>
-        <a href='#' className='accent'>
-          Зарегистрироваться
+      <div className='login-main'>
+        <div className='logo'>
+          <img src={LogoImg} alt='Logo' />
+        </div>
+        <div className='login-hello accent'>Добро пожаловать в Локацию</div>
+        <div className='login-text'>Войдите, чтобы продолжить</div>
+        <div className='login-input'>
+          <input placeholder='Email' type='email' ref={emailRef} onChange={changeEmailHandler} />
+        </div>
+        <div className='login-input'>
+          <input placeholder='Пароль' type='text' ref={passwordRef} onChange={changePasswordHandler} />
+        </div>
+
+        <a className='login-forgot' href='/forgot-password'>
+          Забыли пароль?
         </a>
+        {/*create a tag*/}
+        <div className='login-button' onClick={LoginHandler}>
+          <p>Войти</p>
+        </div>
+        <p className='login-google'>или войти с помощью</p>
+        <div className='login-image' onClick={GoogleHandler}>
+          <img src={GoogleImg} alt='Google' />
+        </div>
+        <div className='login-registration'>
+          <p>Нет аккаунта?</p>
+          <a href='/registration' className='accent'>
+            Зарегистрироваться
+          </a>
+        </div>
       </div>
     </div>
   );
