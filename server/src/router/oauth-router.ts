@@ -18,9 +18,7 @@ router.get('/logout', clearCookie, (req, res, next) => {
   res.redirect(CLIENT_URL);
 });
 
-router.get('/google/success', (req: IRTRequest, res, next) => {
-  console.log(req.user);
-
+router.get('/google/success', clearCookie, (req: IRTRequest, res, next) => {
   if (req.user.userData) {
     res.cookie('refreshToken', req.user.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -36,7 +34,6 @@ router.get('/google/success', (req: IRTRequest, res, next) => {
     res.cookie('registrationToken', req.user.registrationToken, {
       maxAge: 1 * 60 * 1000,
     });
-    console.log('redirected for reg');
 
     res.redirect(CLIENT_REGISTRATION_GOOGLE_URL);
   }
