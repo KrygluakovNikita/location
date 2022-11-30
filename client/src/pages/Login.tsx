@@ -1,12 +1,20 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './Login.css';
 import GoogleImg from '../images/Google.svg';
 import LogoImg from '../images/Logo.svg';
 import { validateEmail } from '../utils/validation';
+import { IClientData, IUserLogin, useLoginMutation } from '../store/api/UserApi';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { getUserData } from '../utils/cookie';
+import { IUser, setUser } from '../store/reducers/UserSlice';
 
 export const Login = () => {
   const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement);
   const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement);
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+
+  const [Login, {}] = useLoginMutation();
   const defaultColor = 'black';
 
   const GoogleHandler = () => {
@@ -17,13 +25,16 @@ export const Login = () => {
     window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL_LOGOUT, '_self');
   };
 
-  const LoginHandler = () => {
+  const LoginHandler = async () => {
     if (!validateEmail(emailRef.current.value)) {
       emailRef.current.style.color = 'red';
     } else if (passwordRef.current.value.length < 6) {
       passwordRef.current.style.color = 'red';
     } else {
-      //////////////login method//////////////
+      const userDto: IUserLogin = { password: passwordRef.current.value, email: emailRef.current.value };
+      const data = await Login(userDto);
+      console.log(data);
+      console.log('login');
     }
   };
 
@@ -36,6 +47,15 @@ export const Login = () => {
     passwordRef.current.value = e.target.value;
     passwordRef.current.style.color = defaultColor;
   };
+
+  useEffect(() => {
+    const data = getUserData();
+    if (data) {
+      const { user, accessToken } = JSON.parse(data) as IClientData;
+      const userDto: IUser = { ...user, accessToken };
+      dispatch(setUser(userDto));
+    }
+  }, []);
 
   return (
     <div className='login-card'>

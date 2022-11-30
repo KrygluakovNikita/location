@@ -1,4 +1,4 @@
-import { Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CardDto {
   cardId: string;
@@ -32,6 +32,7 @@ export interface UserDto {
   nickname: string;
   photo: string;
   isGoogle: boolean;
+  city: string;
 }
 
 export interface LikeDto {
@@ -69,15 +70,16 @@ export interface CommentDto {
 }
 
 export interface IUser {
-  userId?: string;
+  userId: string;
   accessToken: string;
+  registrationToken?: string;
   games?: GameDto[] | null;
   cards?: CardDto[] | null;
   likes?: LikeDto[] | null;
   posts?: PostDto[] | null;
   comments?: CommentDto[] | null;
-  photo?: string | null;
-  role?: UserRole;
+  photo: string | null;
+  role: UserRole;
   activationLink?: string | null;
   isActivated?: boolean;
   email: string;
@@ -86,11 +88,13 @@ export interface IUser {
 }
 
 let initialState: IUser = {
+  userId: '',
   games: [] as GameDto[],
   cards: [] as CardDto[],
   likes: [] as LikeDto[],
   posts: [] as PostDto[],
   comments: [] as CommentDto[],
+  registrationToken: '',
   accessToken: '',
   photo: '',
   role: UserRole.USER,
@@ -106,7 +110,9 @@ export const resumeSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state: IUser, action: PayloadAction<IUser>) => {
-      state = action.payload;
+      console.log(action.payload);
+
+      return (state = { ...state, ...action.payload });
     },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {
@@ -167,6 +173,9 @@ export const resumeSlice = createSlice({
     setAccessToken: (state: IUser, { payload }: PayloadAction<string>) => {
       state.accessToken = payload;
     },
+    setRegistrationToken: (state: IUser, { payload }: PayloadAction<string>) => {
+      state.registrationToken = payload;
+    },
     setIsActivated: (state: IUser, { payload }: PayloadAction<boolean>) => {
       state.isActivated = payload;
     },
@@ -184,6 +193,7 @@ export const resumeSlice = createSlice({
 
 export const {
   setAccessToken,
+  setRegistrationToken,
   setActivationLink,
   setCity,
   setEmail,

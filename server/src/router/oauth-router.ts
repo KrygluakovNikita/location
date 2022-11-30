@@ -1,30 +1,44 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { IServerData } from '../service/user-service';
+import { IRTRequest } from '../interfaces/user-interface';
+import { clearCookie } from '../middlewares/auth-middleware';
 require('../strategy/google-strategy');
 
 const router = Router();
 
 const CLIENT_URL = process.env.CLIENT_URL;
+const CLIENT_REGISTRATION_GOOGLE_URL = process.env.CLIENT_REGISTRATION_GOOGLE_URL;
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', clearCookie, (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       next(err);
     }
   });
-  res.clearCookie('refreshToken');
   res.redirect(CLIENT_URL);
 });
 
-router.get('/login/success', (req, res) => {
-  if (req.user) {
-    res.status(200).json({
-      success: true,
-      message: 'successfully',
-      user: req.user,
-      //   cookies: req.cookies
+router.get('/google/success', (req: IRTRequest, res, next) => {
+  console.log(req.user);
+
+  if (req.user.userData) {
+    res.cookie('refreshToken', req.user.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
     });
+
+    res.cookie('serverUserData', JSON.stringify(req.user.userData), {
+      maxAge: 5 * 60 * 1000,
+    });
+
+    res.redirect(CLIENT_URL);
+  } else if (req.user.registrationToken) {
+    res.cookie('registrationToken', req.user.registrationToken, {
+      maxAge: 1 * 60 * 1000,
+    });
+    console.log('redirected for reg');
+
+    res.redirect(CLIENT_REGISTRATION_GOOGLE_URL);
   }
 });
 
@@ -35,25 +49,13 @@ router.get('/google/failed', (req, res) => {
   });
 });
 
-router.get('/google/callback', (req, res) => {
-  passport.authenticate(
-    'google',
-    {
-      successRedirect: CLIENT_URL,
-      failureRedirect: 'failed',
-    },
-    async (err, data: IServerData) => {
-      if (err) {
-        res.redirect('failed');
-      }
-      res.cookie('refreshToken', data.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      res.json(data.userData).redirect(CLIENT_URL);
-    }
-  )(req, res);
-});
+router.get(
+  '/google/callback',
+  passport.authenticate('google', {
+    successRedirect: 'success',
+    failureRedirect: 'failed',
+  })
+);
 
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 

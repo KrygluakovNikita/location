@@ -222,12 +222,7 @@ class UserController {
 
       const dto: IGoogleRegistration = { nickname, city, registrationToken, photo };
 
-      const { userData, refreshToken } = await userService.registrationForGoogle(dto);
-
-      res.cookie('refreshToken', refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
+      const userData = await userService.registrationForGoogle(dto);
 
       return res.json(userData).status(200);
     } catch (e) {

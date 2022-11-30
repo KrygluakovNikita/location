@@ -34,3 +34,7 @@ export interface IUpdateEmail {
   previousEmail: string;
   newEmail: string;
 }
+
+export interface IRegistrationToken {
+  registrationToken: string;
+}

@@ -29,5 +29,9 @@ class UserError extends Error {
   static GoogleUser() {
     return new UserError(403, 'Данное действие запрещено пользователю создавшему аккаунт через гугл');
   }
+
+  static GoogleAuth() {
+    return new UserError(403, 'Вы зарегистировались через гугл. Используйте авторизацию через гугл');
+  }
 }
 export default UserError;
