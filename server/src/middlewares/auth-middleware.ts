@@ -35,10 +35,3 @@ export function isAdmin(req: IUserRequest, res: Response, next: NextFunction) {
   }
   return next();
 }
-
-export function clearCookie(_: IUserRequest, res: Response, next: NextFunction) {
-  res.clearCookie('refreshToken');
-  res.clearCookie('serverUserData');
-  res.clearCookie('registrationToken');
-  return next();
-}

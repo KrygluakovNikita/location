@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { IRTRequest } from '../interfaces/user-interface';
-import { clearCookie } from '../middlewares/auth-middleware';
+import { clearCookie } from '../middlewares/token-middleware';
 require('../strategy/google-strategy');
 
 const router = Router();

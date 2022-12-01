@@ -11,6 +11,9 @@ import { IRegistrationToken } from './token-interface';
 export interface IUserRequest extends Request {
   user: UserDto;
 }
+export interface IGoogleRequest extends Request {
+  user: IGoogleDto;
+}
 
 export interface IRTRequest extends Request {
   user?: {

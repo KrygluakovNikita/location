@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { setUser, UserDto } from '../reducers/UserSlice';
+import { IUser, setUser, UserDto } from '../reducers/UserSlice';
 
 export interface IUserLogin {
   password: string;
@@ -9,6 +9,12 @@ export interface IUserLogin {
 export interface IClientData {
   accessToken: string;
   user: UserDto;
+}
+
+export interface IGoogleRegistration {
+  nickname: string;
+  city: string;
+  photo?: string;
 }
 
 export const userApi = createApi({
@@ -27,11 +33,31 @@ export const userApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const data = await queryFulfilled;
-          const userDto = { ...data.data.userData, accessToken: data.data.accessToken };
+          const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
           dispatch(setUser(userDto));
 
-          return data.data;
-        } catch (err) {}
+          return data.data.user;
+        } catch (err) {
+          return err;
+        }
+      },
+    }),
+    LoginGoogle: build.mutation({
+      query: (body: IGoogleRegistration) => ({
+        url: `auth/registration/google`,
+        method: 'POST',
+        body,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const data = await queryFulfilled;
+          const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
+          dispatch(setUser(userDto));
+
+          return data.data.user;
+        } catch (err) {
+          return err;
+        }
       },
     }),
     // Google: build.query<UserDto, any>({
@@ -55,4 +81,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { useGetUsersQuery, useLoginMutation } = userApi;
+export const { useGetUsersQuery, useLoginMutation, useLoginGoogleMutation } = userApi;

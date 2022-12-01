@@ -72,7 +72,6 @@ export interface CommentDto {
 export interface IUser {
   userId: string;
   accessToken: string;
-  registrationToken?: string;
   games?: GameDto[] | null;
   cards?: CardDto[] | null;
   likes?: LikeDto[] | null;
@@ -94,7 +93,6 @@ let initialState: IUser = {
   likes: [] as LikeDto[],
   posts: [] as PostDto[],
   comments: [] as CommentDto[],
-  registrationToken: '',
   accessToken: '',
   photo: '',
   role: UserRole.USER,
@@ -110,8 +108,6 @@ export const resumeSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state: IUser, action: PayloadAction<IUser>) => {
-      console.log(action.payload);
-
       return (state = { ...state, ...action.payload });
     },
     resetUserSlice: () => initialState,
@@ -173,9 +169,6 @@ export const resumeSlice = createSlice({
     setAccessToken: (state: IUser, { payload }: PayloadAction<string>) => {
       state.accessToken = payload;
     },
-    setRegistrationToken: (state: IUser, { payload }: PayloadAction<string>) => {
-      state.registrationToken = payload;
-    },
     setIsActivated: (state: IUser, { payload }: PayloadAction<boolean>) => {
       state.isActivated = payload;
     },
@@ -193,7 +186,6 @@ export const resumeSlice = createSlice({
 
 export const {
   setAccessToken,
-  setRegistrationToken,
   setActivationLink,
   setCity,
   setEmail,

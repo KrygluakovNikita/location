@@ -2,6 +2,7 @@ import { Router } from 'express';
 import userController from '../controller/user-controller';
 import { body } from 'express-validator';
 import { multerUploadPhoto } from '../middlewares/photo-middleware';
+import { isRegistrationToken } from '../middlewares/token-middleware';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post(
   userController.registration
 );
 
-router.post('/registration/google', multerUploadPhoto, userController.registrationForGoogle);
+router.post('/registration/google', isRegistrationToken, multerUploadPhoto, userController.registrationForGoogle);
 router.post('/login', userController.login);
 router.get('/activate/:link', userController.activate);
 

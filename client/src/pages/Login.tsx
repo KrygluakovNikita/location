@@ -48,15 +48,6 @@ export const Login = () => {
     passwordRef.current.style.color = defaultColor;
   };
 
-  useEffect(() => {
-    const data = getUserData();
-    if (data) {
-      const { user, accessToken } = JSON.parse(data) as IClientData;
-      const userDto: IUser = { ...user, accessToken };
-      dispatch(setUser(userDto));
-    }
-  }, []);
-
   return (
     <div className='login-card'>
       <div className='login-main'>
@@ -90,6 +81,7 @@ export const Login = () => {
           </a>
         </div>
       </div>
+      <div>{JSON.stringify(user)}</div>
     </div>
   );
 };

@@ -5,9 +5,3 @@ export const getUserData = (): string => {
 
   return data;
 };
-
-export const getRegistrationToken = (): string => {
-  const data = Cookie.get('registrationToken') ?? '';
-
-  return data;
-};
