@@ -297,7 +297,7 @@ class UserService {
   }
 
   async findOrCreateForGoogle(googleDto: IGoogleDto): Promise<IServerData | IRegistrationToken> {
-    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] }); /////////////////////
+    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] });
     if (!candidate) {
       const isEmailDuplicate = await User.findOneBy({ email: googleDto.email });
       if (isEmailDuplicate) {
