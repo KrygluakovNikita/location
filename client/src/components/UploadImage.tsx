@@ -20,7 +20,7 @@ const UploadImage: FC<UploadImageProps> = ({ selectedImage, changeHandler }) => 
       )}
 
       <label className='feedback__label '>
-        <span className='underline'>Загрузите фото профиля</span>
+        <span className='underline'>Загрузить фото профиля</span>
         <input type='file' className='feedback__file' onChange={changeHandler} />
       </label>
     </div>

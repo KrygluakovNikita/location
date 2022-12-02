@@ -1,18 +1,3 @@
-.terms {
-  margin: 5px 0 20px 0;
-  font-family: 'Lato', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 150%;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.5px;
-}
-
-.terms td label {
-  margin-left: 10px;
-}
 
 .registration-login {
   margin-top: 15px;

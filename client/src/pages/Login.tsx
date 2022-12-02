@@ -66,7 +66,7 @@ export const Login = () => {
       </a>
       {/*create a tag//////////////////////////////////*/}
 
-      <button className='btn' onClick={LoginHandler}>
+      <button className='btn' onClick={LoginHandler} disabled={false}>
         Войти
       </button>
       <p className='google'>или войти с помощью</p>

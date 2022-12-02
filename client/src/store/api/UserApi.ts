@@ -16,6 +16,13 @@ export interface IGoogleRegistration {
   city: string;
 }
 
+export interface IRegistration {
+  email: string;
+  password: string;
+  nickname: string;
+  city: string;
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: customFetchBase,
@@ -59,6 +66,24 @@ export const userApi = createApi({
         }
       },
     }),
+    Registration: build.mutation({
+      query: (body: IRegistration) => ({
+        url: `auth/registration`,
+        method: 'POST',
+        body,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const data = await queryFulfilled;
+          const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
+          dispatch(setUser(userDto));
+
+          return data.data.user;
+        } catch (err) {
+          return err;
+        }
+      },
+    }),
     UpdatePhoto: build.mutation({
       query: (body: FormData) => ({
         url: `user/update-photo`,
@@ -69,4 +94,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { useGetUsersQuery, useLoginMutation, useRegistrationGoogleMutation, useUpdatePhotoMutation } = userApi;
+export const { useGetUsersQuery, useLoginMutation, useRegistrationGoogleMutation, useUpdatePhotoMutation, useRegistrationMutation } = userApi;

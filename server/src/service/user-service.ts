@@ -38,7 +38,6 @@ class UserService {
     dbUser.city = dto.city;
     dbUser.password = hashPassword;
     dbUser.activationLink = activationLink;
-    if (dto.photo) dbUser.photo = dto.photo;
     dbUser.email = dto.email;
     dbUser.nickname = dto.nickname;
 

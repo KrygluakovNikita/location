@@ -15,12 +15,8 @@ class UserController {
       }
 
       const { email, password, nickname, city } = req.body as IUser;
-      let photo = null;
-      if (req?.file?.filename) {
-        photo = req.file.filename;
-      }
 
-      const userDto: IUser = { email, password, nickname, city, photo };
+      const userDto: IUser = { email, password, nickname, city };
 
       const { userData, refreshToken } = await userService.registration(userDto);
 

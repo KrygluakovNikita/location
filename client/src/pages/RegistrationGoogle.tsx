@@ -7,13 +7,14 @@ import UploadImage from '../components/UploadImage';
 import defaultImage from '../images/default.png';
 import { useNavigate } from 'react-router-dom';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { Terms } from '../components/Terms';
 
 export const RegistrationGoogle = () => {
   const user = useAppSelector(state => state.user);
   const [nickname, setNickname] = useState('');
   const [city, setCity] = useState('');
   const [agree, setAgree] = useState(false);
-  const [RegistrationGoogle, { isError, error, isSuccess: isSuccessRegistration }] = useRegistrationGoogleMutation();
+  const [registrationGoogle, { isError, error, isSuccess: isSuccessRegistration }] = useRegistrationGoogleMutation();
   const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload, isLoading }] = useUpdatePhotoMutation();
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ export const RegistrationGoogle = () => {
 
   const RegistrationHandler = async () => {
     const userDto: IGoogleRegistration = { nickname, city };
-    await RegistrationGoogle(userDto);
+    await registrationGoogle(userDto);
     if (selectedImage !== defaultImage) {
       const photo = new FormData();
       photo.append('photo', selectedImage);
@@ -43,12 +44,11 @@ export const RegistrationGoogle = () => {
         navigate('/login');
       }
     }
-  }, [isError, error, navigate, isSuccessRegistration, selectedImage, UpdatePhoto, user, isErrorUpload, isSuccessUpload, isLoading]);
+  }, [error, isError, isErrorUpload, isSuccessUpload, navigate]);
 
   return (
     <div>
       <div className='card'>
-        <div className=''>{user && <p>{user.nickname}</p>}</div>
         <div className='main'>
           <div className='logo'>
             <img src={LogoImg} alt='Logo' />
@@ -58,32 +58,12 @@ export const RegistrationGoogle = () => {
           <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} />
 
           <div className='input'>
-            <input placeholder='Никнейм' type='email' onChange={e => setNickname(e.target.value)} />
+            <input placeholder='Никнейм' type='text' onChange={e => setNickname(e.target.value)} />
           </div>
           <div className='input'>
             <input placeholder='Город' type='text' onChange={e => setCity(e.target.value)} />
           </div>
-
-          <div className='terms'>
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <input className='' type='checkbox' onChange={() => setAgree(state => !state)} />
-                  </td>
-                  <td>
-                    <label>
-                      Я согласен с условиями{' '}
-                      <a href='/#' className='accent'>
-                        Пользовательского соглашения
-                      </a>
-                    </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
+          <Terms setAgree={setAgree} />
           <button disabled={!nickname || !city || !agree} className='btn' onClick={RegistrationHandler}>
             Зарегистрироваться
           </button>
