@@ -6,7 +6,7 @@ import tokenService from '../service/token-service';
 import mailService from '../service/mail-service';
 import ApiError from '../exeptions/api-error';
 import { IGoogleDto, IGoogleRegistration, IUser } from '../interfaces/user-interface';
-import { IChangeEmail, IChangePassword, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
+import { IChangeEmail, IChangePassword, IRegistrationToken, IResetPassword, IToken, IUpdateEmail } from '../interfaces/token-interface';
 import { Equal } from 'typeorm';
 import Puid from 'puid';
 import UserError from '../exeptions/user-error';
@@ -60,10 +60,13 @@ class UserService {
     user.save();
   }
 
-  async login(email: string, password: string): Promise<IServerData> {
+  async login(email: string, password): Promise<IServerData> {
     const user = await User.findOneBy({ email: email });
     if (!user) {
       throw UserError.UserNotFound();
+    }
+    if (!user.password && user.googleId) {
+      throw UserError.GoogleAuth();
     }
 
     const isPasswordsEquals = await bcrypt.compare(password, user.password);
@@ -293,8 +296,8 @@ class UserService {
     return await bcrypt.hash(password, 3);
   }
 
-  async findOrCreateForGoogle(googleDto: IGoogleDto) {
-    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] }); /////////////////////
+  async findOrCreateForGoogle(googleDto: IGoogleDto): Promise<IServerData | IRegistrationToken> {
+    const candidate = await User.findOne({ where: [{ googleId: googleDto.sub }] });
     if (!candidate) {
       const isEmailDuplicate = await User.findOneBy({ email: googleDto.email });
       if (isEmailDuplicate) {
@@ -325,8 +328,6 @@ class UserService {
     dbUser.email = data.email;
     dbUser.nickname = googleDto.nickname;
     dbUser.googleId = data.sub;
-
-    if (googleDto.photo) dbUser.photo = googleDto.photo;
 
     dbUser.isActivated = data.email_verified;
     if (!data.email_verified) {

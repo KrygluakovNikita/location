@@ -1,4 +1,4 @@
-import { Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CardDto {
   cardId: string;
@@ -32,6 +32,7 @@ export interface UserDto {
   nickname: string;
   photo: string;
   isGoogle: boolean;
+  city: string;
 }
 
 export interface LikeDto {
@@ -69,23 +70,25 @@ export interface CommentDto {
 }
 
 export interface IUser {
-  userId?: string;
+  userId: string;
   accessToken: string;
   games?: GameDto[] | null;
   cards?: CardDto[] | null;
   likes?: LikeDto[] | null;
   posts?: PostDto[] | null;
   comments?: CommentDto[] | null;
-  photo?: string | null;
-  role?: UserRole;
+  photo: string | null;
+  role: UserRole;
   activationLink?: string | null;
   isActivated?: boolean;
+  isGoogle?: boolean;
   email: string;
   nickname: string;
   city: string;
 }
 
 let initialState: IUser = {
+  userId: '',
   games: [] as GameDto[],
   cards: [] as CardDto[],
   likes: [] as LikeDto[],
@@ -96,6 +99,7 @@ let initialState: IUser = {
   role: UserRole.USER,
   activationLink: '',
   isActivated: false,
+  isGoogle: false,
   email: '',
   nickname: '',
   city: '',
@@ -106,7 +110,7 @@ export const resumeSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state: IUser, action: PayloadAction<IUser>) => {
-      state = action.payload;
+      return (state = { ...state, ...action.payload });
     },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {

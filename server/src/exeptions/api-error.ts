@@ -11,6 +11,10 @@ class ApiError extends Error {
     return new ApiError(401, 'Пользователь не авторизован');
   }
 
+  static InvalidToken() {
+    return new ApiError(401, 'Неверный токен доступа');
+  }
+
   static BadRequest(message, errors = []) {
     return new ApiError(400, message, errors);
   }

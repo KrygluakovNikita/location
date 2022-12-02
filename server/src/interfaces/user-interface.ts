@@ -5,9 +5,22 @@ import { GameDto } from '../dtos/game-dto';
 import { LikeDto } from '../dtos/like-dto';
 import { PostDto } from '../dtos/post-dto';
 import { UserDto } from '../dtos/user-dto';
+import { IClientData } from '../service/user-service';
+import { IRegistrationToken } from './token-interface';
 
 export interface IUserRequest extends Request {
   user: UserDto;
+}
+export interface IGoogleRequest extends Request {
+  user: IGoogleDto;
+}
+
+export interface IRTRequest extends Request {
+  user?: {
+    userData?: IClientData | null;
+    refreshToken?: string | null;
+    registrationToken?: IRegistrationToken | null;
+  } | null;
 }
 
 export interface CardDto {
@@ -61,6 +74,5 @@ export interface IGoogleDto {
 export interface IGoogleRegistration {
   nickname: string;
   city: string;
-  photo: string;
   registrationToken: string;
 }

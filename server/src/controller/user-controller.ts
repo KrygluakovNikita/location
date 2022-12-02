@@ -214,15 +214,15 @@ class UserController {
 
   async registrationForGoogle(req: Request, res: Response, next: NextFunction) {
     try {
-      const { nickname, city, registrationToken } = req.body as IGoogleRegistration;
-      let photo = null;
-      if (req?.file?.filename) {
-        photo = req.file.filename;
-      }
+      const { nickname, city } = req.body;
 
-      const dto: IGoogleRegistration = { nickname, city, registrationToken, photo };
+      const { registrationToken } = req.cookies;
+
+      const dto: IGoogleRegistration = { nickname, city, registrationToken };
 
       const { userData, refreshToken } = await userService.registrationForGoogle(dto);
+
+      res.clearCookie('registrationToken');
 
       res.cookie('refreshToken', refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -234,9 +234,11 @@ class UserController {
       next(e);
     }
   }
+
   async updatePhoto(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const { userId } = req.user;
+      console.log(req.file);
 
       const newPhoto = req.file?.filename;
 
