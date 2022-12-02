@@ -1,0 +1,44 @@
+.img {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  background: #ffffff;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+}
+
+.underline {
+  display: flex;
+  width: 83%;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 25px;
+  letter-spacing: 0.5px;
+  text-decoration-line: underline;
+  color: #3b3a39;
+  margin-bottom: 15px;
+}
+
+.feedback__label {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  padding: 8px 20px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: center;
+  color: #282828;
+  cursor: pointer;
+}
+
+.feedback__file {
+  display: none;
+}
+
+.upload-image {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

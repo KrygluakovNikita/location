@@ -74,6 +74,5 @@ export interface IGoogleDto {
 export interface IGoogleRegistration {
   nickname: string;
   city: string;
-  photo: string;
   registrationToken: string;
 }

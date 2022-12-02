@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const QRCode = () => {
   const [QRCode, setQRCode] = useState(null);

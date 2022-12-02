@@ -329,8 +329,6 @@ class UserService {
     dbUser.nickname = googleDto.nickname;
     dbUser.googleId = data.sub;
 
-    if (googleDto.photo) dbUser.photo = googleDto.photo;
-
     dbUser.isActivated = data.email_verified;
     if (!data.email_verified) {
       const activationLink: string = uuid.v4();

@@ -16,21 +16,15 @@ export function isRegistrationToken(req: IGoogleRequest, res: Response, next: Ne
     const userData = jwtService.validateGoogleRegistrationToken(registrationToken);
 
     if (!userData) {
-      return next(ApiError.UnauthorizedError());
+      return next(ApiError.InvalidToken());
     }
     req.user = userData as IGoogleDto;
 
     next();
-  } catch (e) {
-    return next(ApiError.UnauthorizedError());
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    return next(ApiError.ServerError());
   }
-}
-
-export function isAdmin(req: IUserRequest, res: Response, next: NextFunction) {
-  if (req.user.role !== UserRole.ADMIN) {
-    throw ApiError.AccessDenied();
-  }
-  return next();
 }
 
 export function clearCookie(_: IUserRequest, res: Response, next: NextFunction) {

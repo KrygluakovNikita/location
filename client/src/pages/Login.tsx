@@ -1,32 +1,39 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import './Login.css';
 import GoogleImg from '../images/Google.svg';
 import LogoImg from '../images/Logo.svg';
 import { validateEmail } from '../utils/validation';
 import { IUserLogin, useLoginMutation } from '../store/api/UserApi';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 
 export const Login = () => {
   const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement);
   const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement);
-  const [Login] = useLoginMutation();
+  const [Login, { isError, error }] = useLoginMutation();
   const defaultColor = 'black';
 
   const GoogleHandler = () => {
     window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL, '_self');
   };
 
-  const LogoutHandler = () => {
-    window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL_LOGOUT, '_self');
-  };
+  // const LogoutHandler = () => {
+  //   window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL_LOGOUT, '_self');
+  // };
 
-  const LoginHandler = () => {
+  const LoginHandler = async () => {
     if (!validateEmail(emailRef.current.value)) {
       emailRef.current.style.color = 'red';
     } else if (passwordRef.current.value.length < 6) {
       passwordRef.current.style.color = 'red';
     } else {
       const userDto: IUserLogin = { password: passwordRef.current.value, email: emailRef.current.value };
-      Login(userDto);
+      await Login(userDto);
+      if (isError) {
+        const err = error as FetchBaseQueryError;
+        if (err.status === 406) {
+          emailRef.current.style.color = 'red';
+        }
+      }
     }
   };
 
@@ -54,7 +61,7 @@ export const Login = () => {
         <input placeholder='Пароль' type='text' ref={passwordRef} onChange={changePasswordHandler} />
       </div>
 
-      <a className='forgot' href='/forgot-password'>
+      <a className='underline-end' href='/forgot-password'>
         Забыли пароль?
       </a>
       {/*create a tag//////////////////////////////////*/}

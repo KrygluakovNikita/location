@@ -14,7 +14,6 @@ export interface IClientData {
 export interface IGoogleRegistration {
   nickname: string;
   city: string;
-  photo?: string;
 }
 
 export const userApi = createApi({
@@ -42,7 +41,7 @@ export const userApi = createApi({
         }
       },
     }),
-    LoginGoogle: build.mutation({
+    RegistrationGoogle: build.mutation({
       query: (body: IGoogleRegistration) => ({
         url: `auth/registration/google`,
         method: 'POST',
@@ -60,25 +59,14 @@ export const userApi = createApi({
         }
       },
     }),
-    // Google: build.query<UserDto, any>({
-    //   query: () => ({
-    //     url: 'http://localhost:8000/api/oauth/login/success',
-    //     method: 'GET',
-    //     credentials: 'include',
-    //     headers: {
-    //       Accept: 'application/json',
-    //       'Content-Type': 'application/json',
-    //       'Access-Control-Allow-Credentials': 'true',
-    //     },
-    //   }),
-    //   async onQueryStarted(id, { dispatch, queryFulfilled }) {
-    //     try {
-    //       const { data } = await queryFulfilled;
-    //       dispatch(setUser(data));
-    //     } catch (err) {}
-    //   },
-    // }),
+    UpdatePhoto: build.mutation({
+      query: (body: FormData) => ({
+        url: `user/update-photo`,
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useLoginMutation, useLoginGoogleMutation } = userApi;
+export const { useGetUsersQuery, useLoginMutation, useRegistrationGoogleMutation, useUpdatePhotoMutation } = userApi;

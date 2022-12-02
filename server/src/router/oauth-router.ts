@@ -32,7 +32,7 @@ router.get('/google/success', clearCookie, (req: IRTRequest, res, next) => {
     res.redirect(CLIENT_URL);
   } else if (req.user.registrationToken) {
     res.cookie('registrationToken', req.user.registrationToken, {
-      maxAge: 6 * 60 * 1000,
+      maxAge: 6 * 60 * 60 * 1000,
     });
 
     res.redirect(CLIENT_REGISTRATION_GOOGLE_URL);

@@ -81,6 +81,7 @@ export interface IUser {
   role: UserRole;
   activationLink?: string | null;
   isActivated?: boolean;
+  isGoogle?: boolean;
   email: string;
   nickname: string;
   city: string;
@@ -98,6 +99,7 @@ let initialState: IUser = {
   role: UserRole.USER,
   activationLink: '',
   isActivated: false,
+  isGoogle: false,
   email: '',
   nickname: '',
   city: '',

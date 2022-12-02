@@ -1,36 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import LogoImg from '../images/Logo.svg';
 import { useAppSelector } from '../hooks/redux';
-import { IGoogleRegistration, useLoginGoogleMutation } from '../store/api/UserApi';
-import { validateEmail } from '../utils/validation';
+import { IGoogleRegistration, useRegistrationGoogleMutation, useUpdatePhotoMutation } from '../store/api/UserApi';
 import './RegistrationGoogle.css';
+import UploadImage from '../components/UploadImage';
+import defaultImage from '../images/default.png';
+import { useNavigate } from 'react-router-dom';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 
 export const RegistrationGoogle = () => {
   const user = useAppSelector(state => state.user);
-  const [LoginGoogle, { isError, error }] = useLoginGoogleMutation();
   const [nickname, setNickname] = useState('');
   const [city, setCity] = useState('');
   const [agree, setAgree] = useState(false);
+  const [RegistrationGoogle, { isError, error, isSuccess: isSuccessRegistration }] = useRegistrationGoogleMutation();
+  const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload, isLoading }] = useUpdatePhotoMutation();
+  const navigate = useNavigate();
 
-  const RegistrationHandler = () => {
+  const [selectedImage, setSelectedImage] = useState<File | string>(defaultImage);
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    setSelectedImage(event.target.files[0]);
+  };
+
+  const RegistrationHandler = async () => {
     const userDto: IGoogleRegistration = { nickname, city };
-    LoginGoogle(userDto);
-  };
-
-  const changeNicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-  };
-
-  const changeCityHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
+    await RegistrationGoogle(userDto);
+    if (selectedImage !== defaultImage) {
+      const photo = new FormData();
+      photo.append('photo', selectedImage);
+      await UpdatePhoto(photo);
+    }
   };
 
   useEffect(() => {
-    if (isError) {
-      if (error === 401) {
-      } /////////////create error when value is invalid and if status 401 redirect for creating new registrationToken
+    if (isErrorUpload || isSuccessUpload) {
+      navigate('/');
     }
-  }, [isError, error]);
+    if (isError) {
+      const err = error as FetchBaseQueryError;
+      if (err.status === 401) {
+        navigate('/login');
+      }
+    }
+  }, [isError, error, navigate, isSuccessRegistration, selectedImage, UpdatePhoto, user, isErrorUpload, isSuccessUpload, isLoading]);
 
   return (
     <div>
@@ -42,15 +55,13 @@ export const RegistrationGoogle = () => {
           </div>
           <div className='title accent'>Давайте начнём</div>
           <div className='text'>Создайте новый аккаунт</div>
-          <div className='photo'>
-            <p>Загрузить фото профиля</p>
-            {/*////////////////////*/}
+          <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} />
+
+          <div className='input'>
+            <input placeholder='Никнейм' type='email' onChange={e => setNickname(e.target.value)} />
           </div>
           <div className='input'>
-            <input placeholder='Никнейм' type='email' onChange={changeNicknameHandler} />
-          </div>
-          <div className='input'>
-            <input placeholder='Город' type='text' onChange={changeCityHandler} />
+            <input placeholder='Город' type='text' onChange={e => setCity(e.target.value)} />
           </div>
 
           <div className='terms'>
@@ -58,7 +69,7 @@ export const RegistrationGoogle = () => {
               <tbody>
                 <tr>
                   <td>
-                    <input type='checkbox' onChange={() => setAgree(state => !state)} />
+                    <input className='' type='checkbox' onChange={() => setAgree(state => !state)} />
                   </td>
                   <td>
                     <label>
