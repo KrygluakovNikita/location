@@ -4,6 +4,7 @@ import './Terms.css';
 interface ITremsProps {
   setAgree: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 export const Terms: FC<ITremsProps> = ({ setAgree }) => {
   return (
     <div className='terms'>

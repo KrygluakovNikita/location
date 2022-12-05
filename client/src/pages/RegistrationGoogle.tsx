@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import LogoImg from '../images/Logo.svg';
-import { useAppSelector } from '../hooks/redux';
 import { IGoogleRegistration, useRegistrationGoogleMutation, useUpdatePhotoMutation } from '../store/api/UserApi';
 import './RegistrationGoogle.css';
 import UploadImage from '../components/UploadImage';
@@ -10,12 +9,11 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Terms } from '../components/Terms';
 
 export const RegistrationGoogle = () => {
-  const user = useAppSelector(state => state.user);
   const [nickname, setNickname] = useState('');
   const [city, setCity] = useState('');
   const [agree, setAgree] = useState(false);
-  const [registrationGoogle, { isError, error, isSuccess: isSuccessRegistration }] = useRegistrationGoogleMutation();
-  const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload, isLoading }] = useUpdatePhotoMutation();
+  const [registrationGoogle, { isError, error }] = useRegistrationGoogleMutation();
+  const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload }] = useUpdatePhotoMutation();
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = useState<File | string>(defaultImage);
