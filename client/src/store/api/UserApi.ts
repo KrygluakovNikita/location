@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { IUser, setUser, UserDto } from '../reducers/UserSlice';
+import { IUser, resetUserSlice, setUser, UserDto } from '../reducers/UserSlice';
 
 export interface IUserLogin {
   password: string;
@@ -58,6 +58,7 @@ export const userApi = createApi({
         try {
           const data = await queryFulfilled;
           const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
+
           dispatch(setUser(userDto));
 
           return data.data.user;
@@ -91,7 +92,24 @@ export const userApi = createApi({
         body,
       }),
     }),
+    Logout: build.mutation<any, void>({
+      query: () => ({
+        url: `auth/logout`,
+        method: 'POST',
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        dispatch(resetUserSlice());
+        await queryFulfilled.catch(err => console.log(err));
+      },
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useLoginMutation, useRegistrationGoogleMutation, useUpdatePhotoMutation, useRegistrationMutation } = userApi;
+export const {
+  useGetUsersQuery,
+  useLoginMutation,
+  useRegistrationGoogleMutation,
+  useUpdatePhotoMutation,
+  useRegistrationMutation,
+  useLogoutMutation,
+} = userApi;

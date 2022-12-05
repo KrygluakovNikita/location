@@ -9,13 +9,15 @@ import { PageNotFound } from './pages/PageNotFound';
 import { Profile } from './pages/Profile';
 
 function App() {
-  const { userId } = useAppSelector(state => state.user);
+  const user = useAppSelector(state => state.user);
+  console.log(user);
+
   return (
     <>
       <Routes>
-        <Route path='/login' element={userId ? <Navigate to='/' replace={true} /> : <Login />} />
-        <Route path='/registration-google' element={userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
-        <Route path='/registration' element={userId ? <Navigate to='/' replace={true} /> : <Registration />} />
+        <Route path='/login' element={user?.userId ? <Navigate to='/' replace={true} /> : <Login />} />
+        <Route path='/registration-google' element={user?.userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
+        <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
         <Route path='/' element={<Feed />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/*' element={<PageNotFound />} />

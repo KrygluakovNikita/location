@@ -1,4 +1,4 @@
-import { User, Token, DB_DEFAULT_PHOTO } from '../database/entity';
+import { User, Token, DB_DEFAULT_PHOTO, RefreshToken } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';
@@ -78,16 +78,9 @@ class UserService {
     return result;
   }
 
-  async logout(refreshToken: string) {
-    const token = await tokenService.removeToken(refreshToken);
-
-    return token;
-  }
-
   async refresh(token: string): Promise<IServerData> {
     const data = jwtService.validateRefreshToken(token);
-    const tokenFromDb = await tokenService.findRefreshToken(token);
-    if (!data || !tokenFromDb) {
+    if (!data) {
       throw ApiError.UnauthorizedError();
     }
 

@@ -27,6 +27,7 @@ router.get('/google/success', clearCookie, (req: IRTRequest, res, next) => {
 
     res.cookie('serverUserData', JSON.stringify(req.user.userData), {
       maxAge: 5 * 60 * 1000,
+      secure: false,
     });
 
     res.redirect(CLIENT_URL);

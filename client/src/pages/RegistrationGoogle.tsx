@@ -3,7 +3,7 @@ import LogoImg from '../images/Logo.svg';
 import { IGoogleRegistration, useRegistrationGoogleMutation, useUpdatePhotoMutation } from '../store/api/UserApi';
 import './RegistrationGoogle.css';
 import UploadImage from '../components/UploadImage';
-import defaultImage from '../images/default.png';
+import defaultImage from '../images/default.svg';
 import { useNavigate } from 'react-router-dom';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Terms } from '../components/Terms';
@@ -12,8 +12,8 @@ export const RegistrationGoogle = () => {
   const [nickname, setNickname] = useState('');
   const [city, setCity] = useState('');
   const [agree, setAgree] = useState(false);
-  const [registrationGoogle, { isError, error }] = useRegistrationGoogleMutation();
-  const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload }] = useUpdatePhotoMutation();
+  const [registrationGoogle, { isError }] = useRegistrationGoogleMutation();
+  const [UpdatePhoto, { isSuccess: isSuccessUpload, isError: isErrorUpload, error }] = useUpdatePhotoMutation();
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = useState<File | string>(defaultImage);
@@ -33,10 +33,10 @@ export const RegistrationGoogle = () => {
   };
 
   useEffect(() => {
-    if (isErrorUpload || isSuccessUpload) {
+    if (isError) {
       navigate('/');
     }
-    if (isError) {
+    if (isErrorUpload) {
       const err = error as FetchBaseQueryError;
       if (err.status === 401) {
         navigate('/login');
@@ -47,7 +47,7 @@ export const RegistrationGoogle = () => {
   return (
     <div>
       <div className='card'>
-        <div className='main'>
+        <div>
           <div className='logo'>
             <img src={LogoImg} alt='Logo' />
           </div>

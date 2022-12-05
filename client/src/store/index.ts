@@ -4,17 +4,19 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { userApi } from './api/UserApi';
+import { postApi } from './api/PostApi';
 
 const rootReducer = combineReducers({
   user: userReducer,
   [userApi.reducerPath]: userApi.reducer,
+  [postApi.reducerPath]: postApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: [userApi.reducerPath],
+  blacklist: [userApi.reducerPath, postApi.reducerPath],
 };
 
 const persistedReducer = persistReducer<RootReducer>(persistConfig, rootReducer);
@@ -26,7 +28,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(userApi.middleware),
+    }).concat(userApi.middleware, postApi.middleware),
 });
 
 export const persistor = persistStore(store);

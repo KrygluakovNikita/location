@@ -49,11 +49,9 @@ class UserController {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.cookies;
-      const token = await userService.logout(refreshToken);
       res.clearCookie('refreshToken');
 
-      return res.json(token);
+      return res.end();
     } catch (e) {
       next(e);
     }
@@ -234,8 +232,6 @@ class UserController {
   async updatePhoto(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const { userId } = req.user;
-      console.log(req.file);
-
       const newPhoto = req.file?.filename;
 
       await userService.updatePhoto(userId, newPhoto);
