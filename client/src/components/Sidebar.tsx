@@ -45,24 +45,17 @@ export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
 
   return (
     <>
-      <div id='mySidenav' className='sidenav'>
+      <div className='sidenav'>
         <img src={LogoImg} alt='Logo' className='sidebar-logo' onClick={e => clickHandler(e)} />
-
-        <div className='sidebar-menu'>
-          <div className='top'>
-            <p className={`menu ${isFeed ? 'selected' : ''}`} onClick={e => clickFeedHandler(e)}>
-              Лента
-            </p>
-            <p className={`menu ${isProfile ? 'selected' : ''}`} onClick={e => clickProfileHandler(e)}>
-              Профиль
-            </p>
-          </div>
-          <div className='bottom'>
-            <p className='menu end' onClick={e => logoutHandler(e)}>
-              Выйти
-            </p>
-          </div>
-        </div>
+        <p className={`menu ${isFeed ? 'selected' : ''}`} onClick={e => clickFeedHandler(e)}>
+          Лента
+        </p>
+        <p className={`menu ${isProfile ? 'selected' : ''}`} onClick={e => clickProfileHandler(e)}>
+          Профиль
+        </p>
+        <p className='menu' onClick={e => logoutHandler(e)}>
+          Выйти
+        </p>
       </div>
     </>
   );

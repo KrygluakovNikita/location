@@ -14,26 +14,6 @@
   padding: 15px;
 }
 
-.user-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.user-nickname {
-  font-family: 'Lato', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 19px;
-  color: #3b3a39;
-}
-
-.user-text {
-  margin-left: 10px;
-}
-
 .post-date {
   display: flex;
   flex-direction: row;

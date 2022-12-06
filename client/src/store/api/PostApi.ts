@@ -19,7 +19,10 @@ export const postApi = createApi({
           ? [...result.map(({ postId }) => ({ type: 'Posts' as const, postId })), { type: 'Posts', id: 'LIST' }]
           : [{ type: 'Posts', id: 'LIST' }],
     }),
+    getPost: build.query<PostDto, string>({
+      query: postId => ({ url: `post/${postId}`, method: 'GET' }),
+    }),
   }),
 });
 
-export const { useGetPostsQuery } = postApi;
+export const { useGetPostsQuery, useGetPostQuery } = postApi;
