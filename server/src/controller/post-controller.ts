@@ -52,12 +52,7 @@ class PostController {
       next(e);
     }
   }
-  async search(req: Request, res: Response, next: NextFunction) {
-    try {
-    } catch (e) {
-      next(e);
-    }
-  }
+
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const posts = await postService.getAll();

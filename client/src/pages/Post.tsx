@@ -11,6 +11,7 @@ import Icon from '../images/Icon.svg';
 import Heart from '../images/Heart.svg';
 import { Share } from '../components/Share';
 import { correctEnding } from '../utils/naming';
+import { Comments } from '../components/Comments';
 
 export const Post = () => {
   const { postId } = useParams();
@@ -71,9 +72,7 @@ export const Post = () => {
                   {data.comments.length ?? 0} комментар{correctEnding(data.comments.length ?? 0)}
                 </p>
               </div>
-              <div className='comments'>
-                <UserInfo postLocaleDate={postDate.postLocaleDate} postLocaleTime={postDate.postLocaleTime} user={data!.user} />
-              </div>
+              <Comments comments={data.comments} />
             </div>
           </div>
         ) : (

@@ -4,6 +4,7 @@ import { UserDto } from './user-dto';
 
 export class CommentDto {
   commentId: string;
+  postId: string;
   user: UserDto;
   message: string;
   date: Date;
@@ -12,6 +13,7 @@ export class CommentDto {
     this.commentId = model.commentId;
     this.user = new UserDto(model.user);
     this.date = model.date;
+    this.postId = model.post.postId;
     this.message = model.message;
     this.answers = model?.answers?.map(answer => new ReplyDto(answer)) ?? [];
   }

@@ -29,7 +29,7 @@
   justify-content: center;
 }
 .post-image-wrapper img {
-  margin-top: 22px;
+  margin-bottom: 5px;
   max-width: 752px;
   max-height: 307px;
 }

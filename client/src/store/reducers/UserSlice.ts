@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PostDto } from './PostSlice';
+import { CommentDto, PostDto } from './PostSlice';
 
 export interface CardDto {
   cardId: string;
@@ -47,14 +47,6 @@ export interface ReplyDto {
   userReply: UserDto;
   date: Date;
   message: string;
-}
-
-export interface CommentDto {
-  commentId: string;
-  user: UserDto;
-  message: string;
-  date: Date;
-  answers: ReplyDto[];
 }
 
 export interface IUser {
@@ -117,20 +109,6 @@ export const resumeSlice = createSlice({
     removeLike: (state: IUser, { payload }: PayloadAction<LikeDto>) => {
       state.likes = state.likes?.filter(like => like.likeId !== payload.likeId);
     },
-    addComment: (state: IUser, action: PayloadAction<CommentDto>) => {
-      state.comments?.push(action.payload);
-    },
-    editComment: (state: IUser, { payload }: PayloadAction<CommentDto>) => {
-      const index = state.comments?.findIndex(comment => {
-        return comment.commentId === payload.commentId;
-      });
-      if (index) {
-        state.comments![index] = { ...payload };
-      }
-    },
-    removeComment: (state: IUser, { payload }: PayloadAction<CommentDto>) => {
-      state.comments = state.comments?.filter(comment => comment.commentId !== payload.commentId);
-    },
     setPhoto: (state: IUser, { payload }: PayloadAction<string>) => {
       state.photo = payload;
     },
@@ -171,13 +149,10 @@ export const {
   resetUserSlice,
   addCard,
   removeCard,
-  removeComment,
   removeGame,
   removeLike,
-  addComment,
   addGame,
   addLike,
-  editComment,
 } = resumeSlice.actions;
 
 export default resumeSlice.reducer;

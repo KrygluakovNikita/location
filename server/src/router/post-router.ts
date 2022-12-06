@@ -10,6 +10,5 @@ router.patch('/', isAuth, isAdmin, postController.update);
 router.delete('/:postId', isAuth, isAdmin, postController.delete);
 router.get('/:postId', postController.getOne);
 router.get('/', postController.getAll);
-router.get('/:search', postController.search);
 
 export default router;

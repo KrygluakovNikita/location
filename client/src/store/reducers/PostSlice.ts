@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CommentDto, LikeDto, UserDto } from './UserSlice';
+import { LikeDto, ReplyDto, UserDto } from './UserSlice';
 
 export interface PostDto {
   postId: string;
@@ -14,6 +14,15 @@ export interface PostDto {
   photo: string;
 }
 
+export interface CommentDto {
+  commentId: string;
+  postId: string;
+  user: UserDto;
+  message: string;
+  date: Date;
+  answers: ReplyDto[];
+}
+
 export interface IPosts {
   posts: PostDto[];
 }
@@ -23,7 +32,7 @@ let initialState: IPosts = {
 };
 
 export const postSlice = createSlice({
-  name: 'post',
+  name: 'posts',
   initialState,
   reducers: {
     setPosts: (state: IPosts, { payload }: PayloadAction<PostDto[]>) => {
@@ -44,9 +53,34 @@ export const postSlice = createSlice({
     removePost: (state: IPosts, { payload }: PayloadAction<string>) => {
       state.posts = state.posts?.filter(post => post.postId !== payload);
     },
+    addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind) {
+        state.posts[ind].comments.push(payload);
+      }
+    },
+    editComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind) {
+        const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
+        if (commentInd) {
+          state.posts[ind].comments[commentInd] = { ...payload };
+        }
+      }
+    },
+    removeComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind) {
+        const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
+        if (commentInd) {
+          state.posts[ind].comments[commentInd] = { ...payload };
+        }
+        state.posts[ind].comments = state.posts[ind].comments.filter(comment => comment.commentId !== payload.commentId);
+      }
+    },
   },
 });
 
-export const { addPost, editPost, removePost, setPosts } = postSlice.actions;
+export const { addPost, editPost, removePost, setPosts, addComment } = postSlice.actions;
 
 export default postSlice.reducer;

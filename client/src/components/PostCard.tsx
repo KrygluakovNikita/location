@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { CommentDto, LikeDto, UserDto } from '../store/reducers/UserSlice';
+import { LikeDto, UserDto } from '../store/reducers/UserSlice';
 import './PostCard.css';
 import Pointer from '../images/Pointer.svg';
 import Icon from '../images/Icon.svg';
@@ -8,6 +8,7 @@ import Comment from '../images/Comment.svg';
 import { Share } from './Share';
 import { UserInfo } from './UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
+import { CommentDto } from '../store/reducers/PostSlice';
 
 interface IPostProps {
   postId: string;

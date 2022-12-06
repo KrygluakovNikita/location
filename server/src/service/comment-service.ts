@@ -36,7 +36,10 @@ class CommentService {
       throw ApiError.NotFound();
     }
 
-    const comments = await Comment.find({ where: { post: Equal(post.postId) }, relations: { user: true, answers: { user: true, userReply: true } } });
+    const comments = await Comment.find({
+      where: { post: Equal(post.postId) },
+      relations: { user: true, answers: { user: true, userReply: true }, post: true },
+    });
 
     const result = comments.map(comment => new CommentDto(comment));
 
