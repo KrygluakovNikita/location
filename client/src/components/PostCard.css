@@ -97,7 +97,7 @@
   margin-right: 5px;
 }
 
-.post-footer {
+.post-card-footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

@@ -10,6 +10,7 @@ import Pointer from '../images/Pointer.svg';
 import Icon from '../images/Icon.svg';
 import Heart from '../images/Heart.svg';
 import { Share } from '../components/Share';
+import { correctEnding } from '../utils/naming';
 
 export const Post = () => {
   const { postId } = useParams();
@@ -64,7 +65,16 @@ export const Post = () => {
                 <p onClick={() => {}}>125</p>
               </div>
             </div>
-            <div className='comments'>comments</div>
+            <div className='comments-container'>
+              <div className='comments-count'>
+                <p>
+                  {data.comments.length ?? 0} комментар{correctEnding(data.comments.length ?? 0)}
+                </p>
+              </div>
+              <div className='comments'>
+                <UserInfo postLocaleDate={postDate.postLocaleDate} postLocaleTime={postDate.postLocaleTime} user={data!.user} />
+              </div>
+            </div>
           </div>
         ) : (
           <div>

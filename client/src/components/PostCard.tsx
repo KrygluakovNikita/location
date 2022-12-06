@@ -49,7 +49,7 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
       <div className='image-wrapper'>
         <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + photo} alt='' />
       </div>
-      <div className='post-footer'>
+      <div className='post-card-footer'>
         <Share url={postId} />
         <div className='footer'>
           <img src={Comment} alt='' />
