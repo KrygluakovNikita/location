@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { ReplyDto, UserDto } from '../store/reducers/UserSlice';
 import { convertPostDate } from '../utils/timeConverter';
+import { AnswerCard } from './AnswerCard';
 import './CommentCard.css';
 
 interface ICommentCardProps {
@@ -29,10 +30,7 @@ export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user, dat
         </div>
       </div>
       {answers.map(answer => (
-        <div>
-          {answer.user.nickname}
-          {answer.message}
-        </div>
+        <AnswerCard key={answer.replyId} {...answer} />
       ))}
     </div>
   );
