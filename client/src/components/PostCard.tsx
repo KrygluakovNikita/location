@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { CommentDto, LikeDto, UserDto } from '../store/reducers/UserSlice';
-import './Post.css';
+import './PostCard.css';
 import Pointer from '../images/Pointer.svg';
 import Icon from '../images/Icon.svg';
 import Share from '../images/Share.svg';
@@ -20,12 +20,12 @@ interface IPostProps {
   photo: string;
 }
 
-export const Post: FC<IPostProps> = ({ location, postDate, title, user, description, photo }) => {
+export const PostCard: FC<IPostProps> = ({ location, postDate, title, user, description, photo }) => {
   const postLocaleDate = new Date(postDate).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric' });
   const postLocaleTime = new Date(postDate).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   const gameLocaleDate = new Date(postDate).toLocaleDateString('ru-RU', { month: '2-digit', day: 'numeric', year: 'numeric' });
   const gameLocaleTime = new Date(postDate).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-  const maxDescriptionLength = 160;
+  const maxDescriptionLength = 150;
 
   return (
     <div className='post'>

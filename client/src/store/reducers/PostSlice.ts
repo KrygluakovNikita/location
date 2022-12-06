@@ -22,11 +22,12 @@ let initialState: IPosts = {
   posts: [],
 };
 
-export const resumeSlice = createSlice({
-  name: 'resume',
+export const postSlice = createSlice({
+  name: 'post',
   initialState,
   reducers: {
     setPosts: (state: IPosts, { payload }: PayloadAction<PostDto[]>) => {
+      state.posts = [];
       state.posts = payload;
     },
     addPost: (state: IPosts, action: PayloadAction<PostDto>) => {
@@ -46,6 +47,6 @@ export const resumeSlice = createSlice({
   },
 });
 
-export const { addPost, editPost, removePost, setPosts } = resumeSlice.actions;
+export const { addPost, editPost, removePost, setPosts } = postSlice.actions;
 
-export default resumeSlice.reducer;
+export default postSlice.reducer;
