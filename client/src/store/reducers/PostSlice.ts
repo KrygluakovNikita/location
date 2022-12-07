@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { LikeDto, ReplyDto, UserDto } from './UserSlice';
+import { IUser, LikeDto, ReplyDto, UserDto } from './UserSlice';
 
 export interface PostDto {
   postId: string;

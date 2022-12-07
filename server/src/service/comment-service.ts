@@ -22,6 +22,7 @@ class CommentService {
     comment.post = post;
     comment.user = user;
     comment.message = data.message;
+    comment.date = new Date(Date.now());
 
     await comment.save();
 

@@ -12,36 +12,38 @@ import Heart from '../images/Heart.svg';
 import { Share } from '../components/Share';
 import { correctEnding } from '../utils/naming';
 import { Comments } from '../components/Comments';
+import { useAppSelector } from '../hooks/redux';
 
 export const Post = () => {
   const { postId } = useParams();
-  const { data, isLoading } = useGetPostQuery(postId!);
+  // const { post, isLoading } = useGetPostQuery(postId!);
+  const post = useAppSelector(state => state.postSlice.posts.filter(post => post.postId === postId!)[0]);
   const [postDate, setPostDate] = useState({ postLocaleDate: '', postLocaleTime: '' });
   const [gameDate, setGameDate] = useState({ gameLocaleDate: '', gameLocaleTime: '' });
 
   useEffect(() => {
-    if (data?.postDate) {
-      const date = convertPostDate(data!.postDate);
+    if (post?.postDate) {
+      const date = convertPostDate(post!.postDate);
       setPostDate(date);
     }
-    if (data?.gameDate) {
-      const date = convertGameDate(data!.gameDate);
+    if (post?.gameDate) {
+      const date = convertGameDate(post!.gameDate);
       setGameDate(date);
     }
-  }, [data, isLoading]);
+  }, [post]);
 
   return (
     <>
       <Sidebar isProfile={false} />
       <div className='main'>
-        {isLoading && <Loader />}
-        {data ? (
+        {/* {isLoading && <Loader />} */}
+        {post ? (
           <div className='container'>
             <div className='post-card'></div>
-            <UserInfo postLocaleDate={postDate.postLocaleDate} postLocaleTime={postDate.postLocaleTime} user={data!.user} />
-            <p className='post-title'>{data.title}</p>
+            <UserInfo postLocaleDate={postDate.postLocaleDate} postLocaleTime={postDate.postLocaleTime} user={post!.user} />
+            <p className='post-title'>{post.title}</p>
             <div className='post-text'>
-              <p>{data.description}</p>
+              <p>{post.description}</p>
             </div>
             <div className='post-metadata'>
               <div className='post-game-date'>
@@ -52,12 +54,12 @@ export const Post = () => {
               </div>
               <div className='post-location'>
                 <img src={Pointer} alt='' />
-                <p className='location-text'>{data.location}</p>
+                <p className='location-text'>{post.location}</p>
               </div>
             </div>
 
             <div className='post-image-wrapper'>
-              <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + data.photo} alt='' />
+              <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />
             </div>
             <div className='post-footer'>
               <Share url={postId!} />
@@ -69,10 +71,10 @@ export const Post = () => {
             <div className='comments-container'>
               <div className='comments-count'>
                 <p>
-                  {data.comments.length ?? 0} комментар{correctEnding(data.comments.length ?? 0)}
+                  {post.comments.length ?? 0} комментар{correctEnding(post.comments.length ?? 0)}
                 </p>
               </div>
-              <Comments comments={data.comments} />
+              <Comments comments={post.comments} postId={postId!} />
             </div>
           </div>
         ) : (

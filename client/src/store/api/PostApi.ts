@@ -4,7 +4,7 @@ import { PostDto, setPosts } from '../reducers/PostSlice';
 
 export const postApi = createApi({
   reducerPath: 'postApi',
-  tagTypes: ['Posts'],
+  tagTypes: ['Posts', 'Comments'],
   baseQuery: customFetchBase,
   endpoints: build => ({
     getPosts: build.query<PostDto[], void>({

@@ -33,6 +33,7 @@ class ReplyService {
     reply.comment = comment;
     reply.user = user;
     reply.message = data.message;
+    reply.date = new Date(Date.now());
 
     await reply.save();
 
