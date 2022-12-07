@@ -110,7 +110,8 @@
   cursor: pointer;
 }
 
-.footer p {
+.footer p,
+a {
   font-family: 'Lato', sans-serif;
   font-style: normal;
   font-weight: 600;

@@ -19,8 +19,9 @@ export const Feed = () => {
   useEffect(() => {
     const userData = getUserData();
 
-    if (!user && userData) {
+    if (!user.userId && userData) {
       const userDto = JSON.parse(userData);
+      console.log(userDto);
       const result: IUser = { ...userDto.user, accessToken: userDto.accessToken };
       dispatch(setUser(result));
     }

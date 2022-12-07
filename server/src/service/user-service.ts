@@ -60,7 +60,7 @@ class UserService {
   }
 
   async login(email: string, password): Promise<IServerData> {
-    const user = await User.findOneBy({ email: email });
+    const user = await User.findOne({ where: { email: email }, relations: { comments: true, games: true, likes: true, posts: true } });
     if (!user) {
       throw UserError.UserNotFound();
     }

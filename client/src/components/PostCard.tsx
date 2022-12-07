@@ -9,6 +9,7 @@ import { Share } from './Share';
 import { UserInfo } from './UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
 import { CommentDto } from '../store/reducers/PostSlice';
+import { Link } from 'react-router-dom';
 
 interface IPostProps {
   postId: string;
@@ -54,7 +55,7 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
         <Share url={postId} />
         <div className='footer'>
           <img src={Comment} alt='' />
-          <p onClick={() => {}}>Комментарии</p>
+          <a href={`/${postId}`}>Комментарии</a>
         </div>
         <div className='footer'>
           <img src={Heart} alt='' />

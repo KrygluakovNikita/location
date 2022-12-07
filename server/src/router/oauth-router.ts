@@ -8,6 +8,7 @@ const router = Router();
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const CLIENT_REGISTRATION_GOOGLE_URL = process.env.CLIENT_REGISTRATION_GOOGLE_URL;
+const CLIENT_LOGIN_GOOGLE_URL = process.env.CLIENT_LOGIN_GOOGLE_URL;
 
 router.get('/logout', clearCookie, (req, res, next) => {
   req.logout(function (err) {
@@ -41,10 +42,7 @@ router.get('/google/success', clearCookie, (req: IRTRequest, res, next) => {
 });
 
 router.get('/google/failed', (req, res) => {
-  res.status(401).json({
-    success: false,
-    message: 'failure',
-  });
+  res.redirect(CLIENT_LOGIN_GOOGLE_URL);
 });
 
 router.get(

@@ -23,7 +23,7 @@ passport.use(
 
         done(null, result, null);
       } catch (err) {
-        done(err, null, null);
+        done(null, null, err);
       }
     }
   )
