@@ -6,6 +6,8 @@ import './AnswerCard.css';
 import { AnswerInput } from './AnswerInput';
 
 interface IAnswerCardProps {
+  commentId: string;
+  postId: string;
   replyId: string;
   user: UserDto;
   userReply: UserDto;
@@ -15,22 +17,26 @@ interface IAnswerCardProps {
   setCommentReply: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AnswerCard: FC<IAnswerCardProps> = ({ commentReply, setCommentReply, user: userComment, userReply, message, date }) => {
+export const AnswerCard: FC<IAnswerCardProps> = ({
+  commentReply,
+  setCommentReply,
+  user: userComment,
+  userReply,
+  message,
+  date,
+  commentId,
+  postId,
+}) => {
   const { postLocaleDate, postLocaleTime } = convertPostDate(date);
   const [reply, setReply] = useState(false);
   const user = useAppSelector(state => state.user);
 
   useEffect(() => {
-    if (commentReply && reply) {
+    if (reply) {
+      setReply(true);
       setCommentReply(false);
     }
-  }, [reply]);
-
-  useEffect(() => {
-    if (commentReply && reply) {
-      setReply(false);
-    }
-  }, [commentReply]);
+  }, [reply, commentReply]);
 
   return (
     <>
@@ -52,7 +58,7 @@ export const AnswerCard: FC<IAnswerCardProps> = ({ commentReply, setCommentReply
           </div>
         </div>
       </div>
-      {reply && <AnswerInput user={user} userReply={userReply} setReply={setReply} />}
+      {reply && <AnswerInput user={user} userReply={userReply} setReply={setReply} commentId={commentId} postId={postId} />}
     </>
   );
 };

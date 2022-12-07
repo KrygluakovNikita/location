@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IUser, LikeDto, ReplyDto, UserDto } from './UserSlice';
+import { IResponseAnswer } from '../api/AnswerApi';
+import { IUser, LikeDto, UserDto } from './UserSlice';
 
 export interface PostDto {
   postId: string;
@@ -14,6 +15,21 @@ export interface PostDto {
   photo: string;
 }
 
+export interface ReplyDto {
+  commentId: string;
+  replyId: string;
+  user: UserDto;
+  userReply: UserDto;
+  date: Date;
+  message: string;
+}
+
+export interface ReplyUpload {
+  commentId: string;
+  user: UserDto;
+  userReply: UserDto;
+  message: string;
+}
 export interface CommentDto {
   commentId: string;
   postId: string;
@@ -50,24 +66,41 @@ export const postSlice = createSlice({
         state.posts![index] = { ...payload };
       }
     },
-    removePost: (state: IPosts, { payload }: PayloadAction<string>) => {
-      state.posts = state.posts?.filter(post => post.postId !== payload);
-    },
+    // removePost: (state: IPosts, { payload }: PayloadAction<string>) => {
+    //   state.posts = state.posts?.filter(post => post.postId !== payload);
+    // },
     addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {
         state.posts[ind].comments.push(payload);
       }
     },
-    editComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+    addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {
         const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
         if (commentInd) {
-          state.posts[ind].comments[commentInd] = { ...payload };
+          const dto: ReplyDto = {
+            replyId: payload.replyId,
+            user: payload.user,
+            userReply: payload.userReply,
+            date: payload.date,
+            message: payload.message,
+            commentId: payload.commentId,
+          };
+          state.posts[ind].comments[commentInd].answers.push(dto);
         }
       }
     },
+    // editComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+    //   const ind = state.posts.findIndex(post => post.postId === payload.postId);
+    //   if (ind) {
+    //     const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
+    //     if (commentInd) {
+    //       state.posts[ind].comments[commentInd] = { ...payload };
+    //     }
+    //   }
+    // },
     removeComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {
@@ -81,6 +114,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { addPost, editPost, removePost, setPosts, addComment } = postSlice.actions;
+export const { addPost, editPost, addAnswer, setPosts, addComment } = postSlice.actions;
 
 export default postSlice.reducer;

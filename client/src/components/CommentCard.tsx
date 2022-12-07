@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import { useAppSelector } from '../hooks/redux';
-import { ReplyDto, UserDto } from '../store/reducers/UserSlice';
+import { ReplyDto } from '../store/reducers/PostSlice';
+import { UserDto } from '../store/reducers/UserSlice';
 import { convertPostDate } from '../utils/timeConverter';
 import { AnswerCard } from './AnswerCard';
 import { AnswerInput } from './AnswerInput';
 import './CommentCard.css';
 
 interface ICommentCardProps {
+  postId: string;
   commentId: string;
   user: UserDto;
   message: string;
@@ -14,9 +16,8 @@ interface ICommentCardProps {
   answers: ReplyDto[];
 }
 
-export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: userComment, date }) => {
+export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: userComment, date, commentId, postId }) => {
   const user = useAppSelector(state => state.user);
-
   const { postLocaleDate, postLocaleTime } = convertPostDate(date);
   const [reply, setReply] = useState(false);
 
@@ -37,10 +38,19 @@ export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: use
           </div>
         </div>
       </div>
-      {answers.map(answer => {
-        return <AnswerCard key={answer.date.toString()} {...answer} commentReply={reply} setCommentReply={setReply} />;
+      {answers?.map(answer => {
+        return (
+          <AnswerCard
+            key={answer.date.toString()}
+            {...answer}
+            commentReply={reply}
+            setCommentReply={setReply}
+            postId={postId}
+            commentId={commentId}
+          />
+        );
       })}
-      {reply && <AnswerInput user={user} userReply={userComment} setReply={setReply} />}
+      {reply && <AnswerInput user={user} userReply={userComment} setReply={setReply} postId={postId} commentId={commentId} />}
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import { Equal } from 'typeorm';
 import { Comment, Reply, User, UserRole } from '../database/entity';
+import { ReplyDto } from '../dtos/reply-dto';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 import { IReply, IReplyWithUser } from '../interfaces/reply-interface';
 
 class ReplyService {
-  async upload(data: IReply): Promise<Reply> {
+  async upload(data: IReply): Promise<ReplyDto> {
     const reply = new Reply();
 
     const user = await User.findOneBy({ userId: data.userId });
@@ -13,7 +14,7 @@ class ReplyService {
       throw UserError.UserNotFound();
     }
 
-    const comment = await Comment.findOne({ where: { commentId: Equal(data.commentId) }, relations: { user: true } });
+    const comment = await Comment.findOne({ where: { commentId: Equal(data.commentId) }, relations: { user: true, post: true } });
 
     if (!comment) {
       throw ApiError.NotFound();
@@ -37,7 +38,9 @@ class ReplyService {
 
     await reply.save();
 
-    return reply;
+    const replyDto = new ReplyDto(reply);
+
+    return replyDto;
   }
 
   async getByCommentId(commentId: string): Promise<Reply[]> {

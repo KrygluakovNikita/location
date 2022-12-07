@@ -34,7 +34,7 @@ export const Comments: FC<ICommentProps> = ({ comments, postId }) => {
     <>
       <div className='comments'>
         {comments
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
           .map(comment => (
             <CommentCard key={comment.commentId} {...comment} />
           ))}

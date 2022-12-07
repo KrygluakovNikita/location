@@ -41,14 +41,6 @@ export interface LikeDto {
   user: UserDto;
 }
 
-export interface ReplyDto {
-  replyId: string;
-  user: UserDto;
-  userReply: UserDto;
-  date: Date;
-  message: string;
-}
-
 export interface IUser {
   userId: string;
   accessToken: string;
