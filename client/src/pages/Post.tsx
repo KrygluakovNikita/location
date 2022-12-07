@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader } from '../components/Loader';
 import { Sidebar } from '../components/Sidebar';
 import { UserInfo } from '../components/UserInfo';
-import { useGetPostQuery } from '../store/api/PostApi';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
 import './Post.css';
 import Pointer from '../images/Pointer.svg';
@@ -13,10 +11,10 @@ import { Share } from '../components/Share';
 import { correctEnding } from '../utils/naming';
 import { Comments } from '../components/Comments';
 import { useAppSelector } from '../hooks/redux';
+import BackArrow from '../images/BackArrow.svg';
 
 export const Post = () => {
   const { postId } = useParams();
-  // const { post, isLoading } = useGetPostQuery(postId!);
   const post = useAppSelector(state => state.postSlice.posts.filter(post => post.postId === postId!)[0]);
   const [postDate, setPostDate] = useState({ postLocaleDate: '', postLocaleTime: '' });
   const [gameDate, setGameDate] = useState({ gameLocaleDate: '', gameLocaleTime: '' });
@@ -36,6 +34,12 @@ export const Post = () => {
     <>
       <Sidebar isProfile={false} />
       <div className='main'>
+        <div className='post-top'>
+          <a className='back-button' href='/'>
+            <img src={BackArrow} alt='' />
+            <p>назад</p>
+          </a>
+        </div>
         {post ? (
           <div className='container'>
             <div className='post-card'></div>
