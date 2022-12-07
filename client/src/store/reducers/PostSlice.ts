@@ -56,7 +56,7 @@ export const postSlice = createSlice({
       state.posts = payload;
     },
     addPost: (state: IPosts, action: PayloadAction<PostDto>) => {
-      state.posts?.push(action.payload);
+      state.posts?.unshift(action.payload);
     },
     editPost: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
       const index = state.posts?.findIndex(post => {
@@ -66,13 +66,10 @@ export const postSlice = createSlice({
         state.posts![index] = { ...payload };
       }
     },
-    // removePost: (state: IPosts, { payload }: PayloadAction<string>) => {
-    //   state.posts = state.posts?.filter(post => post.postId !== payload);
-    // },
     addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {
-        state.posts[ind].comments.push(payload);
+        state.posts[ind].comments.unshift(payload);
       }
     },
     addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {
@@ -88,19 +85,10 @@ export const postSlice = createSlice({
             message: payload.message,
             commentId: payload.commentId,
           };
-          state.posts[ind].comments[commentInd].answers.push(dto);
+          state.posts[ind].comments[commentInd].answers.unshift(dto);
         }
       }
     },
-    // editComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
-    //   const ind = state.posts.findIndex(post => post.postId === payload.postId);
-    //   if (ind) {
-    //     const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
-    //     if (commentInd) {
-    //       state.posts[ind].comments[commentInd] = { ...payload };
-    //     }
-    //   }
-    // },
     removeComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {

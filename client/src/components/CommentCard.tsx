@@ -38,18 +38,9 @@ export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: use
           </div>
         </div>
       </div>
-      {answers?.map(answer => {
-        return (
-          <AnswerCard
-            key={answer.date.toString()}
-            {...answer}
-            commentReply={reply}
-            setCommentReply={setReply}
-            postId={postId}
-            commentId={commentId}
-          />
-        );
-      })}
+      {answers?.map(answer => (
+        <AnswerCard key={answer.replyId} {...answer} commentReply={reply} setCommentReply={setReply} postId={postId} commentId={commentId} />
+      ))}
       {reply && <AnswerInput user={user} userReply={userComment} setReply={setReply} postId={postId} commentId={commentId} />}
     </div>
   );

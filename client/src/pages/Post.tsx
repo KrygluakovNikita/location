@@ -36,7 +36,6 @@ export const Post = () => {
     <>
       <Sidebar isProfile={false} />
       <div className='main'>
-        {/* {isLoading && <Loader />} */}
         {post ? (
           <div className='container'>
             <div className='post-card'></div>
@@ -74,7 +73,7 @@ export const Post = () => {
                   {post.comments.length ?? 0} комментар{correctEnding(post.comments.length ?? 0)}
                 </p>
               </div>
-              <Comments comments={post.comments} postId={postId!} />
+              <Comments postId={postId!} />
             </div>
           </div>
         ) : (

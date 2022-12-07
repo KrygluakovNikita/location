@@ -8,11 +8,11 @@ import { ICommentUpload, useAddCommentMutation } from '../store/api/CommentApi';
 import { useAppSelector } from '../hooks/redux';
 
 interface ICommentProps {
-  comments: CommentDto[];
   postId: string;
 }
 
-export const Comments: FC<ICommentProps> = ({ comments, postId }) => {
+export const Comments: FC<ICommentProps> = ({ postId }) => {
+  const comments = useAppSelector(state => state.postSlice.posts.find(post => post.postId === postId)?.comments);
   const [uploadComment] = useAddCommentMutation();
   const user = useAppSelector(state => state.user);
   const [message, setMessage] = useState('');
@@ -33,11 +33,9 @@ export const Comments: FC<ICommentProps> = ({ comments, postId }) => {
   return (
     <>
       <div className='comments'>
-        {comments
-          ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .map(comment => (
-            <CommentCard key={comment.commentId} {...comment} />
-          ))}
+        {comments?.map(comment => (
+          <CommentCard key={comment.commentId} {...comment} />
+        ))}
       </div>
       <form className='add-comment' onSubmit={e => submitHandler(e)}>
         <img src={Plus} alt='' className='plus-image' />
