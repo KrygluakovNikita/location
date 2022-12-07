@@ -38,6 +38,7 @@ class PostService {
         comments: {
           user: true,
           answers: { userReply: true, user: true },
+          post: true,
         },
         likes: { user: true },
       },
@@ -54,6 +55,7 @@ class PostService {
         comments: {
           user: true,
           answers: { userReply: true, user: true },
+          post: true,
         },
         likes: { user: true },
       },

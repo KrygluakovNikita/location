@@ -3,6 +3,7 @@ import userController from '../controller/user-controller';
 import { body } from 'express-validator';
 import { multerUploadPhoto } from '../middlewares/photo-middleware';
 import { isRegistrationToken } from '../middlewares/token-middleware';
+import { isAuth } from '../middlewares/auth-middleware';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post(
   multerUploadPhoto,
   userController.registration
 );
-
+router.post('/logout', userController.logout);
 router.post('/registration/google', isRegistrationToken, userController.registrationForGoogle);
 router.post('/login', userController.login);
 router.get('/refresh', userController.refresh);

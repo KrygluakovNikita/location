@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import UploadImage from '../components/UploadImage';
-import defaultImage from '../images/default.png';
+import defaultImage from '../images/default.svg';
 import LogoImg from '../images/Logo.svg';
 import { IRegistration, useRegistrationMutation, useUpdatePhotoMutation } from '../store/api/UserApi';
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +51,7 @@ export const Registration = () => {
   return (
     <div>
       <div className='card'>
-        <div className='main'>
+        <div>
           <div className='logo'>
             <img src={LogoImg} alt='Logo' />
           </div>

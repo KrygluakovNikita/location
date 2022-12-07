@@ -16,10 +16,6 @@ export const Login = () => {
     window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL, '_self');
   };
 
-  // const LogoutHandler = () => {
-  //   window.open(process.env.REACT_APP_GOOGLE_OAUTH_URL_LOGOUT, '_self');
-  // };
-
   const LoginHandler = async () => {
     if (!validateEmail(emailRef.current.value)) {
       emailRef.current.style.color = 'red';
@@ -64,7 +60,6 @@ export const Login = () => {
       <a className='underline-end' href='/forgot-password'>
         Забыли пароль?
       </a>
-      {/*create a tag//////////////////////////////////*/}
 
       <button className='btn' onClick={LoginHandler} disabled={false}>
         Войти
