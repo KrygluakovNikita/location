@@ -69,7 +69,7 @@ export const postSlice = createSlice({
     addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind) {
-        state.posts[ind].comments.unshift(payload);
+        state.posts[ind].comments.push(payload);
       }
     },
     addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {

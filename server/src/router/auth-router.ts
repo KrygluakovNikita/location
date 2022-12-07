@@ -14,7 +14,7 @@ router.post(
   multerUploadPhoto,
   userController.registration
 );
-router.post('/logout', isAuth, userController.logout);
+router.post('/logout', userController.logout);
 router.post('/registration/google', isRegistrationToken, userController.registrationForGoogle);
 router.post('/login', userController.login);
 router.get('/refresh', userController.refresh);

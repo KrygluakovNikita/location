@@ -22,6 +22,7 @@ export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
   };
 
   const logoutHandler = (e: MouseEvent<HTMLParagraphElement>) => {
+    e.preventDefault();
     Logout();
   };
 

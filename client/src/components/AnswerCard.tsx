@@ -1,4 +1,5 @@
 import { FC, useState, Dispatch, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 import { UserDto } from '../store/reducers/UserSlice';
 import { convertPostDate } from '../utils/timeConverter';
@@ -30,6 +31,7 @@ export const AnswerCard: FC<IAnswerCardProps> = ({
   const { postLocaleDate, postLocaleTime } = convertPostDate(date);
   const [reply, setReply] = useState(false);
   const user = useAppSelector(state => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (reply) {
@@ -37,6 +39,14 @@ export const AnswerCard: FC<IAnswerCardProps> = ({
       setCommentReply(false);
     }
   }, [reply, commentReply]);
+
+  const clickHandler = () => {
+    if (!user.userId) {
+      navigate('/login');
+    } else {
+      setReply(true);
+    }
+  };
 
   return (
     <>
@@ -52,13 +62,13 @@ export const AnswerCard: FC<IAnswerCardProps> = ({
             <p className='small-text'>
               {postLocaleDate} в {postLocaleTime}
             </p>
-            <p className='small-text' onClick={() => setReply(true)}>
+            <p className='small-text' onClick={clickHandler}>
               Ответить
             </p>
           </div>
         </div>
       </div>
-      {reply && <AnswerInput user={user} userReply={userReply} setReply={setReply} commentId={commentId} postId={postId} />}
+      {reply && <AnswerInput user={user} userReply={userComment} setReply={setReply} commentId={commentId} postId={postId} />}
     </>
   );
 };

@@ -6,6 +6,7 @@ import Plus from '../images/Plus.svg';
 import Send from '../images/Send.svg';
 import { ICommentUpload, useAddCommentMutation } from '../store/api/CommentApi';
 import { useAppSelector } from '../hooks/redux';
+import { useNavigate } from 'react-router-dom';
 
 interface ICommentProps {
   postId: string;
@@ -16,9 +17,13 @@ export const Comments: FC<ICommentProps> = ({ postId }) => {
   const [uploadComment] = useAddCommentMutation();
   const user = useAppSelector(state => state.user);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const submitHandler = async (e: FormEvent<HTMLFormElement> | MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
+    if (!user.userId) {
+      navigate('/login');
+    }
     if (message) {
       const dto: ICommentUpload = {
         postId,

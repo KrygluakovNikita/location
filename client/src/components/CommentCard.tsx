@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 import { ReplyDto } from '../store/reducers/PostSlice';
 import { UserDto } from '../store/reducers/UserSlice';
@@ -20,6 +21,15 @@ export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: use
   const user = useAppSelector(state => state.user);
   const { postLocaleDate, postLocaleTime } = convertPostDate(date);
   const [reply, setReply] = useState(false);
+  const navigate = useNavigate();
+
+  const clickHandler = () => {
+    if (!user.userId) {
+      navigate('/login');
+    } else {
+      setReply(true);
+    }
+  };
 
   return (
     <div className=''>
@@ -32,7 +42,7 @@ export const CommentCard: FC<ICommentCardProps> = ({ message, answers, user: use
             <p className='small-text'>
               {postLocaleDate} в {postLocaleTime}
             </p>
-            <p className='small-text' onClick={() => setReply(true)}>
+            <p className='small-text' onClick={clickHandler}>
               Ответить
             </p>
           </div>
