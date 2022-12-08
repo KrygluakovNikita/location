@@ -38,6 +38,7 @@ export interface UserDto {
 
 export interface LikeDto {
   likeId: string;
+  postId: string;
   user: UserDto;
 }
 

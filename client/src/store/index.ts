@@ -8,6 +8,7 @@ import { userApi } from './api/UserApi';
 import { postApi } from './api/PostApi';
 import { commentApi } from './api/CommentApi';
 import { answerApi } from './api/AnswerApi';
+import { likeApi } from './api/LikeApi';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -16,13 +17,14 @@ const rootReducer = combineReducers({
   [postApi.reducerPath]: postApi.reducer,
   [commentApi.reducerPath]: commentApi.reducer,
   [answerApi.reducerPath]: answerApi.reducer,
+  [likeApi.reducerPath]: likeApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: [userApi.reducerPath, postApi.reducerPath, commentApi.reducerPath, answerApi.reducerPath],
+  blacklist: [userApi.reducerPath, postApi.reducerPath, commentApi.reducerPath, answerApi.reducerPath, likeApi.reducerPath],
 };
 
 const persistedReducer = persistReducer<RootReducer>(persistConfig, rootReducer);
@@ -34,7 +36,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(userApi.middleware, postApi.middleware, commentApi.middleware, answerApi.middleware),
+    }).concat(userApi.middleware, postApi.middleware, commentApi.middleware, answerApi.middleware, likeApi.middleware),
 });
 
 export const persistor = persistStore(store);

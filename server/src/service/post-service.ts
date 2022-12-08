@@ -67,7 +67,7 @@ class PostService {
           answers: { userReply: true, user: true },
           post: true,
         },
-        likes: { user: true },
+        likes: { user: true, post: true },
       },
     });
     const result = new PostDto(post);
@@ -84,7 +84,7 @@ class PostService {
           answers: { userReply: true, user: true, comment: true },
           post: true,
         },
-        likes: { user: true },
+        likes: { user: true, post: true },
       },
     });
 
@@ -114,7 +114,18 @@ class PostService {
   }
 
   async update(postDto: IPostUpdate): Promise<PostDto> {
-    const post = await Post.findOne({ where: { postId: postDto.postId } });
+    const post = await Post.findOne({
+      where: { postId: postDto.postId },
+      relations: {
+        user: true,
+        comments: {
+          user: true,
+          answers: { userReply: true, user: true, comment: true },
+          post: true,
+        },
+        likes: { user: true },
+      },
+    });
     if (!post) {
       throw ApiError.NotFound();
     }

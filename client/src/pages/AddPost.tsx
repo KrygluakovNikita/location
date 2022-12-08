@@ -1,23 +1,32 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from '../components/ArrowLeft';
 import { Sidebar } from '../components/Sidebar';
 import { useAppSelector } from '../hooks/redux';
 import { UserRole } from '../store/reducers/UserSlice';
 import './AddPost.css';
 import GoodCheckIcon from '../images/GoodCheck.svg';
-import UploadImage from '../components/UploadImage';
 import ImageIcon from '../images/Image.svg';
-import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUploadPostMutation } from '../store/api/PostApi';
+import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUpdatePostMutation, useUploadPostMutation } from '../store/api/PostApi';
 
 export const AddPost = () => {
+  const { postId } = useParams();
   const user = useAppSelector(state => state.user);
+  const post = useAppSelector(state => state.postSlice.posts.find(post => post.postId === postId));
   const [selectedImage, setSelectedImage] = useState<File | string>(ImageIcon);
   const [uploadPost] = useUploadPostMutation();
   const [uploadPostImage] = useUpdatePhotoMutation();
+  const [updatePost] = useUpdatePostMutation();
 
   const [postObject, setPostObject] = useState<IUploadPost>({ title: '', description: '', gameDate: new Date(Date.now()), location: '' });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (post) {
+      setPostObject(post);
+      setSelectedImage(process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo);
+    }
+  }, []);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -32,8 +41,22 @@ export const AddPost = () => {
       photo.append('photo', selectedImage);
       const dto: IPostUploadImage = { postId: data.postId, photo };
       await uploadPostImage(dto);
-      navigate('/');
     }
+
+    navigate('/');
+  };
+
+  const updateHandler = async () => {
+    const userDto: IUploadPost = postObject;
+    const data = await updatePost(userDto).unwrap();
+    if (selectedImage && typeof selectedImage !== 'string') {
+      const photo = new FormData();
+      photo.append('photo', selectedImage);
+      const dto: IPostUploadImage = { postId: data.postId, photo };
+      await uploadPostImage(dto);
+    }
+
+    navigate('/');
   };
 
   if (user.role !== UserRole.ADMIN) {
@@ -48,10 +71,17 @@ export const AddPost = () => {
           <ArrowLeft />
           <p className='add-text'>Создать событие</p>
           <div className='add-button'>
-            <button onClick={uploadHandler}>
-              <img src={GoodCheckIcon} alt='' />
-              Сохранить
-            </button>
+            {post ? (
+              <button onClick={updateHandler}>
+                <img src={GoodCheckIcon} alt='' />
+                Сохранить
+              </button>
+            ) : (
+              <button onClick={uploadHandler}>
+                <img src={GoodCheckIcon} alt='' />
+                Сохранить
+              </button>
+            )}
           </div>
         </div>
         <div className='add-wrapper'>
@@ -85,8 +115,6 @@ export const AddPost = () => {
                 type='datetime-local'
                 onChange={e =>
                   setPostObject(prevState => {
-                    console.log(e.target.value);
-
                     const dto: IUploadPost = { ...prevState, gameDate: new Date(e.target.value) };
                     return dto;
                   })

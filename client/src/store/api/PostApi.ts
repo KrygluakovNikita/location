@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addPhoto, addPost, PostDto, setPosts } from '../reducers/PostSlice';
+import { addPhoto, addPost, editPost, PostDto, setPosts } from '../reducers/PostSlice';
 
 export interface IUploadPost {
   title: string;
@@ -43,6 +43,16 @@ export const postApi = createApi({
       },
       invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
     }),
+    updatePost: build.mutation<PostDto, IUploadPost>({
+      query: body => ({ url: `post/`, method: 'PATCH', body }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        const post: PostDto = data.data;
+
+        dispatch(editPost(post));
+      },
+      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+    }),
     UpdatePhoto: build.mutation({
       query: (body: IPostUploadImage) => ({
         url: `post/update-photo/${body.postId}`,
@@ -58,4 +68,4 @@ export const postApi = createApi({
   }),
 });
 
-export const { useGetPostsQuery, useGetPostQuery, useUploadPostMutation, useUpdatePhotoMutation } = postApi;
+export const { useGetPostsQuery, useGetPostQuery, useUploadPostMutation, useUpdatePhotoMutation, useUpdatePostMutation } = postApi;

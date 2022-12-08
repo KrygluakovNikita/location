@@ -12,7 +12,6 @@ import { AddPost } from './pages/AddPost';
 
 function App() {
   const user = useAppSelector(state => state.user);
-  console.log(user);
 
   return (
     <>
@@ -22,6 +21,7 @@ function App() {
         <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/add-post' element={<AddPost />} />
+        <Route path='/add-post/:postId' element={<AddPost />} />
         <Route path='/:postId' element={<Post />} />
         <Route path='/' element={<Feed />} />
         <Route path='/*' element={<PageNotFound />} />

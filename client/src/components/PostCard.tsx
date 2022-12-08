@@ -1,14 +1,18 @@
-import { FC } from 'react';
+import { FC, useState, useEffect, MouseEvent } from 'react';
 import { LikeDto, UserDto } from '../store/reducers/UserSlice';
 import './PostCard.css';
 import Pointer from '../images/Pointer.svg';
 import Icon from '../images/Icon.svg';
-import Heart from '../images/Heart.svg';
+import HeartIcon from '../images/Heart.svg';
+import FullHeartIcon from '../images/FullHeart.svg';
 import Comment from '../images/Comment.svg';
 import { Share } from './Share';
 import { UserInfo } from './UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
 import { CommentDto } from '../store/reducers/PostSlice';
+import { useAddLikeMutation } from '../store/api/LikeApi';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../hooks/redux';
 
 interface IPostProps {
   postId: string;
@@ -23,17 +27,37 @@ interface IPostProps {
   photo: string;
 }
 
-export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate, title, user, description, photo }) => {
+export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate, title, user: postUser, description, photo, likes }) => {
+  const user = useAppSelector(state => state.user);
   const { postLocaleDate, postLocaleTime } = convertPostDate(postDate);
   const { gameLocaleDate, gameLocaleTime } = convertGameDate(gameDate);
   const maxDescriptionLength = 150;
   const defaultImage = 'default_image.jpg';
-  console.log(photo);
+  const [isLike, setIsLike] = useState(false);
+  const [addLike] = useAddLikeMutation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (likes.findIndex(like => like.user.userId === user.userId!) !== -1) {
+      setIsLike(true);
+    }
+  }, []);
+
+  const likeHandler = async (e: MouseEvent<HTMLDivElement>) => {
+    if (!user.userId) {
+      navigate('/login');
+    } else if (isLike) {
+      setIsLike(false);
+    } else {
+      await addLike(postId);
+      setIsLike(true);
+    }
+  };
 
   return (
     <div className='post'>
       <div className='info'>
-        <UserInfo postLocaleDate={postLocaleDate} postLocaleTime={postLocaleTime} user={user} />
+        <UserInfo postLocaleDate={postLocaleDate} postLocaleTime={postLocaleTime} user={postUser} />
         <p className='title'>{title}</p>
         <p className='description post-text'>
           {description.length > maxDescriptionLength ? description.slice(0, maxDescriptionLength) + '...' : description}
@@ -62,10 +86,17 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
           <img src={Comment} alt='' />
           <a href={`/${postId}`}>Комментарии</a>
         </div>
-        <div className='footer'>
-          <img src={Heart} alt='' />
-          <p onClick={() => {}}>125</p>
-        </div>
+        {isLike ? (
+          <div className='footer' onClick={e => likeHandler(e)}>
+            <img src={FullHeartIcon} alt='' />
+            <p>{likes.length}</p>
+          </div>
+        ) : (
+          <div className='footer' onClick={e => likeHandler(e)}>
+            <img src={HeartIcon} alt='' />
+            <p>{likes.length}</p>
+          </div>
+        )}
       </div>
     </div>
   );
