@@ -8,6 +8,7 @@ import { useAppSelector } from './hooks/redux';
 import { PageNotFound } from './pages/PageNotFound';
 import { Profile } from './pages/Profile';
 import { Post } from './pages/Post';
+import { AddPost } from './pages/AddPost';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -20,6 +21,7 @@ function App() {
         <Route path='/registration-google' element={user?.userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
         <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/add-post' element={<AddPost />} />
         <Route path='/:postId' element={<Post />} />
         <Route path='/' element={<Feed />} />
         <Route path='/*' element={<PageNotFound />} />

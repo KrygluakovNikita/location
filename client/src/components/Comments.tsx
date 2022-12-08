@@ -1,5 +1,4 @@
 import { FC, FormEvent, MouseEvent, useState } from 'react';
-import { CommentDto } from '../store/reducers/PostSlice';
 import { CommentCard } from './CommentCard';
 import './Comments.css';
 import Plus from '../images/Plus.svg';

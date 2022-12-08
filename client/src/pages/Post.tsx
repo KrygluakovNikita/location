@@ -11,7 +11,7 @@ import { Share } from '../components/Share';
 import { correctEnding } from '../utils/naming';
 import { Comments } from '../components/Comments';
 import { useAppSelector } from '../hooks/redux';
-import BackArrow from '../images/BackArrow.svg';
+import { ArrowLeft } from '../components/ArrowLeft';
 
 export const Post = () => {
   const { postId } = useParams();
@@ -34,12 +34,7 @@ export const Post = () => {
     <>
       <Sidebar isProfile={false} />
       <div className='main'>
-        <div className='post-top'>
-          <a className='back-button' href='/'>
-            <img src={BackArrow} alt='' />
-            <p>назад</p>
-          </a>
-        </div>
+        <ArrowLeft />
         {post ? (
           <div className='container'>
             <div className='post-card'></div>

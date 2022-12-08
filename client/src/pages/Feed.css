@@ -5,3 +5,36 @@
   align-items: center;
   justify-content: space-around;
 }
+
+.feed-add-button {
+  float: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.feed-add-button button {
+  padding: 10px 18px;
+  gap: 8px;
+  background: #e33940;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.feed-add-button button:active {
+  background: #c73237;
+  color: #ffffff;
+}

@@ -228,7 +228,6 @@ class UserService {
 
   async updateEmail({ token, newEmail }: IChangeEmail): Promise<void> {
     const data = jwtService.validateChangeEmailToken(token);
-    //check token and exteptions
 
     if (!data.isChangeEmail) {
       throw ApiError.BadRequest('Вы не можете изменить почту');
@@ -356,7 +355,7 @@ class UserService {
       user.photo = newPhoto;
     }
 
-    user.save();
+    await user.save();
 
     return;
   }

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CommentDto, PostDto } from './PostSlice';
+import { CommentDto } from './PostSlice';
 
 export interface CardDto {
   cardId: string;

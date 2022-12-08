@@ -8,9 +8,8 @@ class PostController {
     try {
       const { title, description, postDate = null, gameDate, location = null } = req.body as IPost;
 
-      const photo = req.file.filename;
       const { userId } = req.user;
-      const postDto: IPost = { title, description, postDate, gameDate, location, photo, userId };
+      const postDto: IPost = { title, description, postDate, gameDate, location, userId };
 
       const userData = await postService.upload(postDto);
 
@@ -19,6 +18,19 @@ class PostController {
       next(e);
     }
   }
+  async updatePhoto(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { postId } = req.params;
+      const newPhoto = req.file?.filename;
+
+      await postService.updatePhoto(postId, newPhoto);
+
+      return res.end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async update(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const { title, description, gameDate, location, postId } = req.body as IPostUpdate;

@@ -1,0 +1,15 @@
+.back-button {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #3b3a39;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.post-top {
+  margin-bottom: 10px;
+}

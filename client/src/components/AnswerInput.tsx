@@ -21,16 +21,6 @@ export const AnswerInput: FC<IAnswerInputProps> = ({ user, userReply, setReply, 
   const submitHandler = async (e: FormEvent<HTMLFormElement> | MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
     if (message) {
-      // const dto: ReplyUpload = {
-      //   postId,
-      //   answer: {
-      //     commentId,
-      //     user: user as UserDto,
-      //     message,
-      //     userReply,
-      //   },
-      // };
-
       const uploadDto: ReplyUpload = { commentId, user: user as UserDto, message, userReply };
       await uploadAnswer(uploadDto);
       setMessage('');

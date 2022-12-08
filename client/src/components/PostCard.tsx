@@ -9,7 +9,6 @@ import { Share } from './Share';
 import { UserInfo } from './UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
 import { CommentDto } from '../store/reducers/PostSlice';
-import { Link } from 'react-router-dom';
 
 interface IPostProps {
   postId: string;

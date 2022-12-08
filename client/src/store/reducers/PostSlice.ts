@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IResponseAnswer } from '../api/AnswerApi';
-import { IUser, LikeDto, UserDto } from './UserSlice';
+import { LikeDto, UserDto } from './UserSlice';
 
 export interface PostDto {
   postId: string;
