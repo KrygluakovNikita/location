@@ -27,6 +27,8 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
   const { postLocaleDate, postLocaleTime } = convertPostDate(postDate);
   const { gameLocaleDate, gameLocaleTime } = convertGameDate(gameDate);
   const maxDescriptionLength = 150;
+  const defaultImage = 'default_image.jpg';
+  console.log(photo);
 
   return (
     <div className='post'>
@@ -48,7 +50,11 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
         </div>
       </div>
       <div className='image-wrapper'>
-        <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + photo} alt='' />
+        {photo ? (
+          <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + photo} alt='' />
+        ) : (
+          <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + defaultImage} alt='' />
+        )}
       </div>
       <div className='post-card-footer'>
         <Share url={postId} />

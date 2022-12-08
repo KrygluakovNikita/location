@@ -81,7 +81,7 @@ class PostService {
         user: true,
         comments: {
           user: true,
-          answers: { userReply: true, user: true },
+          answers: { userReply: true, user: true, comment: true },
           post: true,
         },
         likes: { user: true },

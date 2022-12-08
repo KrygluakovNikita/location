@@ -18,6 +18,7 @@ export const Post = () => {
   const post = useAppSelector(state => state.postSlice.posts.filter(post => post.postId === postId!)[0]);
   const [postDate, setPostDate] = useState({ postLocaleDate: '', postLocaleTime: '' });
   const [gameDate, setGameDate] = useState({ gameLocaleDate: '', gameLocaleTime: '' });
+  const defaultImage = 'default_image.jpg';
 
   useEffect(() => {
     if (post?.postDate) {
@@ -57,7 +58,11 @@ export const Post = () => {
             </div>
 
             <div className='post-image-wrapper'>
-              <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />
+              {post.photo ? (
+                <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />
+              ) : (
+                <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + defaultImage} alt='' />
+              )}
             </div>
             <div className='post-footer'>
               <Share url={postId!} />
@@ -72,7 +77,7 @@ export const Post = () => {
                   {post.comments.length ?? 0} комментар{correctEnding(post.comments.length ?? 0)}
                 </p>
               </div>
-              <Comments postId={postId!} />
+              <Comments postId={postId!} comments={post.comments} />
             </div>
           </div>
         ) : (

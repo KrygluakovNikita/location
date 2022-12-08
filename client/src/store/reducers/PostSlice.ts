@@ -56,27 +56,42 @@ export const postSlice = createSlice({
       state.posts = payload;
     },
     addPost: (state: IPosts, action: PayloadAction<PostDto>) => {
-      state.posts?.unshift(action.payload);
+      state.posts.unshift(action.payload);
     },
     editPost: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
       const index = state.posts?.findIndex(post => {
         return post.postId === payload.postId;
       });
-      if (index) {
+      if (index !== -1) {
         state.posts![index] = { ...payload };
       }
     },
-    addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+    addPhoto: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
+        state.posts[ind].photo = payload.photo;
+      }
+    },
+    addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
+      console.log('here');
+      console.log(payload);
+      console.log(state);
+
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      console.log(ind);
+      console.log(state.posts);
+
+      if (ind !== -1) {
+        console.log('here2');
+
         state.posts[ind].comments.push(payload);
       }
     },
     addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
         const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
-        if (commentInd) {
+        if (commentInd !== -1) {
           const dto: ReplyDto = {
             replyId: payload.replyId,
             user: payload.user,
@@ -91,7 +106,7 @@ export const postSlice = createSlice({
     },
     removeComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
         const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
         if (commentInd) {
           state.posts[ind].comments[commentInd] = { ...payload };
@@ -102,6 +117,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { addPost, editPost, addAnswer, setPosts, addComment } = postSlice.actions;
+export const { addPost, editPost, addAnswer, setPosts, addComment, addPhoto } = postSlice.actions;
 
 export default postSlice.reducer;

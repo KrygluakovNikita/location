@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addPost, PostDto, setPosts } from '../reducers/PostSlice';
+import { addPhoto, addPost, PostDto, setPosts } from '../reducers/PostSlice';
 
 export interface IUploadPost {
   title: string;
@@ -8,10 +8,14 @@ export interface IUploadPost {
   gameDate: Date;
   location: string;
 }
+export interface IPostUploadImage {
+  photo: FormData;
+  postId: string;
+}
 
 export const postApi = createApi({
   reducerPath: 'postApi',
-  tagTypes: ['Posts'],
+  tagTypes: ['Posts', 'Comments'],
   baseQuery: customFetchBase,
   endpoints: build => ({
     getPosts: build.query<PostDto[], void>({
@@ -39,7 +43,19 @@ export const postApi = createApi({
       },
       invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
     }),
+    UpdatePhoto: build.mutation({
+      query: (body: IPostUploadImage) => ({
+        url: `post/update-photo/${body.postId}`,
+        method: 'POST',
+        body: body.photo,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        dispatch(addPhoto(data.data));
+        await queryFulfilled.catch(err => console.log(err));
+      },
+    }),
   }),
 });
 
-export const { useGetPostsQuery, useGetPostQuery, useUploadPostMutation } = postApi;
+export const { useGetPostsQuery, useGetPostQuery, useUploadPostMutation, useUpdatePhotoMutation } = postApi;

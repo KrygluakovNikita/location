@@ -49,8 +49,6 @@ class UserController {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('ceared');
-
       res.clearCookie('refreshToken', { path: '/' });
       res.clearCookie('serverUserData');
 

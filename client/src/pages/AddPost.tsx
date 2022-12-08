@@ -8,12 +8,14 @@ import './AddPost.css';
 import GoodCheckIcon from '../images/GoodCheck.svg';
 import UploadImage from '../components/UploadImage';
 import ImageIcon from '../images/Image.svg';
-import { IUploadPost, useUploadPostMutation } from '../store/api/PostApi';
+import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUploadPostMutation } from '../store/api/PostApi';
 
 export const AddPost = () => {
   const user = useAppSelector(state => state.user);
   const [selectedImage, setSelectedImage] = useState<File | string>(ImageIcon);
   const [uploadPost] = useUploadPostMutation();
+  const [uploadPostImage] = useUpdatePhotoMutation();
+
   const [postObject, setPostObject] = useState<IUploadPost>({ title: '', description: '', gameDate: new Date(Date.now()), location: '' });
   const navigate = useNavigate();
 
@@ -24,11 +26,13 @@ export const AddPost = () => {
 
   const uploadHandler = async () => {
     const userDto: IUploadPost = postObject;
-    await uploadPost(userDto);
+    const data = await uploadPost(userDto).unwrap();
     if (selectedImage) {
       const photo = new FormData();
       photo.append('photo', selectedImage);
-      await UpdatePhoto(photo);
+      const dto: IPostUploadImage = { postId: data.postId, photo };
+      await uploadPostImage(dto);
+      navigate('/');
     }
   };
 
@@ -102,7 +106,39 @@ export const AddPost = () => {
               />
             </div>
             <div className='add-upload-image'>
-              <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} title='Загрузить фото' />
+              {selectedImage === ImageIcon ? (
+                <div className='upload-image'>
+                  {selectedImage && (
+                    <div>
+                      <img
+                        alt='Не найдена'
+                        className='upload-img'
+                        src={typeof selectedImage === 'string' ? selectedImage : URL.createObjectURL(selectedImage as File)}
+                      />
+                    </div>
+                  )}
+
+                  <label className='feedback__label '>
+                    <span className='underline'>Загрузить</span>
+                    <input type='file' className='feedback__file' onChange={changeHandler} />
+                  </label>
+                </div>
+              ) : (
+                <>
+                  <div className='add-post-image'>
+                    <img
+                      alt='Не найдена'
+                      className='add-post-image'
+                      src={typeof selectedImage === 'string' ? selectedImage : URL.createObjectURL(selectedImage as File)}
+                    />
+                  </div>
+
+                  <label className='feedback__label '>
+                    <span className='underline'>Изменить фото события</span>
+                    <input type='file' className='feedback__file' onChange={changeHandler} />
+                  </label>
+                </>
+              )}
             </div>
           </div>
         </div>
