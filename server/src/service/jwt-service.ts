@@ -47,18 +47,14 @@ class JWTService {
 
       return userData;
     } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
+      throw ApiError.BadRequest(`Ошибка на стороне сервера`);
     }
   }
 
   validateResetPasswordToken(token: string): UserDto {
-    try {
-      const { payload } = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET) as JwtPayload;
+    const { payload } = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET) as JwtPayload;
 
-      return payload as UserDto;
-    } catch (_) {
-      throw ApiError.BadRequest(`Токен неверный или устарел`);
-    }
+    return payload as UserDto;
   }
 
   validateChangePasswordToken(token: string): UserDto {

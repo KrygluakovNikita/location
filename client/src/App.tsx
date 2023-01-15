@@ -22,6 +22,7 @@ function App() {
         <Route path='/profile' element={<Profile />} />
         <Route path='/add-post' element={<AddPost />} />
         <Route path='/add-post/:postId' element={<AddPost />} />
+        {/*/// */}
         <Route path='/:postId' element={<Post />} />
         <Route path='/' element={<Feed />} />
         <Route path='/*' element={<PageNotFound />} />

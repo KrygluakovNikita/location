@@ -11,10 +11,10 @@ import './Feed.css';
 import WhitePlusIcon from '../images/WhitePlus.svg';
 import { useNavigate } from 'react-router-dom';
 export const Feed = () => {
-  const { isLoading } = useGetPostsQuery();
   const user = useAppSelector(state => state.user);
-  const posts = useAppSelector(state => state.postSlice.posts);
-  const [filteredPosts, setFilteredPosts] = useState<PostDto[]>(posts);
+  // const posts = useAppSelector(state => state.postSlice.posts);
+  const { data: posts, isLoading } = useGetPostsQuery();
+  const [filteredPosts, setFilteredPosts] = useState<PostDto[]>(posts ?? []);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ export const Feed = () => {
             </button>
           </div>
         )}
-        <Search setFilteredPosts={setFilteredPosts} posts={posts} />
+        <Search setFilteredPosts={setFilteredPosts} posts={posts ?? []} />
 
         <div className='posts'>{!isLoading && filteredPosts?.map(post => <PostCard key={post.postId} {...post} />)}</div>
       </div>

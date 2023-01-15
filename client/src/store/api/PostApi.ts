@@ -1,7 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
 import { addPhoto, addPost, editPost, PostDto, setPosts } from '../reducers/PostSlice';
-
+import { addLike, deleteLike } from '../reducers/PostSlice';
+import { LikeDto } from '../reducers/UserSlice';
 export interface IUploadPost {
   title: string;
   description: string;
@@ -32,6 +33,13 @@ export const postApi = createApi({
     }),
     getPost: build.query<PostDto, string>({
       query: postId => ({ url: `post/${postId}`, method: 'GET' }),
+      providesTags: result =>
+        result
+          ? [
+              { type: 'Posts' as const, postId: result.postId },
+              { type: 'Posts', id: 'LIST' },
+            ]
+          : [{ type: 'Posts', id: 'LIST' }],
     }),
     uploadPost: build.mutation<PostDto, IUploadPost>({
       query: body => ({ url: `post/`, method: 'POST', body }),
@@ -65,7 +73,39 @@ export const postApi = createApi({
         await queryFulfilled.catch(err => console.log(err));
       },
     }),
+    addLike: build.mutation<LikeDto, string>({
+      query: postId => ({ url: `like/${postId}`, method: 'POST' }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        const like: LikeDto = data.data;
+
+        if (like) {
+          dispatch(addLike(like));
+        }
+      },
+      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+    }),
+    deleteLike: build.mutation<LikeDto, string>({
+      query: postId => ({ url: `like/${postId}`, method: 'DELETE' }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        const like: LikeDto = data.data;
+        if (like) {
+          dispatch(deleteLike(like));
+        }
+      },
+
+      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetPostsQuery, useGetPostQuery, useUploadPostMutation, useUpdatePhotoMutation, useUpdatePostMutation } = postApi;
+export const {
+  useGetPostsQuery,
+  useGetPostQuery,
+  useUploadPostMutation,
+  useUpdatePhotoMutation,
+  useUpdatePostMutation,
+  useAddLikeMutation,
+  useDeleteLikeMutation,
+} = postApi;

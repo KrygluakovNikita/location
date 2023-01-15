@@ -10,7 +10,7 @@ import { Share } from './Share';
 import { UserInfo } from './UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
 import { CommentDto } from '../store/reducers/PostSlice';
-import { useAddLikeMutation } from '../store/api/LikeApi';
+import { useAddLikeMutation, useDeleteLikeMutation } from '../store/api/PostApi';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 
@@ -35,6 +35,7 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
   const defaultImage = 'default_image.jpg';
   const [isLike, setIsLike] = useState(false);
   const [addLike] = useAddLikeMutation();
+  const [deleteLike] = useDeleteLikeMutation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
     if (!user.userId) {
       navigate('/login');
     } else if (isLike) {
+      await deleteLike(postId);
       setIsLike(false);
     } else {
       await addLike(postId);

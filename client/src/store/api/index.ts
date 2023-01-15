@@ -1,4 +1,4 @@
-import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { RootState } from '..';
 import { resetUserSlice, setAccessToken } from '../reducers/UserSlice';
 

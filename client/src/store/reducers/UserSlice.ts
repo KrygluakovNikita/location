@@ -76,8 +76,8 @@ let initialState: IUser = {
   city: '',
 };
 
-export const resumeSlice = createSlice({
-  name: 'resume',
+export const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
     setUser: (state: IUser, action: PayloadAction<IUser>) => {
@@ -146,6 +146,6 @@ export const {
   removeLike,
   addGame,
   addLike,
-} = resumeSlice.actions;
+} = userSlice.actions;
 
-export default resumeSlice.reducer;
+export default userSlice.reducer;
