@@ -15,6 +15,6 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Post, Like, Comment, Game, Card, Token, Reply, Token, RefreshToken],
-  migrations: ['src/database/migrations/*{.ts,.js}'],
+  migrations: ['src/database/migrations/**/*{.ts,.js}'],
   subscribers: ['src/database/subscribers/**/*{.ts,.js}'],
 });
