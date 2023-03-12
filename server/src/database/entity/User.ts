@@ -93,7 +93,7 @@ export class User extends BaseEntity {
   @Column({ type: 'boolean', default: false, name: 'is_activated' })
   isActivated: boolean;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, name: 'reset_link' })
   resetLink: string | null;
 
   @OneToOne(type => RefreshToken, token => token.user, {

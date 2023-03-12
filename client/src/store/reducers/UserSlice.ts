@@ -15,6 +15,11 @@ export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
 }
+export interface IGame {
+  date: Date;
+  hours: string;
+  paymentType: PaymentType;
+}
 
 export interface GameDto {
   gameId: string;
