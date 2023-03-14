@@ -10,6 +10,7 @@ import { Profile } from './pages/Profile/Profile';
 import { Post } from './pages/Post';
 import { AddPost } from './pages/AddPost';
 import { ProfileQrGame } from './pages/Profile/ProfileQrGame';
+import { ProfileSettings } from './pages/Profile/ProfileSettings';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -22,6 +23,7 @@ function App() {
         <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/profile/:gameId' element={<ProfileQrGame />} />
+        <Route path='/profile-settings' element={<ProfileSettings />} />
         <Route path='/add-post' element={<AddPost />} />
         <Route path='/add-post/:postId' element={<AddPost />} />
         {/*/// */}

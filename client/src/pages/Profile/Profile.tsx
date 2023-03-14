@@ -4,32 +4,38 @@ import { useAppSelector } from '../../hooks/redux';
 import styles from './Profile.module.css';
 import { Settings } from '../../images/Settings';
 import { useAddGameMutation } from '../../store/api/GameApi';
-import { PaymentType } from '../../store/reducers/UserSlice';
+import { GameDto, PaymentType } from '../../store/reducers/UserSlice';
+import { useNavigate } from 'react-router-dom';
+import Modal from '../../components/Modal';
 
 export const Profile = () => {
+  const navigate = useNavigate();
   const user = useAppSelector(state => state.user);
-  const [addGame, { data, isLoading }] = useAddGameMutation();
+  const [addGame] = useAddGameMutation();
   const [hours, setHours] = useState<null | string>(null);
   const [payType, setPayType] = useState<null | PaymentType>(null);
   const [playDate, setPlayDate] = useState<null | string>(null);
-  const [isCreateGame, setIsCreateGame] = useState(true);
-  const [qrCOde, setQRCOde] = useState(null);
+  const [gameId, setGameId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const createGame = async () => {
     if (hours && payType && playDate) {
       await addGame({ hours, paymentType: payType, date: new Date(playDate) })
-        .then((data: any) => {
-          console.log('data');
-          console.log(data.data);
-          setQRCOde(data.data.qrCode);
+        .unwrap()
+        .then((res: GameDto) => {
+          setGameId(res.gameId);
+          setIsOpen(true);
         })
-        .finally(() => {
-          setIsCreateGame(false);
-          setHours(null);
-          setPayType(null);
-          setPlayDate(null);
-        });
+        .catch(err => console.log(err));
     }
+  };
+
+  const onClickModal = (state: boolean) => {
+    setIsOpen(state);
+    navigate(`/profile/${gameId}`);
+    setHours(null);
+    setPayType(null);
+    setPlayDate(null);
   };
 
   return (
@@ -46,62 +52,65 @@ export const Profile = () => {
                 <p className={styles.profileUserCity}>{user.city}</p>
               </div>
             </div>
+            {isOpen ? (
+              <Modal setIsOpen={onClickModal} title='Игра успешно создана' />
+            ) : (
+              <div className={styles.profileScanContainer}>
+                <div className={styles.profileSelectMainContainer}>
+                  <select
+                    className={styles.selectContainer}
+                    onChange={event => {
+                      setHours(event.currentTarget.value);
+                    }}
+                    defaultValue={''}>
+                    <option value='' disabled>
+                      Время игры
+                    </option>
+                    <option value='1'>1 час</option>
+                    <option value='2'>2 часа</option>
+                    <option value='4'>4 часа</option>
+                  </select>
+                </div>
+                <div className={styles.profileSelectPayTypeMainContainer}>
+                  <select
+                    className={styles.selectContainer}
+                    onChange={event => {
+                      setPayType(event.currentTarget.value as PaymentType);
+                    }}
+                    defaultValue={''}>
+                    <option value='' disabled>
+                      Тип оплаты
+                    </option>
+                    <option value='cash'>Наличные</option>
+                    <option value='card'>Карта</option>
+                  </select>
+                </div>
+                <div className={styles.profileSelectDate}>
+                  <input
+                    type='datetime-local'
+                    onChange={e => {
+                      console.log('e.currentTarget.value');
+                      console.log(e.currentTarget.value);
 
-            <div className={styles.profileScanContainer}>
-              <div className={styles.profileSelectMainContainer}>
-                <select
-                  className={styles.selectContainer}
-                  onChange={event => {
-                    setHours(event.currentTarget.value);
-                  }}
-                  value={hours ?? ''}>
-                  <option value='' disabled selected>
-                    Время игры
-                  </option>
-                  <option value='1'>1 час</option>
-                  <option value='2'>2 часа</option>
-                  <option value='4'>4 часа</option>
-                </select>
-              </div>
-              <div className={styles.profileSelectPayTypeMainContainer}>
-                <select
-                  className={styles.selectContainer}
-                  onChange={event => {
-                    setPayType(event.currentTarget.value as PaymentType);
-                  }}
-                  value={payType ?? ''}>
-                  <option value='' disabled selected>
-                    Тип оплаты
-                  </option>
-                  <option value='cash'>Наличные</option>
-                  <option value='card'>Карта</option>
-                </select>
-              </div>
-              <div className={styles.profileSelectDate}>
-                <input
-                  type='datetime-local'
-                  onChange={e => {
-                    console.log('e.currentTarget.value');
-                    console.log(e.currentTarget.value);
+                      setPlayDate(e.currentTarget.value);
+                    }}
+                    className={styles.profileDateTimeContainer}
+                    value={playDate ?? ''}
+                  />
+                </div>
 
-                    setPlayDate(e.currentTarget.value);
-                  }}
-                  className={styles.profileDateTimeContainer}
-                  value={playDate ?? ''}
-                />
+                <div className={styles.profileGenerateQRBtnContainer}>
+                  <button
+                    className={hours && payType && playDate ? styles.profileGenerateQRBtn : styles.profileGenerateQRBtnContainerDisabled}
+                    onClick={createGame}>
+                    <p className={styles.profileGenerateQRBtnText}>Сгенерировать QR код</p>
+                  </button>
+                </div>
               </div>
-
-              <div className={styles.profileGenerateQRBtnContainer}>
-                <button
-                  className={hours && payType && playDate ? styles.profileGenerateQRBtn : styles.profileGenerateQRBtnContainerDisabled}
-                  onClick={createGame}>
-                  <p className={styles.profileGenerateQRBtnText}>Сгенерировать QR код</p>
-                </button>
-              </div>
-            </div>
+            )}
           </div>
           <div className={styles.sideContainer}>
-            <button className={styles.profileSettingContainer}>
+            <button className={styles.profileSettingContainer} onClick={() => navigate('/profile-settings')}>
               <Settings color={'white'} />
               <p className={styles.profileSettingText}>Настройки</p>
             </button>

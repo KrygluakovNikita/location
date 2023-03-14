@@ -23,8 +23,8 @@ export const customFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBase
     const refreshResult = await baseQuery({ url: 'auth/refresh', method: 'GET' }, api, extraOptions);
 
     const response = refreshResult.data as any;
-    if (response) {
-      api.dispatch(setAccessToken(response.data.user.accessToken));
+    if (response?.accessToken) {
+      api.dispatch(setAccessToken(response.accessToken));
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(resetUserSlice());

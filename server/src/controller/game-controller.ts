@@ -35,9 +35,9 @@ class GameController {
       const gameId = req.params.gameId;
       const { userId } = req.user;
 
-      const games = await gameService.getByGameId(userId, gameId);
+      const game = await gameService.getByGameId(userId, gameId);
 
-      return res.json(games);
+      return res.json(game);
     } catch (e) {
       next(e);
     }

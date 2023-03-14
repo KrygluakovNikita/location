@@ -30,6 +30,16 @@ export interface GameDto {
   isPayed: boolean;
 }
 
+export interface GameDtoWithQr {
+  gameId: string;
+  user: UserDto;
+  date: Date;
+  hours: string;
+  paymentType: PaymentType;
+  isPayed: boolean;
+  qrCode: string;
+}
+
 export interface UserDto {
   email: string;
   userId: string;
