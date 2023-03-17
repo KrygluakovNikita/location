@@ -43,6 +43,20 @@ class GameController {
     }
   }
 
+  async updatePayByGameId(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const gameId = req.params.gameId;
+      const { isPayed } = req.body;
+      const { userId } = req.user;
+
+      const game = await gameService.updatePayByGameId(userId, gameId, isPayed);
+
+      return res.json(game);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const games = await gameService.getAllGames();

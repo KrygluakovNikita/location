@@ -50,7 +50,7 @@ export const ProfileQrGame = () => {
             )}
           </div>
           <div className={styles.sideContainer}>
-            <button className={styles.profileSettingContainer} onClick={() => navigate('/profile-settings')}>
+            <button className={styles.profileSettingContainer} onClick={() => navigate('/profile/settings')}>
               <Settings color={'white'} />
               <p className={styles.profileSettingText}>Настройки</p>
             </button>

@@ -58,6 +58,27 @@ class GameService {
     return result;
   }
 
+  async updatePayByGameId(userId: string, gameId: string, isPayed: boolean): Promise<GameDto> {
+    const user = await User.findOneBy({ userId });
+
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
+
+    const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true } });
+    if (game.user.userId !== userId || user.role !== UserRole.ADMIN) {
+      throw UserError.NotAllow();
+    }
+    if (game.isPayed !== isPayed) {
+      game.isPayed = isPayed;
+      await game.save();
+    }
+
+    const result = new GameDto(game);
+
+    return result;
+  }
+
   async getAllGames(): Promise<GameDto[]> {
     const games = await Game.find({ relations: { user: true } });
 
