@@ -206,6 +206,20 @@ class UserService {
     return userDto;
   }
 
+  ///delete
+  async updateUserData(userId: string, { newPassword = null, newEmail = null, newCity = null }): Promise<UserDto> {
+    const user = await User.findOneBy({ userId: userId });
+    if (newPassword) user.password = await this.hashPassword(newPassword);
+    if (newEmail) user.email = newEmail;
+    if (newCity) user.city = newCity;
+
+    await user.save();
+
+    const result = new UserDto(user);
+
+    return result;
+  }
+
   async changeEmail(userId: string, password: string): Promise<IToken> {
     const user = await User.findOneBy({ userId });
     if (!user) {

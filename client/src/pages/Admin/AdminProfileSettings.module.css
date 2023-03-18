@@ -21,16 +21,6 @@
   justify-content: flex-start;
 }
 
-.privacyPolicyContainer {
-  padding: 5px 0 5px 0;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-
-  /* background-color: red; */
-}
 .userDataContainer {
   flex-wrap: wrap;
   padding: 12px 12px;
@@ -55,13 +45,6 @@
   color: #e33940;
 }
 
-.userAgreementBtn {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: inherit;
-  cursor: pointer;
-}
 .paddingContainer {
   padding: 12px 12px;
 }
@@ -71,7 +54,5 @@
 }
 
 .profileHistoryItems {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  table-layout: fixed;
 }

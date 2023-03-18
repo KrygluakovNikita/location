@@ -4,20 +4,22 @@ import Pencil from '../images/Pencil.svg';
 
 interface IChangeValueItem {
   title: string;
-  value: string;
+  placeHolder: string;
   onChange: (val: any) => void;
 }
 
-export const ChangeValueItem: FC<IChangeValueItem> = ({ title, value, onChange }) => {
+export const ChangeValueItem: FC<IChangeValueItem> = ({ title, onChange, placeHolder }) => {
   const [newValue, setNewValue] = useState('');
   const [isChange, setIsChange] = useState(false);
+  console.log(placeHolder);
+
   const changeHandler = (newVal: string) => {
-    if (newVal && newVal !== value) {
+    if (newVal) {
       setIsChange(true);
       setNewValue(newVal);
     } else {
       setIsChange(false);
-      setNewValue(value);
+      setNewValue('');
     }
   };
 
@@ -29,9 +31,11 @@ export const ChangeValueItem: FC<IChangeValueItem> = ({ title, value, onChange }
           <div className={styles.changeValueBtnValue}>
             <input
               type='text'
+              placeholder={placeHolder ?? ''}
               className={styles.changeValueBtnText}
               onChange={event => changeHandler(event.target.value)}
-              value={newValue ? newValue : value}></input>
+              value={newValue}
+            />
           </div>
           <div className={styles.changeValueBtnPencil}>
             {isChange ? <img src={Pencil} alt='edit' onClick={onChange} className={styles.cursorPointer} /> : null}

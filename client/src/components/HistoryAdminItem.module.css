@@ -1,0 +1,58 @@
+.redText {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0.5px;
+  color: #e33940;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.historyItemIdContainer {
+  text-align: center;
+}
+.historyItemIdContainer td {
+  padding-right: 5px;
+}
+.adminProfileCheckbox {
+  width: 16px;
+  height: 16px;
+}
+
+input[type='checkbox']:before {
+  font-family: 'FontAwesome';
+  content: '\f00c';
+  font-size: 15px;
+  color: transparent !important;
+  background: white;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  border: 1px solid #e33940;
+  border-radius: 2px;
+}
+
+input[type='checkbox']:checked:before {
+  background-image: url(../images/SelectedCheckbox.svg);
+  background-size: no-repeat;
+
+  background-position: center;
+
+  background-size: cover;
+}
+.historyItemDateContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}

@@ -24,12 +24,66 @@ function App() {
         <Route path='/login' element={user?.userId ? <Navigate to='/' replace={true} /> : <Login />} />
         <Route path='/registration-google' element={user?.userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
         <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/:gameId' element={<ProfileQrGame />} />
-        <Route path='/profile/settings' element={<ProfileSettings />} />
-        <Route path='/admin/profile' element={<AdminProfile />} />
-        <Route path='/admin/profile/:gameId' element={<AdminProfileQrGame />} />
-        <Route path='/admin/profile/settings' element={<AdminProfileSettings />} />
+        <Route
+          path='/profile'
+          element={
+            !user?.userId ? (
+              <Navigate to='/login' replace={true} />
+            ) : user?.role === 'user' ? (
+              <Profile />
+            ) : (
+              <Navigate to='/admin/profile' replace={true} />
+            )
+          }
+        />
+        <Route
+          path='/profile/:gameId'
+          element={
+            !user?.userId ? <Navigate to='/login' replace={true} /> : user?.role === 'user' ? <ProfileQrGame /> : <Navigate to='/' replace={true} />
+          }
+        />
+        <Route
+          path='/profile/settings'
+          element={
+            !user?.userId ? <Navigate to='/login' replace={true} /> : user?.role === 'user' ? <ProfileSettings /> : <Navigate to='/' replace={true} />
+          }
+        />
+        <Route
+          path='/admin/profile'
+          element={
+            !user?.userId ? (
+              <Navigate to='/login' replace={true} />
+            ) : user?.role === 'admin' ? (
+              <AdminProfile />
+            ) : (
+              <Navigate to='/profile' replace={true} />
+            )
+          }
+        />
+        <Route
+          path='/admin/profile/:gameId'
+          element={
+            !user?.userId ? (
+              <Navigate to='/login' replace={true} />
+            ) : user?.role === 'admin' ? (
+              <AdminProfileQrGame />
+            ) : (
+              <Navigate to='/profile/:gameId' replace={true} />
+            )
+          }
+        />
+        <Route
+          path='/admin/profile/settings'
+          element={
+            !user?.userId ? (
+              <Navigate to='/login' replace={true} />
+            ) : user?.role === 'admin' ? (
+              <AdminProfileSettings />
+            ) : (
+              <Navigate to='/profile/settings' replace={true} />
+            )
+          }
+        />
         <Route path='/add-post' element={<AddPost />} />
         <Route path='/add-post/:postId' element={<AddPost />} />
         {/*/// */}

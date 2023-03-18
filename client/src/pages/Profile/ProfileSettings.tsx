@@ -3,19 +3,20 @@ import { ChangeValueItem } from '../../components/ChangeValueItem';
 import { HistoryItem } from '../../components/HistoryItem';
 import { Sidebar } from '../../components/Sidebar';
 import { useAppSelector } from '../../hooks/redux';
+import { useUpdateUserDataMutation } from '../../store/api/UserApi';
 import styles from './ProfileSettings.module.css';
 
 export const ProfileSettings = () => {
   const user = useAppSelector(state => state.user);
-
+  const [updateUserData] = useUpdateUserDataMutation();
   const changeEmailHanlder = (newEmail: string) => {
-    console.log('newEmail'); ///
+    updateUserData({ newEmail });
   };
   const changePasswordHanlder = (newPassword: string) => {
-    console.log('newPassword'); ///
+    updateUserData({ newPassword });
   };
   const changeCityHanlder = (newCity: string) => {
-    console.log('newCity'); ///
+    updateUserData({ newCity });
   };
 
   return (
@@ -41,9 +42,9 @@ export const ProfileSettings = () => {
                 <p className={styles.redText}>Пользовательское соглашение</p>
               </button>
             </div>
-            <ChangeValueItem title='Email' value={user.email} onChange={changeEmailHanlder} />
-            <ChangeValueItem title='Пароль' value='********' onChange={changePasswordHanlder} />
-            <ChangeValueItem title='Город' value={user.city} onChange={changeCityHanlder} />
+            <ChangeValueItem title='Email' placeHolder={user.email} onChange={changeEmailHanlder} />
+            <ChangeValueItem title='Пароль' placeHolder='********' onChange={changePasswordHanlder} />
+            <ChangeValueItem title='Город' placeHolder={user.city} onChange={changeCityHanlder} />
           </div>
         </div>
       </div>

@@ -62,10 +62,7 @@ export const AdminProfileQrGame = () => {
                     </div>
                     <div className={styles.profileIdGameContainer}>
                       <input type='checkbox' id='checkbox_id' className={styles.adminProfileCheckbox} checked={isPayed} onChange={payHandler} />
-                      <label htmlFor='checkbox_id'></label>
-                      <p className={styles.profileQRCodeIdText}>Способ оплаты: </p>
-                      {/* <input id='checkbox_id' type='checkbox' checked={isPayed} onChange={payHandler} />
-                      <label htmlFor='checkbox_id'>hsdsdsdh</label> */}
+                      <p className={styles.profileQRCodeIdText}>Оплачено </p>
                     </div>
                   </div>
                   <div className={styles.profileGenerateQRBtnContainer}>

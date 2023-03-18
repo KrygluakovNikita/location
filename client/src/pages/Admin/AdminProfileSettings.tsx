@@ -1,22 +1,31 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { ChangeValueItem } from '../../components/ChangeValueItem';
-import { HistoryItem } from '../../components/HistoryItem';
 import { Sidebar } from '../../components/Sidebar';
 import { useAppSelector } from '../../hooks/redux';
+import { useGetGamesQuery } from '../../store/api/GameApi';
+import { GameDto } from '../../store/reducers/UserSlice';
 import styles from './AdminProfileSettings.module.css';
+import { HistoryAdminItem } from '../../components/HistoryAdminItem';
+import { useUpdateUserDataMutation } from '../../store/api/UserApi';
 
 export const AdminProfileSettings = () => {
   const user = useAppSelector(state => state.user);
-
+  const { data, isSuccess } = useGetGamesQuery();
+  const [games, setGames] = useState<GameDto[] | null>(null);
+  const [updateUserData] = useUpdateUserDataMutation();
   const changeEmailHanlder = (newEmail: string) => {
-    console.log('newEmail'); ///
+    updateUserData({ newEmail });
   };
   const changePasswordHanlder = (newPassword: string) => {
-    console.log('newPassword'); ///
+    updateUserData({ newPassword });
   };
   const changeCityHanlder = (newCity: string) => {
-    console.log('newCity'); ///
+    updateUserData({ newCity });
   };
+
+  useEffect(() => {
+    if (data) setGames(data);
+  }, [data, isSuccess]);
 
   return (
     <div>
@@ -28,22 +37,22 @@ export const AdminProfileSettings = () => {
               <div className={styles.profileHistoryText}>
                 <p className={styles.redText}>История игр</p>
               </div>
-              <div className={styles.profileHistoryItems}>
-                {user.games?.map(game => (
-                  <HistoryItem id={game.gameId} date={game.date} />
+              <table className={styles.profileHistoryItems}>
+                <tr className={styles.historyItemIdContainer}>
+                  <td>ID</td>
+                  <td>Дата и время</td>
+                  <td>Оплата</td>
+                </tr>
+                {games?.map(game => (
+                  <HistoryAdminItem game={game} />
                 ))}
-              </div>
+              </table>
             </div>
           </div>
           <div className={styles.userDataContainer}>
-            <div className={styles.privacyPolicyContainer}>
-              <button className={styles.userAgreementBtn}>
-                <p className={styles.redText}>Пользовательское соглашение</p>
-              </button>
-            </div>
-            <ChangeValueItem title='Email' value={user.email} onChange={changeEmailHanlder} />
-            <ChangeValueItem title='Пароль' value='********' onChange={changePasswordHanlder} />
-            <ChangeValueItem title='Город' value={user.city} onChange={changeCityHanlder} />
+            <ChangeValueItem title='Email' placeHolder={user.email} onChange={changeEmailHanlder} />
+            <ChangeValueItem title='Пароль' placeHolder='********' onChange={changePasswordHanlder} />
+            <ChangeValueItem title='Город' placeHolder={user.city} onChange={changeCityHanlder} />
           </div>
         </div>
       </div>

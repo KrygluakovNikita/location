@@ -14,6 +14,7 @@ router.post('/reset-password/', userController.resetPassword);
 router.post('/reset-password/verification', userController.verificationResetPin);
 router.post('/reset-password/update-password', userController.updateResetedPassword);
 
+router.put('/change-user-data/', isAuth, userController.changeUserData);
 router.post('/change-password/', isAuth, userController.changePassword);
 router.post('/change-password/verification', isAuth, userController.verificationChangePasswordPin);
 router.post('/change-password/update-password', isAuth, userController.updateChangedPassword);

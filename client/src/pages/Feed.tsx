@@ -5,7 +5,7 @@ import { Sidebar } from '../components/Sidebar';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { useGetPostsQuery } from '../store/api/PostApi';
 import { PostDto } from '../store/reducers/PostSlice';
-import { IUser, setUser, UserRole } from '../store/reducers/UserSlice';
+import { IUser, setData, UserRole } from '../store/reducers/UserSlice';
 import { getUserData } from '../utils/cookie';
 import './Feed.css';
 import WhitePlusIcon from '../images/WhitePlus.svg';
@@ -24,7 +24,7 @@ export const Feed = () => {
     if (!user.userId && userData) {
       const userDto = JSON.parse(userData);
       const result: IUser = { ...userDto.user, accessToken: userDto.accessToken };
-      dispatch(setUser(result));
+      dispatch(setData(result));
     }
   }, []);
 

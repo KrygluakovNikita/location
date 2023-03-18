@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styles from './HistoryItem.module.css';
-
+import moment from 'moment';
 interface IHistoryItem {
   id: string;
   date: Date;
@@ -15,7 +15,7 @@ export const HistoryItem: FC<IHistoryItem> = ({ id, date }) => {
         <p className={styles.redText}>{id}</p>
       </div>
       <div className={styles.historyItemDateContainer}>
-        <p>{date.toString()}</p>
+        <p>{moment(date).format('DD.MM.YYYY HH:mm')}</p>
       </div>
     </div>
   );

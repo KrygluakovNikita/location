@@ -142,6 +142,18 @@ class UserController {
     }
   }
 
+  async changeUserData(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { newPassword, newEmail, newCity } = req.body;
+      const { userId } = req.user;
+      const data = await userService.updateUserData(userId, { newPassword, newEmail, newCity });
+
+      return res.json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async verificationChangePasswordPin(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const { pin } = req.body;
