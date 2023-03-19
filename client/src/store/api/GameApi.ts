@@ -45,7 +45,10 @@ export const gameApi = createApi({
     getGames: build.query<GameDto[], void>({
       query: () => ({ url: `game/`, method: 'GET' }),
     }),
+    getUserGames: build.query<GameDto[], void>({
+      query: () => ({ url: `game/user`, method: 'GET' }),
+    }),
   }),
 });
 
-export const { useAddGameMutation, useGetGameQuery, useUpdatePayByGameIdMutation, useGetGamesQuery } = gameApi;
+export const { useAddGameMutation, useGetGameQuery, useUpdatePayByGameIdMutation, useGetGamesQuery, useGetUserGamesQuery } = gameApi;

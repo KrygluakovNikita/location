@@ -52,6 +52,16 @@ export const HistoryAdminItem: FC<IHistoryItem> = ({ game }) => {
           </td>
         </tr>
       </td>
+      <td>
+        <p className={styles.redText}>{game.gameId}</p>
+      </td>
+      <td>
+        <p className={styles.redText}>{game.user.email} </p>
+      </td>
     </tr>
   );
 };
+
+////сделать редактирование поста
+////сделать модальное окно для ввода ерип кода для оплаты
+/////пофиксить чекбокс на регистрации

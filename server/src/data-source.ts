@@ -12,9 +12,9 @@ export const AppDataSource = new DataSource({
   username: process.env.DOCKER_POSTGRES_USER,
   password: process.env.DOCKER_POSTGRES_PASSWORD,
   database: process.env.DOCKER_POSTGRES_DB,
-  synchronize: true,
+  // synchronize: true,
   logging: false,
   entities: [User, Post, Like, Comment, Game, Card, Token, Reply, Token, RefreshToken],
-  migrations: ['src/database/migrations/**/*{.ts,.js}'],
-  subscribers: ['src/database/subscribers/**/*{.ts,.js}'],
+  migrations: ['./src/database/migrations/*{.ts,.js}'],
+  subscribers: ['./src/database/subscribers/**/*{.ts,.js}'],
 });

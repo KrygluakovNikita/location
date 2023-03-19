@@ -5,7 +5,7 @@ import { LikeDto } from '../dtos/like-dto';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 
-class ReplyService {
+class LikeService {
   async upload(data: ILike): Promise<LikeDto> {
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
@@ -72,4 +72,4 @@ class ReplyService {
   }
 }
 
-export default new ReplyService();
+export default new LikeService();

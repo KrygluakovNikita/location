@@ -42,6 +42,9 @@ export const AdminProfileSettings = () => {
                   <td>ID</td>
                   <td>Дата и время</td>
                   <td>Оплата</td>
+                  <td></td>
+                  <td>ID пользователя</td>
+                  <td>Email</td>
                 </tr>
                 {games?.map(game => (
                   <HistoryAdminItem game={game} />

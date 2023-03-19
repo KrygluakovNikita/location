@@ -64,6 +64,9 @@ export const postSlice = createSlice({
         state.posts[ind].likes.filter(like => like.user.userId !== payload.user.userId);
       }
     },
+    deletePost: (state: IPosts, { payload }: PayloadAction<string>) => {
+      state.posts = state.posts.filter(post => post.postId !== payload);
+    },
     addLike: (state: IPosts, { payload }: PayloadAction<LikeDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind !== -1) {
@@ -120,6 +123,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { addPost, editPost, addAnswer, setPosts, addComment, addPhoto, deleteLike, addLike } = postSlice.actions;
+export const { addPost, editPost, addAnswer, setPosts, addComment, addPhoto, deleteLike, deletePost, addLike } = postSlice.actions;
 
 export default postSlice.reducer;

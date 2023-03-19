@@ -48,9 +48,9 @@
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
     "typeorm": "ts-node -r tsconfig-paths/register  ./node_modules/typeorm/cli.js ",
-    "typeorm:migration:generate": "typeorm -- migration:generate src/database/migrations/*.ts",
+    "typeorm:migration:generate": "npm run typeorm migration:generate -n MyMigration -- -d ./src/data-source.ts",
     "typeorm:migration:run": "typeorm --  migration:run  -d ormconfig.json",
-    "typeorm:migration:create": "npm run typeorm -- migration:create src/migrations/*.ts",
+    "typeorm:migration:create": "npm run typeorm -- migration:create ./src/database/migrations/asdasdasd.ts",
     "typeorm:migration:revert": "typeorm migration:revert"
   }
 }

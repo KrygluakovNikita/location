@@ -14,6 +14,7 @@ import { ProfileSettings } from './pages/Profile/ProfileSettings';
 import { AdminProfile } from './pages/Admin/AdminProfile';
 import { AdminProfileQrGame } from './pages/Admin/AdminProfileQrGame';
 import { AdminProfileSettings } from './pages/Admin/AdminProfileSettings';
+import { EditPost } from './pages/EditPost';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -21,9 +22,9 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/login' element={user?.userId ? <Navigate to='/' replace={true} /> : <Login />} />
-        <Route path='/registration-google' element={user?.userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
-        <Route path='/registration' element={user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
+        <Route path='/login' element={!!user?.userId ? <Navigate to='/' replace={true} /> : <Login />} />
+        <Route path='/registration-google' element={!!user?.userId ? <Navigate to='/' replace={true} /> : <RegistrationGoogle />} />
+        <Route path='/registration' element={!!user?.userId ? <Navigate to='/' replace={true} /> : <Registration />} />
         <Route
           path='/profile'
           element={
@@ -88,6 +89,7 @@ function App() {
         <Route path='/add-post/:postId' element={<AddPost />} />
         {/*/// */}
         <Route path='/:postId' element={<Post />} />
+        <Route path='/admin/:postId' element={<EditPost />} />
         <Route path='/' element={<Feed />} />
         <Route path='/*' element={<PageNotFound />} />
       </Routes>

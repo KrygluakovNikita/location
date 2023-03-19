@@ -86,7 +86,7 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
         <Share url={postId} />
         <div className='footer'>
           <img src={Comment} alt='' />
-          <a href={`/${postId}`}>Комментарии</a>
+          <a href={`${user.role ? '/admin' : ''}/${postId}`}>Комментарии</a>
         </div>
         {isLike ? (
           <div className='footer' onClick={e => likeHandler(e)}>

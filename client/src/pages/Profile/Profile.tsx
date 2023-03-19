@@ -7,6 +7,7 @@ import { useAddGameMutation } from '../../store/api/GameApi';
 import { GameDto, PaymentType } from '../../store/reducers/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal';
+import moment from 'moment';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export const Profile = () => {
       await addGame({ hours, paymentType: payType, date: new Date(playDate) })
         .unwrap()
         .then((res: GameDto) => {
+          console.log('hello');
+
           setGameId(res.gameId);
           setIsOpen(true);
         })
@@ -53,7 +56,7 @@ export const Profile = () => {
               </div>
             </div>
             {isOpen ? (
-              <Modal setIsOpen={onClickModal} title='Игра успешно создана' />
+              <Modal setIsOpen={onClickModal} title='Игра успешно создана' text='Оплата по ЕРИП AlfaBank BY59ALFA301430KLLT0070270000' />
             ) : (
               <div className={styles.profileScanContainer}>
                 <div className={styles.profileSelectMainContainer}>
@@ -89,10 +92,9 @@ export const Profile = () => {
                   <input
                     type='datetime-local'
                     onChange={e => {
-                      console.log('e.currentTarget.value');
-                      console.log(e.currentTarget.value);
-
-                      setPlayDate(e.currentTarget.value);
+                      if (moment(e.currentTarget.value) >= moment()) {
+                        setPlayDate(e.currentTarget.value);
+                      }
                     }}
                     className={styles.profileDateTimeContainer}
                     value={playDate ?? ''}

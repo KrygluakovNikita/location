@@ -96,7 +96,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setData: (state: IUser, action: PayloadAction<IUser>) => {
-      state = { ...state, ...action.payload };
+      return (state = { ...state, ...action.payload });
     },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {
@@ -154,7 +154,6 @@ export const {
   setPhoto,
   setRole,
   setData,
-
   resetUserSlice,
   addCard,
   removeCard,

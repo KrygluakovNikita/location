@@ -1,9 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addPhoto, addPost, editPost, PostDto, setPosts } from '../reducers/PostSlice';
+import { addPhoto, addPost, deletePost, editPost, PostDto, setPosts } from '../reducers/PostSlice';
 import { addLike, deleteLike } from '../reducers/PostSlice';
 import { LikeDto } from '../reducers/UserSlice';
 export interface IUploadPost {
+  postId: string;
   title: string;
   description: string;
   gameDate: Date;
@@ -97,6 +98,10 @@ export const postApi = createApi({
 
       invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
     }),
+    deletePost: build.mutation<LikeDto, string>({
+      query: postId => ({ url: `post/${postId}`, method: 'DELETE' }),
+      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -108,4 +113,5 @@ export const {
   useUpdatePostMutation,
   useAddLikeMutation,
   useDeleteLikeMutation,
+  useDeletePostMutation,
 } = postApi;

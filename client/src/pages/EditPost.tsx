@@ -4,38 +4,50 @@ import { ArrowLeft } from '../components/ArrowLeft';
 import { Sidebar } from '../components/Sidebar';
 import { useAppSelector } from '../hooks/redux';
 import { UserRole } from '../store/reducers/UserSlice';
-import './AddPost.css';
+import { useDeletePostMutation, useGetPostQuery } from '../store/api/PostApi';
+import './EditPost.css';
 import GoodCheckIcon from '../images/GoodCheck.svg';
+import TrashIcon from '../images/Trash.svg';
 import ImageIcon from '../images/Image.svg';
-import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUploadPostMutation } from '../store/api/PostApi';
+import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUpdatePostMutation } from '../store/api/PostApi';
+import { PostDto } from '../store/reducers/PostSlice';
 
-export const AddPost = () => {
+export const EditPost = () => {
   const { postId } = useParams();
   const user = useAppSelector(state => state.user);
-  const post = useAppSelector(state => state.postSlice.posts.find(post => post.postId === postId));
+  const [post, setPost] = useState<PostDto | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | string>(ImageIcon);
-  const [uploadPost] = useUploadPostMutation();
   const [uploadPostImage] = useUpdatePhotoMutation();
-
+  const [deletePost] = useDeletePostMutation();
+  const [updatePost] = useUpdatePostMutation();
+  const { data, isSuccess } = useGetPostQuery(postId!);
   const [postObject, setPostObject] = useState<IUploadPost>({ postId: '', title: '', description: '', gameDate: new Date(Date.now()), location: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(post);
+
     if (post) {
       setPostObject(post);
       setSelectedImage(process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo);
     }
+    console.log(post);
   }, [post]);
+
+  useEffect(() => {
+    if (data) setPost(data);
+  }, [data, isSuccess]);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
     setSelectedImage(event.target.files[0]);
   };
 
-  const uploadHandler = async () => {
+  const updateHandler = async (e: any) => {
+    e.preventDefault();
     const userDto: IUploadPost = postObject;
-    const data = await uploadPost(userDto).unwrap();
-    if (selectedImage) {
+    const data = await updatePost(userDto).unwrap();
+    if (selectedImage && typeof selectedImage !== 'string') {
       const photo = new FormData();
       photo.append('photo', selectedImage);
       const dto: IPostUploadImage = { postId: data.postId, photo };
@@ -43,6 +55,15 @@ export const AddPost = () => {
     }
 
     navigate('/');
+  };
+
+  const deleteHandler = async (e: any) => {
+    e.preventDefault();
+    await deletePost(postId!)
+      .unwrap()
+      .then(() => {
+        navigate('/');
+      });
   };
 
   if (user.role !== UserRole.ADMIN) {
@@ -56,11 +77,23 @@ export const AddPost = () => {
         <div className='top-wrapper'>
           <ArrowLeft />
           <p className='add-text'>Создать событие</p>
-          <div className='add-button'>
-            <button onClick={uploadHandler}>
-              <img src={GoodCheckIcon} alt='' />
-              Сохранить
-            </button>
+          <div className='post-two-buttons'>
+            {post ? (
+              <>
+                <div className='add-button'>
+                  <button onClick={updateHandler}>
+                    <img src={GoodCheckIcon} alt='' />
+                    Обновить
+                  </button>
+                </div>
+                <div className='delete-button'>
+                  <button className='delete-button' onClick={deleteHandler}>
+                    <img src={TrashIcon} alt='' />
+                    Удалить
+                  </button>
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
         <div className='add-wrapper'>
@@ -98,6 +131,7 @@ export const AddPost = () => {
                     return dto;
                   })
                 }
+                value={new Date(postObject.gameDate).toISOString().substring(0, 16)}
               />
             </div>
             <div className='add-input'>
