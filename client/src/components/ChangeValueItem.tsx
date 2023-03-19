@@ -11,7 +11,6 @@ interface IChangeValueItem {
 export const ChangeValueItem: FC<IChangeValueItem> = ({ title, onChange, placeHolder }) => {
   const [newValue, setNewValue] = useState('');
   const [isChange, setIsChange] = useState(false);
-  console.log(placeHolder);
 
   const changeHandler = (newVal: string) => {
     if (newVal) {

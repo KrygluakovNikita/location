@@ -30,6 +30,18 @@ class GameController {
     }
   }
 
+  async getGamesStat(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { startDate, endDate } = req.body;
+
+      const games = await gameService.getGamesStat(startDate, endDate);
+
+      return res.json(games);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getByGameId(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const gameId = req.params.gameId;

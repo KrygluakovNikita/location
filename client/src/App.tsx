@@ -15,6 +15,7 @@ import { AdminProfile } from './pages/Admin/AdminProfile';
 import { AdminProfileQrGame } from './pages/Admin/AdminProfileQrGame';
 import { AdminProfileSettings } from './pages/Admin/AdminProfileSettings';
 import { EditPost } from './pages/EditPost';
+import { AdminProfileGameStat } from './pages/Admin/AdminProfileGameStat';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -80,6 +81,18 @@ function App() {
               <Navigate to='/login' replace={true} />
             ) : user?.role === 'admin' ? (
               <AdminProfileSettings />
+            ) : (
+              <Navigate to='/profile/settings' replace={true} />
+            )
+          }
+        />
+        <Route
+          path='/admin/profile/game-stat'
+          element={
+            !user?.userId ? (
+              <Navigate to='/login' replace={true} />
+            ) : user?.role === 'admin' ? (
+              <AdminProfileGameStat />
             ) : (
               <Navigate to='/profile/settings' replace={true} />
             )

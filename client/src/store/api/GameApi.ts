@@ -6,6 +6,14 @@ export interface IUpdatePayByGameId {
   gameId: string;
   isPayed: boolean;
 }
+export interface IGetStatGame {
+  startDate: Date;
+  endDate: Date;
+}
+export interface IGetStatGameResponse {
+  games: GameDto[];
+  count: number;
+}
 
 export const gameApi = createApi({
   reducerPath: 'gameApi',
@@ -48,7 +56,11 @@ export const gameApi = createApi({
     getUserGames: build.query<GameDto[], void>({
       query: () => ({ url: `game/user`, method: 'GET' }),
     }),
+    getGamesStat: build.mutation<IGetStatGameResponse, IGetStatGame>({
+      query: body => ({ url: `game/stat`, method: 'POST', body }),
+    }),
   }),
 });
 
-export const { useAddGameMutation, useGetGameQuery, useUpdatePayByGameIdMutation, useGetGamesQuery, useGetUserGamesQuery } = gameApi;
+export const { useGetGamesStatMutation, useAddGameMutation, useGetGameQuery, useUpdatePayByGameIdMutation, useGetGamesQuery, useGetUserGamesQuery } =
+  gameApi;

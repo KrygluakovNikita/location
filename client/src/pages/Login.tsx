@@ -5,8 +5,11 @@ import LogoImg from '../images/Logo.svg';
 import { validateEmail } from '../utils/validation';
 import { IUserLogin, useLoginMutation } from '../store/api/UserApi';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { UserDto } from '../store/reducers/UserSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement);
   const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement);
   const [Login, { isError, error }] = useLoginMutation();
@@ -18,12 +21,20 @@ export const Login = () => {
 
   const LoginHandler = async () => {
     if (!validateEmail(emailRef.current.value)) {
+      alert('Почта не верная, исправтье её и попробуйте снова');
       emailRef.current.style.color = 'red';
     } else if (passwordRef.current.value.length < 6) {
+      alert('Длина пароля не может быть меньше 6 символов');
       passwordRef.current.style.color = 'red';
     } else {
       const userDto: IUserLogin = { password: passwordRef.current.value, email: emailRef.current.value };
-      await Login(userDto);
+      await Login(userDto)
+        .unwrap()
+        .then((data: UserDto) => {
+          console.log(data);
+          navigate(`${data.role === 'admin' ? '/admin' : '/'}profile/`);
+        })
+        .catch(err => alert(JSON.stringify(err)));
       if (isError) {
         const err = error as FetchBaseQueryError;
         if (err.status === 406) {

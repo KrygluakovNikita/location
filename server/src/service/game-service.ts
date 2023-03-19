@@ -40,6 +40,13 @@ class GameService {
     return result;
   }
 
+  async getGamesStat(startDate, endDate): Promise<any> {
+    const abuse = { date: LessThanOrEqual(startDate) };
+    const games = await Game.findAndCount({ where: { date: MoreThanOrEqual(endDate), ...abuse }, relations: { user: true } });
+
+    return { games: games[0], count: games[1] };
+  }
+
   async getByGameId(userId: string, gameId: string): Promise<GameDtoWithQr> {
     const user = await User.findOneBy({ userId });
 

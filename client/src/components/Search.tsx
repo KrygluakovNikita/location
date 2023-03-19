@@ -33,7 +33,7 @@ export const Search: FC<ISearchProps> = ({ posts, setFilteredPosts }) => {
   return (
     <div className='mid-top'>
       <div className='search'>
-        <input placeholder='Search' onChange={e => setSearch(e.target.value)} />
+        <input placeholder='Поиск' onChange={e => setSearch(e.target.value)} />
         <img src={SearchIcon} alt='' />
       </div>
     </div>

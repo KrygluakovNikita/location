@@ -45,8 +45,13 @@ export const Feed = () => {
           </div>
         )}
         <Search setFilteredPosts={setFilteredPosts} posts={posts ?? []} />
-
-        <div className='posts'>{!isLoading && filteredPosts?.map(post => <PostCard key={post.postId} {...post} />)}</div>
+        {filteredPosts?.length ? (
+          <div className='posts'>{!isLoading && filteredPosts?.map(post => <PostCard key={post.postId} {...post} />)}</div>
+        ) : (
+          <div className='center-text'>
+            <p>Список пуст</p>
+          </div>
+        )}
       </div>
     </>
   );

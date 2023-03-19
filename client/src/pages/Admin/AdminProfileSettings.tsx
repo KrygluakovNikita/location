@@ -7,8 +7,10 @@ import { GameDto } from '../../store/reducers/UserSlice';
 import styles from './AdminProfileSettings.module.css';
 import { HistoryAdminItem } from '../../components/HistoryAdminItem';
 import { useUpdateUserDataMutation } from '../../store/api/UserApi';
+import { useNavigate } from 'react-router-dom';
 
 export const AdminProfileSettings = () => {
+  const navigator = useNavigate();
   const user = useAppSelector(state => state.user);
   const { data, isSuccess } = useGetGamesQuery();
   const [games, setGames] = useState<GameDto[] | null>(null);
@@ -27,6 +29,9 @@ export const AdminProfileSettings = () => {
     if (data) setGames(data);
   }, [data, isSuccess]);
 
+  const redirectHanlder = () => {
+    navigator('/admin/profile/game-stat');
+  };
   return (
     <div>
       <Sidebar isProfile={true} />
@@ -36,6 +41,9 @@ export const AdminProfileSettings = () => {
             <div className={styles.paddingContainer}>
               <div className={styles.profileHistoryText}>
                 <p className={styles.redText}>История игр</p>
+                <p onClick={redirectHanlder} className={styles.searchStat}>
+                  Поиск в диапазоне
+                </p>
               </div>
               <table className={styles.profileHistoryItems}>
                 <tr className={styles.historyItemIdContainer}>

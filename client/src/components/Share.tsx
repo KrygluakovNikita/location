@@ -8,7 +8,6 @@ interface IShareProps {
 export const Share: FC<IShareProps> = ({ url }) => {
   const copyHandler = () => {
     if (!navigator.clipboard) {
-      console.log('Вы не можете скопировать ссылку');
     } else {
       const urlWithoutId = window.location.href;
       navigator.clipboard.writeText(urlWithoutId + url);

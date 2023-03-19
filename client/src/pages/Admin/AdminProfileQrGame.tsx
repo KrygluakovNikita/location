@@ -75,7 +75,7 @@ export const AdminProfileQrGame = () => {
             ) : (
               <div className={styles.profileScanContainer}>
                 <div className={styles.profileIdGameContainer}>
-                  <p className={styles.profileQRCodeID}>Аренда не найдена</p>
+                  <p className={styles.profileQRCodeID}>Игра не найдена</p>
                 </div>
               </div>
             )}
