@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CommentDto, PostDto } from './PostSlice';
+import { CommentDto } from './PostSlice';
 
 export interface CardDto {
   cardId: string;
@@ -15,6 +15,12 @@ export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
 }
+export interface IGame {
+  date: Date;
+  hours: string;
+  paymentType: PaymentType;
+  equipmentId: string;
+}
 
 export interface GameDto {
   gameId: string;
@@ -23,6 +29,18 @@ export interface GameDto {
   hours: string;
   paymentType: PaymentType;
   isPayed: boolean;
+  createdAt: Date;
+}
+
+export interface GameDtoWithQr {
+  gameId: string;
+  user: UserDto;
+  date: Date;
+  hours: string;
+  paymentType: PaymentType;
+  isPayed: boolean;
+  qrCode: string;
+  createdAt: Date;
 }
 
 export interface UserDto {
@@ -38,6 +56,7 @@ export interface UserDto {
 
 export interface LikeDto {
   likeId: string;
+  postId: string;
   user: UserDto;
 }
 
@@ -75,12 +94,12 @@ let initialState: IUser = {
   city: '',
 };
 
-export const resumeSlice = createSlice({
-  name: 'resume',
+export const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
-    setUser: (state: IUser, action: PayloadAction<IUser>) => {
-      return (state = { ...state, ...action.payload });
+    setData: (state: IUser, action: PayloadAction<IUser>) => {
+      return action.payload;
     },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {
@@ -137,7 +156,7 @@ export const {
   setNickname,
   setPhoto,
   setRole,
-  setUser,
+  setData,
   resetUserSlice,
   addCard,
   removeCard,
@@ -145,6 +164,6 @@ export const {
   removeLike,
   addGame,
   addLike,
-} = resumeSlice.actions;
+} = userSlice.actions;
 
-export default resumeSlice.reducer;
+export default userSlice.reducer;

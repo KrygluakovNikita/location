@@ -53,7 +53,7 @@ export const RegistrationGoogle = () => {
           </div>
           <div className='title accent'>Давайте начнём</div>
           <div className='text'>Создайте новый аккаунт</div>
-          <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} />
+          <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} title='Загрузить фото профиля' />
 
           <div className='input'>
             <input placeholder='Никнейм' type='text' onChange={e => setNickname(e.target.value)} />

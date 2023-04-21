@@ -49,8 +49,6 @@ class UserController {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('ceared');
-
       res.clearCookie('refreshToken', { path: '/' });
       res.clearCookie('serverUserData');
 
@@ -139,6 +137,18 @@ class UserController {
       await userService.changePassword(email);
 
       return res.status(200).end();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async changeUserData(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { newPassword, newEmail, newCity } = req.body;
+      const { userId } = req.user;
+      const data = await userService.updateUserData(userId, { newPassword, newEmail, newCity });
+
+      return res.json(data);
     } catch (e) {
       next(e);
     }

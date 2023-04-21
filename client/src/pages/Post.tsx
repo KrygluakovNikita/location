@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { UserInfo } from '../components/UserInfo';
 import { convertGameDate, convertPostDate } from '../utils/timeConverter';
@@ -7,17 +7,30 @@ import './Post.css';
 import Pointer from '../images/Pointer.svg';
 import Icon from '../images/Icon.svg';
 import Heart from '../images/Heart.svg';
+import FullHeartIcon from '../images/FullHeart.svg';
 import { Share } from '../components/Share';
 import { correctEnding } from '../utils/naming';
 import { Comments } from '../components/Comments';
 import { useAppSelector } from '../hooks/redux';
-import BackArrow from '../images/BackArrow.svg';
+import { ArrowLeft } from '../components/ArrowLeft';
+import { useAddLikeMutation, useDeleteLikeMutation } from '../store/api/PostApi';
 
 export const Post = () => {
+  const navigate = useNavigate();
   const { postId } = useParams();
   const post = useAppSelector(state => state.postSlice.posts.filter(post => post.postId === postId!)[0]);
+  const user = useAppSelector(state => state.user);
   const [postDate, setPostDate] = useState({ postLocaleDate: '', postLocaleTime: '' });
   const [gameDate, setGameDate] = useState({ gameLocaleDate: '', gameLocaleTime: '' });
+  const defaultImage = 'default_image.jpg';
+  const [isLike, setIsLike] = useState(false);
+  const [addLike] = useAddLikeMutation();
+  const [deleteLike] = useDeleteLikeMutation();
+  useEffect(() => {
+    if (post?.likes.findIndex(like => like.user.userId === user.userId) !== -1) {
+      setIsLike(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (post?.postDate) {
@@ -30,16 +43,23 @@ export const Post = () => {
     }
   }, [post]);
 
+  const likeHandler = async (e: any) => {
+    if (!user.userId) {
+      navigate('/login');
+    } else if (isLike) {
+      await deleteLike(postId!);
+      setIsLike(false);
+    } else {
+      await addLike(postId!);
+      setIsLike(true);
+    }
+  };
+
   return (
     <>
       <Sidebar isProfile={false} />
       <div className='main'>
-        <div className='post-top'>
-          <a className='back-button' href='/'>
-            <img src={BackArrow} alt='' />
-            <p>назад</p>
-          </a>
-        </div>
+        <ArrowLeft />
         {post ? (
           <div className='container'>
             <div className='post-card'></div>
@@ -62,14 +82,26 @@ export const Post = () => {
             </div>
 
             <div className='post-image-wrapper'>
-              <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />
+              {post.photo ? (
+                <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />
+              ) : (
+                <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + defaultImage} alt='' />
+              )}
             </div>
             <div className='post-footer'>
               <Share url={postId!} />
-              <div className='footer'>
-                <img src={Heart} alt='' />
-                <p onClick={() => {}}>125</p>
-              </div>
+
+              {isLike ? (
+                <div className='footer' onClick={e => likeHandler(e)}>
+                  <img src={FullHeartIcon} alt='' />
+                  <p>{post.likes.length}</p>
+                </div>
+              ) : (
+                <div className='footer' onClick={e => likeHandler(e)}>
+                  <img src={Heart} alt='' />
+                  <p>{post.likes.length}</p>
+                </div>
+              )}
             </div>
             <div className='comments-container'>
               <div className='comments-count'>
@@ -77,7 +109,7 @@ export const Post = () => {
                   {post.comments.length ?? 0} комментар{correctEnding(post.comments.length ?? 0)}
                 </p>
               </div>
-              <Comments postId={postId!} />
+              <Comments postId={postId!} comments={post.comments} />
             </div>
           </div>
         ) : (

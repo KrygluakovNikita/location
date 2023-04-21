@@ -44,7 +44,7 @@ export const Registration = () => {
 
   useEffect(() => {
     if (isError) {
-      console.log(error);
+      alert(error);
     }
   }, [error, isError]);
 
@@ -57,7 +57,7 @@ export const Registration = () => {
           </div>
           <div className='title accent'>Давайте начнём</div>
           <div className='text'>Создайте новый аккаунт</div>
-          <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} />
+          <UploadImage selectedImage={selectedImage} changeHandler={changeHandler} title='Загрузить фото профиля' />
 
           <div className='input'>
             <input placeholder='Email' type='email' value={email} onChange={e => setEmail(e.target.value)} />
@@ -78,7 +78,7 @@ export const Registration = () => {
           </button>
           <div className='registration-login'>
             <p>Уже есть аккаунт?</p>
-            <a href='login' className='accent'>
+            <a href='/login' className='accent'>
               Войти
             </a>
           </div>

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addAnswer, ReplyDto, ReplyUpload } from '../reducers/PostSlice';
+import { addAnswer, ReplyUpload } from '../reducers/PostSlice';
 import { UserDto } from '../reducers/UserSlice';
 
 export interface IResponseAnswer {

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { IUser, resetUserSlice, setUser, UserDto } from '../reducers/UserSlice';
+import { IUser, resetUserSlice, setData, UserDto } from '../reducers/UserSlice';
 
 export interface IUserLogin {
   password: string;
@@ -22,6 +22,11 @@ export interface IRegistration {
   nickname: string;
   city: string;
 }
+export interface IUpdateUserData {
+  newPassword?: string;
+  newEmail?: string;
+  newCity?: string;
+}
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -40,7 +45,7 @@ export const userApi = createApi({
         try {
           const data = await queryFulfilled;
           const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
-          dispatch(setUser(userDto));
+          dispatch(setData(userDto));
 
           return data.data.user;
         } catch (err) {
@@ -59,7 +64,7 @@ export const userApi = createApi({
           const data = await queryFulfilled;
           const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
 
-          dispatch(setUser(userDto));
+          dispatch(setData(userDto));
 
           return data.data.user;
         } catch (err) {
@@ -77,7 +82,7 @@ export const userApi = createApi({
         try {
           const data = await queryFulfilled;
           const userDto: IUser = { ...data.data.user, accessToken: data.data.accessToken };
-          dispatch(setUser(userDto));
+          dispatch(setData(userDto));
 
           return data.data.user;
         } catch (err) {
@@ -91,6 +96,18 @@ export const userApi = createApi({
         method: 'POST',
         body,
       }),
+    }),
+    updateUserData: build.mutation<UserDto, IUpdateUserData>({
+      query: (body: IUpdateUserData) => ({
+        url: `user/change-user-data/`,
+        method: 'PUT',
+        body,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        const userDto: UserDto = { ...data.data };
+        dispatch(setData(userDto as any)); ///fix here
+      },
     }),
     Logout: build.mutation<any, void>({
       query: () => ({
@@ -112,4 +129,5 @@ export const {
   useUpdatePhotoMutation,
   useRegistrationMutation,
   useLogoutMutation,
+  useUpdateUserDataMutation,
 } = userApi;

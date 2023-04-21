@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IResponseAnswer } from '../api/AnswerApi';
-import { IUser, LikeDto, UserDto } from './UserSlice';
+import { LikeDto, UserDto } from './UserSlice';
 
 export interface PostDto {
   postId: string;
@@ -55,28 +55,49 @@ export const postSlice = createSlice({
       state.posts = [];
       state.posts = payload;
     },
-    addPost: (state: IPosts, action: PayloadAction<PostDto>) => {
-      state.posts?.unshift(action.payload);
+    addPost: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
+      state.posts.unshift(payload);
+    },
+    deleteLike: (state: IPosts, { payload }: PayloadAction<LikeDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind !== -1) {
+        state.posts[ind].likes.filter(like => like.user.userId !== payload.user.userId);
+      }
+    },
+    deletePost: (state: IPosts, { payload }: PayloadAction<string>) => {
+      state.posts = state.posts.filter(post => post.postId !== payload);
+    },
+    addLike: (state: IPosts, { payload }: PayloadAction<LikeDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind !== -1) {
+        state.posts[ind].likes.push(payload);
+      }
     },
     editPost: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
       const index = state.posts?.findIndex(post => {
         return post.postId === payload.postId;
       });
-      if (index) {
+      if (index !== -1) {
         state.posts![index] = { ...payload };
+      }
+    },
+    addPhoto: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
+      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      if (ind !== -1) {
+        state.posts[ind].photo = payload.photo;
       }
     },
     addComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
         state.posts[ind].comments.push(payload);
       }
     },
     addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
         const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
-        if (commentInd) {
+        if (commentInd !== -1) {
           const dto: ReplyDto = {
             replyId: payload.replyId,
             user: payload.user,
@@ -91,7 +112,7 @@ export const postSlice = createSlice({
     },
     removeComment: (state: IPosts, { payload }: PayloadAction<CommentDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
-      if (ind) {
+      if (ind !== -1) {
         const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
         if (commentInd) {
           state.posts[ind].comments[commentInd] = { ...payload };
@@ -102,6 +123,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { addPost, editPost, addAnswer, setPosts, addComment } = postSlice.actions;
+export const { addPost, editPost, addAnswer, setPosts, addComment, addPhoto, deleteLike, deletePost, addLike } = postSlice.actions;
 
 export default postSlice.reducer;

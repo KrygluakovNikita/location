@@ -1,0 +1,56 @@
+.mainContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.changeValueTitle {
+  padding-right: 40px;
+  color: #e33940;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: 0.5px;
+}
+
+.changeValueBtn {
+  width: 100%;
+  max-width: 400px;
+  height: 38px;
+  border: none;
+  box-shadow: 0px 4px 4px rgba(196, 196, 196, 0.2);
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.changeValueBtnText {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.5px;
+  color: #3b3a39;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.changeValueBtnValue {
+  width: 83%;
+  cursor: text;
+  padding: 5px 0 5px 11px;
+}
+
+.changeValueBtnPencil {
+  padding: 5px 11px 5px 10px;
+  justify-content: flex-end;
+  width: 20px;
+  height: 20px;
+}
+.cursorPointer {
+  cursor: pointer;
+}

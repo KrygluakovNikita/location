@@ -5,4 +5,5 @@ export interface IGame {
   date: Date;
   hours: string;
   paymentType: PaymentType;
+  equipmentId: string;
 }

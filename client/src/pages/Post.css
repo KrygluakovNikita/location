@@ -30,6 +30,8 @@
 }
 .post-image-wrapper img {
   margin-bottom: 5px;
+  width: 100%;
+  height: 100%;
   max-width: 752px;
   max-height: 307px;
 }
@@ -121,20 +123,4 @@
 
 .comments {
   padding-top: 15px;
-}
-
-.back-button {
-  font-family: 'Open Sans', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  color: #3b3a39;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.post-top {
-  margin-bottom: 10px;
 }

@@ -1,3 +1,5 @@
+import { unlink } from 'fs/promises';
+import path from 'path';
 import { Equal } from 'typeorm';
 import { Post, User } from '../database/entity';
 import { PostDto } from '../dtos/post-dto';
@@ -20,7 +22,6 @@ class PostService {
     post.description = data.description;
     post.postDate = new Date(Date.now());
     post.gameDate = data.gameDate;
-    post.photo = data.photo;
     post.location = data.location;
 
     await post.save();
@@ -30,6 +31,32 @@ class PostService {
     return result;
   }
 
+  async updatePhoto(postId: string, newPhoto: string): Promise<void> {
+    const post = await Post.findOneBy({ postId });
+    if (!post) {
+      throw ApiError.NotFound();
+    }
+
+    const previousPhoto = post.photo;
+
+    if (previousPhoto) {
+      const p = path.join(__dirname, '../../public/', previousPhoto);
+      await unlink(p);
+
+      if (newPhoto) {
+        post.photo = newPhoto;
+      } else {
+        post.photo = '';
+      }
+    } else {
+      post.photo = newPhoto;
+    }
+
+    await post.save();
+
+    return;
+  }
+
   async getOne(postId: string): Promise<PostDto> {
     const post = await Post.findOne({
       where: { postId: Equal(postId) },
@@ -37,10 +64,10 @@ class PostService {
         user: true,
         comments: {
           user: true,
-          answers: { userReply: true, user: true },
+          answers: { userReply: true, user: true, comment: true },
           post: true,
         },
-        likes: { user: true },
+        likes: { user: true, post: true },
       },
     });
     const result = new PostDto(post);
@@ -54,10 +81,10 @@ class PostService {
         user: true,
         comments: {
           user: true,
-          answers: { userReply: true, user: true },
+          answers: { userReply: true, user: true, comment: true },
           post: true,
         },
-        likes: { user: true },
+        likes: { user: true, post: true },
       },
     });
 
@@ -69,11 +96,36 @@ class PostService {
   async delete(postId: string): Promise<void> {
     await Post.delete(postId);
 
+    const port = await Post.findOneBy({ postId });
+    if (!port) {
+      throw UserError.UserNotFound();
+    }
+
+    if (port.photo) {
+      const p = path.join(__dirname, '../../public/', port.photo);
+      await unlink(p);
+
+      port.photo = '';
+    }
+
+    port.save();
+
     return;
   }
 
   async update(postDto: IPostUpdate): Promise<PostDto> {
-    const post = await Post.findOne({ where: { postId: postDto.postId } });
+    const post = await Post.findOne({
+      where: { postId: postDto.postId },
+      relations: {
+        user: true,
+        comments: {
+          user: true,
+          answers: { userReply: true, user: true, comment: true },
+          post: true,
+        },
+        likes: { user: true, post: true },
+      },
+    });
     if (!post) {
       throw ApiError.NotFound();
     }

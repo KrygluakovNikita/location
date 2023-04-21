@@ -1,6 +1,4 @@
 import { NextFunction, Response } from 'express';
-import { UserRole } from '../database/entity';
-import { UserDto } from '../dtos/user-dto';
 import ApiError from '../exeptions/api-error';
 import { IGoogleDto, IGoogleRequest, IUserRequest } from '../interfaces/user-interface';
 import jwtService from '../service/jwt-service';

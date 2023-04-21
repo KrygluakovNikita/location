@@ -1,11 +1,12 @@
 import { Equal } from 'typeorm';
 import { ILike } from '../controller/like-controller';
 import { Like, Post, User } from '../database/entity';
+import { LikeDto } from '../dtos/like-dto';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 
-class ReplyService {
-  async upload(data: ILike): Promise<Like> {
+class LikeService {
+  async upload(data: ILike): Promise<LikeDto> {
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
       throw UserError.UserNotFound();
@@ -16,9 +17,9 @@ class ReplyService {
       throw ApiError.NotFound();
     }
 
-    const available = await Like.findOne({ where: { user: Equal(user.userId), post: Equal(post.postId) } });
+    const available = await Like.findOne({ where: { user: Equal(user.userId), post: Equal(post.postId) }, relations: { user: true, post: true } });
     if (available) {
-      throw ApiError.NotFound();
+      return;
     }
 
     const like = new Like();
@@ -27,7 +28,9 @@ class ReplyService {
 
     await like.save();
 
-    return like;
+    const likeDto = new LikeDto(like);
+
+    return likeDto;
   }
 
   async getByPostId(postId: string): Promise<Like[]> {
@@ -69,4 +72,4 @@ class ReplyService {
   }
 }
 
-export default new ReplyService();
+export default new LikeService();

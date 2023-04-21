@@ -1,0 +1,175 @@
+.top-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.add-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.add-button button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 18px;
+  gap: 8px;
+
+  background: #e33940;
+  border-radius: 10px;
+  border: none;
+
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.1px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.add-text {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 150%;
+  text-align: center;
+  letter-spacing: 0.5px;
+  color: #e33940;
+}
+
+.add-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  min-width: 590px;
+  max-width: 910px;
+  margin: auto;
+  padding: 8px 16px;
+
+  background: #ffffff;
+  box-shadow: -1px -1px 2px rgba(33, 176, 40, 0.08), 1px 1px 2px rgba(33, 176, 40, 0.08);
+  border-radius: 15px;
+}
+
+.add-container {
+  padding: 21px 22px 8px 22px;
+}
+.add-input {
+  background: #ffffff;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+}
+
+.add-input input {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #000000;
+}
+
+.add-textarea {
+  background: #ffffff;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+}
+.add-textarea textarea {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #000000;
+  min-height: 40px;
+  height: 60px;
+  /* resize: none; */ /*if need delete two line for textarea*/
+}
+
+.add-date {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.add-date input {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #808080;
+}
+
+::-webkit-calendar-picker-indicator {
+  background-image: url('../images/Calendar.svg');
+}
+
+.underline {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+  text-decoration-line: underline;
+  margin-bottom: 15px;
+  color: #3b3a39;
+  text-underline-offset: 2px;
+}
+
+.feedback__label {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  padding: 8px 20px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: center;
+  color: #282828;
+  cursor: pointer;
+}
+
+.feedback__file {
+  display: none;
+}
+
+.upload-image {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.add-post-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover;
+}
+
+.add-post-image img {
+  max-width: 910px;
+  max-height: 400px;
+}

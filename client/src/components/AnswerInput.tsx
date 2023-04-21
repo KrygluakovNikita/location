@@ -21,16 +21,6 @@ export const AnswerInput: FC<IAnswerInputProps> = ({ user, userReply, setReply, 
   const submitHandler = async (e: FormEvent<HTMLFormElement> | MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
     if (message) {
-      // const dto: ReplyUpload = {
-      //   postId,
-      //   answer: {
-      //     commentId,
-      //     user: user as UserDto,
-      //     message,
-      //     userReply,
-      //   },
-      // };
-
       const uploadDto: ReplyUpload = { commentId, user: user as UserDto, message, userReply };
       await uploadAnswer(uploadDto);
       setMessage('');
@@ -46,7 +36,7 @@ export const AnswerInput: FC<IAnswerInputProps> = ({ user, userReply, setReply, 
           <img src={Close} alt='' onClick={e => setReply(false)} />
         </div>
         <form className='answer-text' onSubmit={e => submitHandler(e)}>
-          <p className='comment-text'>{userReply.nickname},</p>
+          <p className='comment-text'>{userReply.nickname.length > 8 ? userReply.nickname.slice(0, 6) + '...' : userReply.nickname},</p>
           <input placeholder='Ответ' value={message} onChange={e => setMessage(e.target.value)} className='comment-text' />
           <img src={Send} alt='' onClick={e => submitHandler(e)} />
         </form>

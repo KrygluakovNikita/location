@@ -1,5 +1,4 @@
 import { FC, FormEvent, MouseEvent, useState } from 'react';
-import { CommentDto } from '../store/reducers/PostSlice';
 import { CommentCard } from './CommentCard';
 import './Comments.css';
 import Plus from '../images/Plus.svg';
@@ -7,13 +6,14 @@ import Send from '../images/Send.svg';
 import { ICommentUpload, useAddCommentMutation } from '../store/api/CommentApi';
 import { useAppSelector } from '../hooks/redux';
 import { useNavigate } from 'react-router-dom';
+import { CommentDto } from '../store/reducers/PostSlice';
 
 interface ICommentProps {
   postId: string;
+  comments: CommentDto[];
 }
 
-export const Comments: FC<ICommentProps> = ({ postId }) => {
-  const comments = useAppSelector(state => state.postSlice.posts.find(post => post.postId === postId)?.comments);
+export const Comments: FC<ICommentProps> = ({ postId, comments }) => {
   const [uploadComment] = useAddCommentMutation();
   const user = useAppSelector(state => state.user);
   const [message, setMessage] = useState('');

@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import './Terms.css';
-
 interface ITremsProps {
   setAgree: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -12,7 +11,7 @@ export const Terms: FC<ITremsProps> = ({ setAgree }) => {
         <tbody>
           <tr>
             <td>
-              <input type='checkbox' onClick={() => setAgree(state => !state)} />
+              <input type='checkbox' id='checkbox_id' className='adminProfileCheckbox' onClick={() => setAgree(state => !state)} />
             </td>
             <td>
               <label>

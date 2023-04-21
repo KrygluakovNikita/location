@@ -1,0 +1,77 @@
+.wrapContainer {
+  padding: 20px;
+  margin-left: 200px;
+}
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 37.5px;
+}
+
+.historyContainer {
+  border-radius: 15px;
+  height: 100%;
+  background-color: white;
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.privacyPolicyContainer {
+  padding: 5px 0 5px 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+
+  /* background-color: red; */
+}
+.userDataContainer {
+  flex-wrap: wrap;
+  padding: 12px 12px;
+  border-radius: 15px;
+  height: 100%;
+  background-color: white;
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.redText {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: 0.5px;
+  color: #e33940;
+}
+
+.userAgreementBtn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+.paddingContainer {
+  padding: 12px 12px;
+}
+
+.profileHistoryText {
+  padding-bottom: 10px;
+}
+
+.profileHistoryItems {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

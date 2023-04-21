@@ -1,5 +1,5 @@
 import { UserDto } from '../dtos/user-dto';
-import { RefreshToken, Token, User } from '../database/entity';
+import { Token, User } from '../database/entity';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
 import { Equal } from 'typeorm';
