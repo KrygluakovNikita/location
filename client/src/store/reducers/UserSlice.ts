@@ -19,6 +19,7 @@ export interface IGame {
   date: Date;
   hours: string;
   paymentType: PaymentType;
+  equipmentId: string;
 }
 
 export interface GameDto {
@@ -28,6 +29,7 @@ export interface GameDto {
   hours: string;
   paymentType: PaymentType;
   isPayed: boolean;
+  createdAt: Date;
 }
 
 export interface GameDtoWithQr {
@@ -38,6 +40,7 @@ export interface GameDtoWithQr {
   paymentType: PaymentType;
   isPayed: boolean;
   qrCode: string;
+  createdAt: Date;
 }
 
 export interface UserDto {
@@ -96,7 +99,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setData: (state: IUser, action: PayloadAction<IUser>) => {
-      return (state = { ...state, ...action.payload });
+      return action.payload;
     },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {

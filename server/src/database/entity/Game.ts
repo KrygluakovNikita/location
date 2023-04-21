@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, PrimaryColumn, OneToOne, OneToMany } from 'typeorm';
 import { User } from './User';
+import { Equipment } from './Equipment';
 
 export enum PaymentType {
   CASH = 'cash',
@@ -32,4 +33,11 @@ export class Game extends BaseEntity {
 
   @Column({ type: 'boolean', default: false })
   isPayed: boolean;
+
+  @Column({ type: 'timestamptz', default: new Date() }) // Recommended
+  createdAt: Date;
+
+  @ManyToOne(() => Equipment, equipment => equipment.games, { nullable: false })
+  @JoinColumn()
+  equipment: Equipment;
 }

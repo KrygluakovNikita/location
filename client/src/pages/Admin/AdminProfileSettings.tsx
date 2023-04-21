@@ -8,6 +8,7 @@ import styles from './AdminProfileSettings.module.css';
 import { HistoryAdminItem } from '../../components/HistoryAdminItem';
 import { useUpdateUserDataMutation } from '../../store/api/UserApi';
 import { useNavigate } from 'react-router-dom';
+import { useGetEquipmentsQuery } from '../../store/api/EquipmentApi';
 
 export const AdminProfileSettings = () => {
   const navigator = useNavigate();
@@ -15,6 +16,7 @@ export const AdminProfileSettings = () => {
   const { data, isSuccess } = useGetGamesQuery();
   const [games, setGames] = useState<GameDto[] | null>(null);
   const [updateUserData] = useUpdateUserDataMutation();
+  const { data: equipments = [] } = useGetEquipmentsQuery();
   const changeEmailHanlder = (newEmail: string) => {
     updateUserData({ newEmail });
   };
@@ -32,6 +34,11 @@ export const AdminProfileSettings = () => {
   const redirectHanlder = () => {
     navigator('/admin/profile/game-stat');
   };
+
+  const createNewEquipmentHanlder = () => {
+    navigator('/admin/add-equipment');
+  };
+
   return (
     <div>
       <Sidebar isProfile={true} />
@@ -48,10 +55,10 @@ export const AdminProfileSettings = () => {
               <table className={styles.profileHistoryItems}>
                 <tr className={styles.historyItemIdContainer}>
                   <td>ID</td>
-                  <td>Дата и время</td>
+                  <td>Дата игры</td>
+                  <td>Дата создания</td>
                   <td>Оплата</td>
                   <td></td>
-                  <td>ID пользователя</td>
                   <td>Email</td>
                 </tr>
                 {games?.map(game => (
@@ -60,10 +67,24 @@ export const AdminProfileSettings = () => {
               </table>
             </div>
           </div>
-          <div className={styles.userDataContainer}>
-            <ChangeValueItem title='Email' placeHolder={user.email} onChange={changeEmailHanlder} />
-            <ChangeValueItem title='Пароль' placeHolder='********' onChange={changePasswordHanlder} />
-            <ChangeValueItem title='Город' placeHolder={user.city} onChange={changeCityHanlder} />
+          <div className={styles.rightSideContainer}>
+            <div className={styles.userDataContainer}>
+              <ChangeValueItem title='Email' placeHolder={user.email} onChange={changeEmailHanlder} />
+              <ChangeValueItem title='Пароль' placeHolder='********' onChange={changePasswordHanlder} />
+              <ChangeValueItem title='Город' placeHolder={user.city} onChange={changeCityHanlder} />
+            </div>
+            <div className={styles.userDataContainer}>
+              <div className={styles.addButton}>
+                <button onClick={createNewEquipmentHanlder}>Добавить оборудование</button>
+              </div>
+              {equipments.map(equipment => {
+                return (
+                  <div>
+                    <h1>{equipment.title}</h1>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

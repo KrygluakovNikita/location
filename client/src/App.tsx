@@ -16,6 +16,7 @@ import { AdminProfileQrGame } from './pages/Admin/AdminProfileQrGame';
 import { AdminProfileSettings } from './pages/Admin/AdminProfileSettings';
 import { EditPost } from './pages/EditPost';
 import { AdminProfileGameStat } from './pages/Admin/AdminProfileGameStat';
+import { AdminAddEquipment } from './pages/Admin/AdminAddEquipment';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -86,6 +87,7 @@ function App() {
             )
           }
         />
+        <Route path='/admin/add-equipment' element={!user?.userId ? <Navigate to='/login' replace={true} /> : <AdminAddEquipment />} />
         <Route
           path='/admin/profile/game-stat'
           element={

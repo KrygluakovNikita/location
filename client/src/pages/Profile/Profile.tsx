@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '../../components/Sidebar';
 import { useAppSelector } from '../../hooks/redux';
 import styles from './Profile.module.css';
@@ -8,6 +8,7 @@ import { GameDto, PaymentType } from '../../store/reducers/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal';
 import moment from 'moment';
+import { EquipmentDto, useGetByDateMutation } from '../../store/api/EquipmentApi';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -17,19 +18,20 @@ export const Profile = () => {
   const [payType, setPayType] = useState<null | PaymentType>(null);
   const [playDate, setPlayDate] = useState<null | string>(null);
   const [gameId, setGameId] = useState<string | null>(null);
+  const [equipments, setEquipments] = useState<EquipmentDto[] | null>(null);
+  const [selectedEquipment, setSelectedEquipment] = useState<EquipmentDto | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [getEquipmentByDate] = useGetByDateMutation();
 
   const createGame = async () => {
-    if (hours && payType && playDate) {
-      await addGame({ hours, paymentType: payType, date: new Date(playDate) })
+    if (hours && payType && playDate && selectedEquipment) {
+      await addGame({ hours, paymentType: payType, date: new Date(playDate), equipmentId: selectedEquipment.equipmentId })
         .unwrap()
         .then((res: GameDto) => {
-          console.log('hello');
-
           setGameId(res.gameId);
           setIsOpen(true);
         })
-        .catch(err => console.log(err));
+        .catch(err => alert(err.data.message));
     }
   };
 
@@ -40,6 +42,18 @@ export const Profile = () => {
     setPayType(null);
     setPlayDate(null);
   };
+
+  const getMoreEquipmentHandler = async () => {
+    const result = await getEquipmentByDate({ date: new Date(playDate!) }).unwrap();
+
+    setEquipments(result);
+  };
+
+  useEffect(() => {
+    if (playDate) {
+      getMoreEquipmentHandler();
+    }
+  }, [playDate]);
 
   return (
     <div className=''>
@@ -86,6 +100,25 @@ export const Profile = () => {
                     </option>
                     <option value='cash'>Наличные</option>
                     <option value='card'>Карта</option>
+                  </select>
+                </div>
+                <div className={styles.profileSelectEquipmentMainContainer}>
+                  <select
+                    className={styles.selectContainer}
+                    onChange={event => {
+                      setSelectedEquipment(JSON.parse(event.currentTarget.value));
+                    }}
+                    defaultValue={''}>
+                    <option value='' disabled>
+                      Лазертаг оборудование
+                    </option>
+                    {equipments
+                      ? equipments.map(equipment => (
+                          <option value={JSON.stringify(equipment)} key={equipment.equipmentId}>
+                            {equipment.title}
+                          </option>
+                        ))
+                      : null}
                   </select>
                 </div>
                 <div className={styles.profileSelectDate}>

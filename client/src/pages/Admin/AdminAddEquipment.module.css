@@ -1,0 +1,98 @@
+.mainContainer {
+  padding: 20px;
+  margin-left: 200px;
+}
+
+.secondContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+  flex-wrap: wrap-reverse;
+}
+
+.cartContainer {
+  flex: 3;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 500px;
+  max-width: 40em;
+  padding: 10px 15px 15px 10px;
+}
+
+.sideContainer {
+  height: 100%;
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.profileScanContainer {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  min-width: 590px;
+  max-width: 910px;
+  /* margin: auto; */
+  padding: 8px 16px;
+
+  background: #ffffff;
+  box-shadow: -1px -1px 2px rgba(33, 176, 40, 0.08), 1px 1px 2px rgba(33, 176, 40, 0.08);
+  border-radius: 15px;
+}
+
+.profileGenerateQRBtnContainer {
+  width: 304px;
+  height: 48px;
+  background: #e33940;
+  border-radius: 10px;
+  margin: auto;
+}
+.profileGenerateQRBtnContainerDisabled {
+  width: 304px;
+  height: 48px;
+  background: #ce5b5e;
+  border-radius: 10px;
+  border: none;
+}
+
+.profileGenerateQRBtnText {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: #ffffff;
+}
+.profileGenerateQRBtn {
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: initial;
+  cursor: pointer;
+}
+
+.addInput {
+  background: #ffffff;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+}
+
+.addInput input {
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #000000;
+}

@@ -5,7 +5,8 @@ import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
 import UserError from '../exeptions/user-error';
 import qr from 'qrcode';
 import ApiError from '../exeptions/api-error';
-
+import { Equipment } from '../database/entity/Equipment';
+import moment from 'moment';
 class GameService {
   async upload(data: IGame): Promise<GameDto> {
     const game = new Game();
@@ -19,11 +20,22 @@ class GameService {
     if (!user.isActivated) {
       throw UserError.EmailIsNotActivated();
     }
+    const equipment = await Equipment.findOne({ where: { equipmentId: data.equipmentId, disabled: false } });
+    if (!equipment) {
+      throw ApiError.BadRequest('Оборудование не найдено');
+    }
+    const abuse = { date: LessThanOrEqual(data.date) };
+    const dateOnThisTime = await Game.find({ where: { date: MoreThanOrEqual(moment(data.date).add(data.hours, 'hours').toDate()), ...abuse } });
 
+    if (equipment.count >= dateOnThisTime.length) {
+      throw ApiError.BadRequest('Данное оборудование уже занято на это время');
+    }
     game.date = data.date;
     game.paymentType = data.paymentType;
     game.hours = data.hours;
     game.user = user;
+    game.createdAt = new Date();
+    game.equipment = equipment;
 
     await game.save();
     const result = new GameDto(game);
@@ -34,7 +46,7 @@ class GameService {
   async getGamesByUserId(userId: string): Promise<GameDto[]> {
     const user = await User.findOneBy({ userId });
 
-    const games = await Game.find({ where: { user: Equal(user.userId) }, relations: { user: true } });
+    const games = await Game.find({ where: { user: Equal(user.userId) }, relations: { user: true, equipment: true } });
     const result = games.map(game => new GameDto(game));
 
     return result;
@@ -42,7 +54,7 @@ class GameService {
 
   async getGamesStat(startDate, endDate): Promise<any> {
     const abuse = { date: LessThanOrEqual(startDate) };
-    const games = await Game.findAndCount({ where: { date: MoreThanOrEqual(endDate), ...abuse }, relations: { user: true } });
+    const games = await Game.findAndCount({ where: { date: MoreThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
 
     return { games: games[0], count: games[1] };
   }
@@ -54,7 +66,7 @@ class GameService {
       throw UserError.UserNotFound();
     }
 
-    const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true } });
+    const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true, equipment: true } });
     if (game.user.userId !== userId && user.role !== UserRole.ADMIN) {
       throw UserError.NotAllow();
     }
@@ -88,7 +100,7 @@ class GameService {
   }
 
   async getAllGames(): Promise<GameDto[]> {
-    const games = await Game.find({ relations: { user: true } });
+    const games = await Game.find({ relations: { user: true, equipment: true } });
 
     const result = games.map(game => new GameDto(game));
 

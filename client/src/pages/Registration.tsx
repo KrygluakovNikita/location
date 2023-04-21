@@ -44,7 +44,7 @@ export const Registration = () => {
 
   useEffect(() => {
     if (isError) {
-      console.log(error);
+      alert(error);
     }
   }, [error, isError]);
 

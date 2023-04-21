@@ -71,7 +71,7 @@ export const postApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const data = await queryFulfilled;
         dispatch(addPhoto(data.data));
-        await queryFulfilled.catch(err => console.log(err));
+        await queryFulfilled.catch(err => alert(err));
       },
     }),
     addLike: build.mutation<LikeDto, string>({

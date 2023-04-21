@@ -20,7 +20,6 @@ export const Feed = () => {
 
   useEffect(() => {
     const userData = getUserData();
-
     if (!user.userId && userData) {
       const userDto = JSON.parse(userData);
       const result: IUser = { ...userDto.user, accessToken: userDto.accessToken };

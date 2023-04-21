@@ -31,7 +31,6 @@ export const Login = () => {
       await Login(userDto)
         .unwrap()
         .then((data: UserDto) => {
-          console.log(data);
           navigate(`${data.role === 'admin' ? '/admin' : '/'}profile/`);
         })
         .catch(err => alert(JSON.stringify(err)));

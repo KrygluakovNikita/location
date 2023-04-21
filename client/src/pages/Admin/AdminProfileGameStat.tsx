@@ -19,13 +19,11 @@ export const AdminProfileGameStat = () => {
   }, [data, isSuccess]);
 
   const clickHandler = async () => {
-    console.log('clicked');
-
     if (startDate && endDate) {
       await getStat({ startDate, endDate })
         .unwrap()
         .then(data => console.log(data))
-        .catch(err => console.log(err));
+        .catch(err => alert(err));
     }
   };
 
@@ -74,11 +72,12 @@ export const AdminProfileGameStat = () => {
                 <thead>
                   <tr className={styles.historyItemIdContainer}>
                     <th>ID</th>
-                    <th>Date</th>
-                    <th>Hours</th>
-                    <th>Payment Type</th>
-                    <th>Is Paid</th>
-                    <th>User</th>
+                    <th>Дата игры</th>
+                    <th>Дата создания</th>
+                    <th>Часов</th>
+                    <th>Способ оплаты</th>
+                    <th>Оплачено</th>
+                    <th>Email пользователя</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,10 +85,11 @@ export const AdminProfileGameStat = () => {
                     <tr key={game.gameId} className={styles.historyItemIdContainer}>
                       <td>{game.gameId}</td>
                       <td>{moment(game.date).format('DD-MM-YYYY')}</td>
+                      <td>{moment(game.createdAt).format('DD-MM-YYYY')}</td>
                       <td>{game.hours}</td>
                       <td>{game.paymentType}</td>
                       <td>{game.isPayed ? 'Yes' : 'No'}</td>
-                      <td>{game.user.userId}</td>
+                      <td>{game.user.email}</td>
                     </tr>
                   ))}
                 </tbody>

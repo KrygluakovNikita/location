@@ -9,6 +9,7 @@ import { postApi } from './api/PostApi';
 import { commentApi } from './api/CommentApi';
 import { answerApi } from './api/AnswerApi';
 import { gameApi } from './api/GameApi';
+import { equipmentApi } from './api/EquipmentApi';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -18,13 +19,14 @@ const rootReducer = combineReducers({
   [commentApi.reducerPath]: commentApi.reducer,
   [answerApi.reducerPath]: answerApi.reducer,
   [gameApi.reducerPath]: gameApi.reducer,
+  [equipmentApi.reducerPath]: equipmentApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: [userApi.reducerPath, postApi.reducerPath, commentApi.reducerPath, answerApi.reducerPath, gameApi.reducerPath],
+  blacklist: [userApi.reducerPath, postApi.reducerPath, commentApi.reducerPath, answerApi.reducerPath, gameApi.reducerPath, equipmentApi.reducerPath],
 };
 
 const persistedReducer = persistReducer<RootReducer>(persistConfig, rootReducer);
@@ -36,7 +38,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(userApi.middleware, postApi.middleware, commentApi.middleware, answerApi.middleware, gameApi.middleware),
+    }).concat(userApi.middleware, postApi.middleware, commentApi.middleware, answerApi.middleware, gameApi.middleware, equipmentApi.middleware),
 });
 
 export const persistor = persistStore(store);

@@ -25,8 +25,6 @@ export const gameApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const data = await queryFulfilled;
         const game: GameDto = data.data;
-        console.log(game);
-
         dispatch(addGame(game));
       },
       invalidatesTags: result =>

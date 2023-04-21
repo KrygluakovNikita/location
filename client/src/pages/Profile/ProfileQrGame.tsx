@@ -18,8 +18,6 @@ export const ProfileQrGame = () => {
     if (data) setGame(data as GameDtoWithQr);
   }, [data, isSuccess]);
 
-  console.log(gameId);
-
   return (
     <div>
       <Sidebar isProfile={true} />

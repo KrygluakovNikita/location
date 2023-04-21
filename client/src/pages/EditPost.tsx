@@ -25,13 +25,10 @@ export const EditPost = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(post);
-
     if (post) {
       setPostObject(post);
       setSelectedImage(process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo);
     }
-    console.log(post);
   }, [post]);
 
   useEffect(() => {

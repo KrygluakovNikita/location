@@ -6,10 +6,10 @@ import gameService from '../service/game-service';
 class GameController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {
     try {
-      const { date, hours, paymentType } = req.body as IGame;
+      const { date, hours, paymentType, equipmentId } = req.body as IGame;
       const { userId } = req.user;
 
-      const gameDto: IGame = { userId, date, hours, paymentType };
+      const gameDto: IGame = { userId, date, hours, paymentType, equipmentId };
       const game = await gameService.upload(gameDto);
 
       return res.json(game);

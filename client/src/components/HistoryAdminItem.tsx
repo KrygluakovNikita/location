@@ -10,7 +10,6 @@ interface IHistoryItem {
 }
 
 export const HistoryAdminItem: FC<IHistoryItem> = ({ game }) => {
-  console.log(game);
   const [isPayed, setIsPayed] = useState(false);
   const [updatePayGame] = useUpdatePayByGameIdMutation();
   useEffect(() => {
@@ -28,9 +27,6 @@ export const HistoryAdminItem: FC<IHistoryItem> = ({ game }) => {
       <td>
         <tr>
           <td>
-            <p>ID </p>
-          </td>
-          <td>
             <p className={styles.redText}>{game.gameId}</p>
           </td>
         </tr>
@@ -41,6 +37,7 @@ export const HistoryAdminItem: FC<IHistoryItem> = ({ game }) => {
           .add(+game.hours ?? 0, 'hours')
           .format('HH:mm')}
       </td>
+      <td>{moment(game.createdAt).format('DD.MM.YYYY HH:mm')}</td>
       <td>{game.paymentType === 'cash' ? 'наличные' : 'карта'}</td>
       <td>
         <tr>
@@ -52,9 +49,7 @@ export const HistoryAdminItem: FC<IHistoryItem> = ({ game }) => {
           </td>
         </tr>
       </td>
-      <td>
-        <p className={styles.redText}>{game.gameId}</p>
-      </td>
+
       <td>
         <p className={styles.redText}>{game.user.email} </p>
       </td>

@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { Card, Comment, Game, Like, Post, User, Token, RefreshToken } from './database/entity';
 import { Reply } from './database/entity/Reply';
+import { Equipment } from './database/entity/Equipment';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DOCKER_POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: [User, Post, Like, Comment, Game, Card, Token, Reply, Token, RefreshToken],
+  entities: [User, Post, Like, Comment, Game, Card, Token, Reply, Token, RefreshToken, Equipment],
   migrations: ['./src/database/migrations/*{.ts,.js}'],
   subscribers: ['./src/database/subscribers/**/*{.ts,.js}'],
 });
