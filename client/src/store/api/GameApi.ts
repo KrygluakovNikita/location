@@ -10,6 +10,16 @@ export interface IGetStatGame {
   startDate: Date;
   endDate: Date;
 }
+
+export enum StatChartTypeEnum {
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
+}
+export interface IGetDiagramStatGame {
+  type: StatChartTypeEnum;
+  startDate: Date;
+  equipment?: string;
+}
 export interface IGetStatGameResponse {
   games: GameDto[];
   count: number;
@@ -57,8 +67,18 @@ export const gameApi = createApi({
     getGamesStat: build.mutation<IGetStatGameResponse, IGetStatGame>({
       query: body => ({ url: `game/stat`, method: 'POST', body }),
     }),
+    getGamesDiagramStat: build.mutation<IGetStatGameResponse, IGetDiagramStatGame>({
+      query: body => ({ url: `game/stat-chart`, method: 'POST', body }),
+    }),
   }),
 });
 
-export const { useGetGamesStatMutation, useAddGameMutation, useGetGameQuery, useUpdatePayByGameIdMutation, useGetGamesQuery, useGetUserGamesQuery } =
-  gameApi;
+export const {
+  useGetGamesDiagramStatMutation,
+  useGetGamesStatMutation,
+  useAddGameMutation,
+  useGetGameQuery,
+  useUpdatePayByGameIdMutation,
+  useGetGamesQuery,
+  useGetUserGamesQuery,
+} = gameApi;

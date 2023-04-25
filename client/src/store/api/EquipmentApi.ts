@@ -46,14 +46,15 @@ export const equipmentApi = createApi({
           : [{ type: 'Equipments', id: 'LIST' }],
     }),
     getByDate: build.mutation<EquipmentDto[], IGetEquipmentByDate>({
-      query: (body: IGetEquipmentByDate) => ({ url: `equipment/by-date`, method: 'POST', body }),
+      query: (body: IGetEquipmentByDate) => ({ url: `/equipment/by-date`, method: 'POST', body }),
     }),
     getEquipments: build.query<EquipmentDto[], void>({
-      query: () => ({ url: `equipment/`, method: 'GET' }),
+      query: () => ({ url: `/equipment/`, method: 'GET' }),
       providesTags: ['Equipments'],
     }),
-    deleteById: build.mutation<void, string>({
-      query: (equipmentId: string) => ({ url: `equipment/${equipmentId}`, method: 'DELETE' }),
+    deleteById: build.mutation<EquipmentDto, string>({
+      query: (equipmentId: string) => ({ url: `/equipment/${equipmentId}`, method: 'DELETE' }),
+      invalidatesTags: [{ type: 'Equipments' }],
     }),
   }),
 });

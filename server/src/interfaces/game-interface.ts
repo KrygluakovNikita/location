@@ -7,3 +7,14 @@ export interface IGame {
   paymentType: PaymentType;
   equipmentId: string;
 }
+
+export enum StatChartEnum {
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
+}
+
+export interface IStatChart {
+  type: StatChartEnum;
+  startDate: Date;
+  equipment?: string;
+}

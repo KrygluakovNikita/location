@@ -17,6 +17,7 @@ import { AdminProfileSettings } from './pages/Admin/AdminProfileSettings';
 import { EditPost } from './pages/EditPost';
 import { AdminProfileGameStat } from './pages/Admin/AdminProfileGameStat';
 import { AdminAddEquipment } from './pages/Admin/AdminAddEquipment';
+import { AdminProfileDiagram } from './pages/Admin/AdminProfileDiagram';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -99,6 +100,10 @@ function App() {
               <Navigate to='/profile/settings' replace={true} />
             )
           }
+        />
+        <Route
+          path='/admin/profile/diagram'
+          element={user?.userId && user?.role === 'admin' ? <AdminProfileDiagram /> : <Navigate to='/profile' replace={true} />}
         />
         <Route path='/add-post' element={<AddPost />} />
         <Route path='/add-post/:postId' element={<AddPost />} />

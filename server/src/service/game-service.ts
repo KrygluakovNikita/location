@@ -1,4 +1,4 @@
-import { IGame } from './../interfaces/game-interface';
+import { IGame, IStatChart, StatChartEnum } from './../interfaces/game-interface';
 import { Equal, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Game, User, UserRole } from '../database/entity';
 import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
@@ -6,7 +6,7 @@ import UserError from '../exeptions/user-error';
 import qr from 'qrcode';
 import ApiError from '../exeptions/api-error';
 import { Equipment } from '../database/entity/Equipment';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 class GameService {
   async upload(data: IGame): Promise<GameDto> {
     const game = new Game();
@@ -24,10 +24,12 @@ class GameService {
     if (!equipment) {
       throw ApiError.BadRequest('Оборудование не найдено');
     }
-    const abuse = { date: LessThanOrEqual(data.date) };
-    const dateOnThisTime = await Game.find({ where: { date: MoreThanOrEqual(moment(data.date).add(data.hours, 'hours').toDate()), ...abuse } });
+    const abuse = { date: MoreThanOrEqual(data.date) };
+    const dateOnThisTime = await Game.find({
+      where: { date: LessThanOrEqual(moment(data.date).add(data.hours, 'hours').toDate()), ...abuse, equipment: Equal(equipment.equipmentId) },
+    });
 
-    if (equipment.count >= dateOnThisTime.length) {
+    if (equipment.count <= dateOnThisTime.length) {
       throw ApiError.BadRequest('Данное оборудование уже занято на это время');
     }
     game.date = data.date;
@@ -52,9 +54,27 @@ class GameService {
     return result;
   }
 
-  async getGamesStat(startDate, endDate): Promise<any> {
-    const abuse = { date: LessThanOrEqual(startDate) };
-    const games = await Game.findAndCount({ where: { date: MoreThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
+  async getGamesStat(startDate: Date, endDate: Date): Promise<any> {
+    const abuse = { date: MoreThanOrEqual(startDate) };
+    const games = await Game.findAndCount({ where: { date: LessThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
+
+    return { games: games[0], count: games[1] };
+  }
+
+  async getGamesStatChart({ type, startDate, equipment }: IStatChart): Promise<any> {
+    const abuse: any = { date: MoreThanOrEqual(startDate) };
+    let endDate: Moment;
+
+    if (type == StatChartEnum.MONTH) {
+      endDate = moment(startDate).add(1, 'months');
+    } else {
+      endDate = moment(startDate).add(1, 'years');
+    }
+    if (equipment) {
+      abuse.equipment = equipment;
+    }
+
+    const games = await Game.findAndCount({ where: { date: LessThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
 
     return { games: games[0], count: games[1] };
   }

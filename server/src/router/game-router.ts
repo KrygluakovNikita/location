@@ -10,4 +10,5 @@ router.post('/stat', isAuth, isAdmin, gameController.getGamesStat);
 router.get('/:gameId', isAuth, gameController.getByGameId);
 router.get('/', isAuth, isAdmin, gameController.getAll);
 router.put('/pay/:gameId', isAuth, gameController.updatePayByGameId);
+router.post('/stat-chart', isAuth, gameController.getGamesStat);
 export default router;

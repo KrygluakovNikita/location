@@ -8,7 +8,8 @@ import styles from './AdminProfileSettings.module.css';
 import { HistoryAdminItem } from '../../components/HistoryAdminItem';
 import { useUpdateUserDataMutation } from '../../store/api/UserApi';
 import { useNavigate } from 'react-router-dom';
-import { useGetEquipmentsQuery } from '../../store/api/EquipmentApi';
+import { EquipmentDto, useGetEquipmentsQuery } from '../../store/api/EquipmentApi';
+import { useDeleteByIdMutation } from '../../store/api/EquipmentApi';
 
 export const AdminProfileSettings = () => {
   const navigator = useNavigate();
@@ -16,6 +17,7 @@ export const AdminProfileSettings = () => {
   const { data, isSuccess } = useGetGamesQuery();
   const [games, setGames] = useState<GameDto[] | null>(null);
   const [updateUserData] = useUpdateUserDataMutation();
+  const [deleteEquipmentById] = useDeleteByIdMutation();
   const { data: equipments = [] } = useGetEquipmentsQuery();
   const changeEmailHanlder = (newEmail: string) => {
     updateUserData({ newEmail });
@@ -31,12 +33,35 @@ export const AdminProfileSettings = () => {
     if (data) setGames(data);
   }, [data, isSuccess]);
 
-  const redirectHanlder = () => {
+  const redirectHanlderStat = () => {
     navigator('/admin/profile/game-stat');
+  };
+  const redirectHanlderDiagram = () => {
+    navigator('/admin/profile/diagram');
   };
 
   const createNewEquipmentHanlder = () => {
     navigator('/admin/add-equipment');
+  };
+
+  const deleteEquipmentHandler = async (equipmentId: string) => {
+    await deleteEquipmentById(equipmentId);
+  };
+
+  const equipmentItem = (equipment: EquipmentDto) => {
+    return (
+      <tr className={styles.historyItemIdContainer}>
+        <td>{equipment.equipmentId}</td>
+        <td>{equipment.title}</td>
+        <td>{equipment.description}</td>
+        <td>{equipment.count}</td>
+        <td>
+          <div className={styles.deleteButton}>
+            <button onClick={() => deleteEquipmentHandler(equipment.equipmentId)}>Удалить</button>
+          </div>
+        </td>
+      </tr>
+    );
   };
 
   return (
@@ -48,8 +73,11 @@ export const AdminProfileSettings = () => {
             <div className={styles.paddingContainer}>
               <div className={styles.profileHistoryText}>
                 <p className={styles.redText}>История игр</p>
-                <p onClick={redirectHanlder} className={styles.searchStat}>
+                <p onClick={redirectHanlderStat} className={styles.searchStat}>
                   Поиск в диапазоне
+                </p>
+                <p onClick={redirectHanlderDiagram} className={styles.searchStat}>
+                  Диаграмма
                 </p>
               </div>
               <table className={styles.profileHistoryItems}>
@@ -73,17 +101,22 @@ export const AdminProfileSettings = () => {
               <ChangeValueItem title='Пароль' placeHolder='********' onChange={changePasswordHanlder} />
               <ChangeValueItem title='Город' placeHolder={user.city} onChange={changeCityHanlder} />
             </div>
-            <div className={styles.userDataContainer}>
+            <div className={styles.equipmentContainer}>
               <div className={styles.addButton}>
                 <button onClick={createNewEquipmentHanlder}>Добавить оборудование</button>
               </div>
-              {equipments.map(equipment => {
-                return (
-                  <div>
-                    <h1>{equipment.title}</h1>
-                  </div>
-                );
-              })}
+              <div>
+                <table className={styles.profileHistoryItems}>
+                  <tr className={styles.historyItemIdContainer}>
+                    <td>ID</td>
+                    <td>Название</td>
+                    <td>Описание</td>
+                    <td>Количество</td>
+                    <td></td>
+                  </tr>
+                  {equipments.map(equipment => equipmentItem(equipment))}
+                </table>
+              </div>
             </div>
           </div>
         </div>

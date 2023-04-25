@@ -70,7 +70,11 @@ export const Profile = () => {
               </div>
             </div>
             {isOpen ? (
-              <Modal setIsOpen={onClickModal} title='Игра успешно создана' text='Оплата по ЕРИП AlfaBank BY59ALFA301430KLLT0070270000' />
+              <Modal
+                setIsOpen={onClickModal}
+                title='Игра успешно создана'
+                text={payType === PaymentType.CARD ? 'Оплата по ЕРИП AlfaBank BY59ALFA301430KLLT0070270000' : 'Оплата наличными'}
+              />
             ) : (
               <div className={styles.profileScanContainer}>
                 <div className={styles.profileSelectMainContainer}>

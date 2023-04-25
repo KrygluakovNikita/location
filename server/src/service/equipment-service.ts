@@ -48,26 +48,19 @@ class EquipmentService {
       .getMany();
     const doesNotUsingEquipments = await Equipment.find({ where: { games: [], disabled: false } });
 
-    console.log('equipments');
-    console.log('equipments');
-    console.log(equipments);
-    console.log('doesNotUsingEquipments');
-    console.log('doesNotUsingEquipments');
-    console.log(doesNotUsingEquipments);
-
     const validEquipments = [...equipments, ...doesNotUsingEquipments]?.map(equipment => new EquipmentDto(equipment));
 
     return validEquipments;
   }
 
   async getAllEquipment(): Promise<EquipmentDto[]> {
-    const equipments = await Equipment.find();
+    const equipments = await Equipment.find({ where: { disabled: false } });
 
     const equipmentsDto = equipments.map(equipment => new EquipmentDto(equipment));
     return equipmentsDto;
   }
 
-  async deleteById(equipmentId: string): Promise<void> {
+  async deleteById(equipmentId: string): Promise<EquipmentDto> {
     const equipment = await Equipment.findOneBy({ equipmentId });
     if (!equipment) {
       throw ApiError.BadRequest('Такого оборудования не существует');
@@ -75,7 +68,7 @@ class EquipmentService {
 
     equipment.disabled = true;
     await equipment.save();
-    return;
+    return equipment;
   }
 }
 

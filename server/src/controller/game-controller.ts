@@ -1,7 +1,8 @@
-import { IGame } from './../interfaces/game-interface';
+import { IGame, StatChartEnum } from './../interfaces/game-interface';
 import { IUserRequest } from './../interfaces/user-interface';
 import { Request, Response, NextFunction } from 'express';
 import gameService from '../service/game-service';
+import ApiError from '../exeptions/api-error';
 
 class GameController {
   async upload(req: IUserRequest, res: Response, next: NextFunction) {
@@ -23,6 +24,20 @@ class GameController {
       const { userId } = req.user;
 
       const games = await gameService.getGamesByUserId(userId);
+
+      return res.json(games);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getGamesStatChart(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { type = StatChartEnum.MONTH, startDate, equipment = null } = req.body;
+      if (!type || !startDate) {
+        throw ApiError.BadRequest('Необходимо отправить тип и дату конца');
+      }
+      const games = await gameService.getGamesStatChart({ type, startDate, equipment });
 
       return res.json(games);
     } catch (e) {

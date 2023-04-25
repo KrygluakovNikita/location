@@ -44,10 +44,9 @@ class EquipmentController {
   async deleteById(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const equipmentId = req.params.equipmentId;
+      const deleted = await equipmentService.deleteById(equipmentId);
 
-      await equipmentService.deleteById(equipmentId);
-
-      return res.end();
+      return res.json(deleted);
     } catch (e) {
       next(e);
     }
