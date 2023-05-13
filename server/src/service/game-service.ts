@@ -1,5 +1,5 @@
 import { IGame, IStatChart, StatChartEnum } from './../interfaces/game-interface';
-import { Equal, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { Equal, LessThanOrEqual, MoreThanOrEqual, Between } from 'typeorm';
 import { Game, User, UserRole } from '../database/entity';
 import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
 import UserError from '../exeptions/user-error';
@@ -24,9 +24,11 @@ class GameService {
     if (!equipment) {
       throw ApiError.BadRequest('Оборудование не найдено');
     }
-    const abuse = { date: MoreThanOrEqual(data.date) };
     const dateOnThisTime = await Game.find({
-      where: { date: LessThanOrEqual(moment(data.date).add(data.hours, 'hours').toDate()), ...abuse, equipment: Equal(equipment.equipmentId) },
+      where: {
+        date: Between(data.date, moment(data.date).add(data.hours, 'hours').toDate()),
+        equipment: Equal(equipment.equipmentId),
+      },
     });
 
     if (equipment.count <= dateOnThisTime.length) {
@@ -55,26 +57,25 @@ class GameService {
   }
 
   async getGamesStat(startDate: Date, endDate: Date): Promise<any> {
-    const abuse = { date: MoreThanOrEqual(startDate) };
-    const games = await Game.findAndCount({ where: { date: LessThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
+    const games = await Game.findAndCount({ where: { date: Between(startDate, endDate) }, relations: { user: true, equipment: true } });
 
     return { games: games[0], count: games[1] };
   }
 
   async getGamesStatChart({ type, startDate, equipment }: IStatChart): Promise<any> {
     const abuse: any = { date: MoreThanOrEqual(startDate) };
-    let endDate: Moment;
+    let endDate: Date;
 
     if (type == StatChartEnum.MONTH) {
-      endDate = moment(startDate).add(1, 'months');
+      endDate = moment(startDate).add(1, 'months').toDate();
     } else {
-      endDate = moment(startDate).add(1, 'years');
+      endDate = moment(startDate).add(1, 'years').toDate();
     }
     if (equipment) {
       abuse.equipment = equipment;
     }
 
-    const games = await Game.findAndCount({ where: { date: LessThanOrEqual(endDate), ...abuse }, relations: { user: true, equipment: true } });
+    const games = await Game.findAndCount({ where: { date: Between(startDate, endDate) }, relations: { user: true, equipment: true } });
 
     return { games: games[0], count: games[1] };
   }
@@ -98,21 +99,11 @@ class GameService {
     return result;
   }
 
-  async updatePayByGameId(userId: string, gameId: string, isPayed: boolean): Promise<GameDto> {
-    const user = await User.findOneBy({ userId });
-
-    if (!user) {
-      throw UserError.UserNotFound();
-    }
-
+  async updatePayByGameId(gameId: string, isPayed: boolean): Promise<GameDto> {
     const game = await Game.findOne({ where: { gameId: Equal(gameId) }, relations: { user: true } });
-    if (game.user.userId !== userId || user.role !== UserRole.ADMIN) {
-      throw UserError.NotAllow();
-    }
-    if (game.isPayed !== isPayed) {
-      game.isPayed = isPayed;
-      await game.save();
-    }
+
+    game.isPayed = isPayed;
+    await game.save();
 
     const result = new GameDto(game);
 
@@ -120,7 +111,12 @@ class GameService {
   }
 
   async getAllGames(): Promise<GameDto[]> {
-    const games = await Game.find({ relations: { user: true, equipment: true } });
+    const games = await Game.find({
+      relations: { user: true, equipment: true },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
 
     const result = games.map(game => new GameDto(game));
 

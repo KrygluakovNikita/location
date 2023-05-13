@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { IUser, resetUserSlice, setData, UserDto } from '../reducers/UserSlice';
+import { IUser, resetUserSlice, setData, setUserData, UserDto } from '../reducers/UserSlice';
 
 export interface IUserLogin {
   password: string;
@@ -105,8 +105,13 @@ export const userApi = createApi({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const data = await queryFulfilled;
+        console.log('data.data');
+        console.log(data.data);
+
         const userDto: UserDto = { ...data.data };
-        dispatch(setData(userDto as any)); ///fix here
+        console.log(userDto);
+
+        dispatch(setUserData(userDto as any)); ///fix here
       },
     }),
     Logout: build.mutation<any, void>({

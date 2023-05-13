@@ -13,34 +13,26 @@ export const AdminProfileDiagram = () => {
   const [games, setGames] = useState<GameDto[] | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [type, setType] = useState<StatChartTypeEnum>(StatChartTypeEnum.MONTH);
-  const [getDiagramStat, { data, isSuccess, isLoading }] = useGetGamesDiagramStatMutation();
+  const [getDiagramStat, { isLoading }] = useGetGamesDiagramStatMutation();
 
   useEffect(() => {
-    if (data?.games.length) {
-      // setCoinsData({
-      //   labels: [
-      //     moment(startDate).toString().substring(0, 10),
-      //     moment(startDate)
-      //       .add(1, type === StatChartTypeEnum.MONTH ? 'months' : 'years')
-      //       .toString()
-      //       .substring(0, 10),
-      //   ],
-      //   datasets: {
-      //     // data: data?.games?.map((game: GameDto) => game.date) ?? [],
-      //     data: [1, 2, 3],
-      //     pointHitRadius: 20,
-      //     pointRadius: 0,
-      //   },
-      // });
-      setGames(data.games);
+    if (startDate && type) {
+      clickHandler();
     }
-  }, [data, isSuccess]);
+  }, [startDate, type]);
 
   const clickHandler = async () => {
     if (startDate && type) {
       await getDiagramStat({ startDate, type })
         .unwrap()
-        .then(data => console.log(data))
+        .then(data => {
+          console.log(data);
+          if (data.games.length) {
+            setGames(data.games);
+          } else {
+            setGames([]);
+          }
+        })
         .catch(err => alert(err));
     }
   };
@@ -94,8 +86,6 @@ export const AdminProfileDiagram = () => {
   const getValuesForYear = (gameDtos: GameDto[] | null, start: Moment, end: Moment) => {
     const startD = moment(moment(start).set('D', 1));
     const endD = moment(moment(end).set('D', 1));
-    console.log("startD.format('YYYY-MM')");
-    console.log(startD.format('YYYY-MM'));
 
     const map = new Map();
     for (let i = 0; i <= 32; i++) {
@@ -167,11 +157,11 @@ export const AdminProfileDiagram = () => {
                 placeholder='Дата начала'
               />
             </div>
-            <div>
+            {/* <div>
               <button className={styles.btnStatContainer} onClick={clickHandler}>
                 <p className={styles.btnTextStat}>Создать</p>
               </button>
-            </div>
+            </div> */}
           </div>
           <div className={styles.historyContainer}>
             {isLoading ? (

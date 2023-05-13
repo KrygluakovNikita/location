@@ -1,7 +1,7 @@
 import { unlink } from 'fs/promises';
 import path from 'path';
 import { Equal } from 'typeorm';
-import { Post, User } from '../database/entity';
+import { Comment, Post, Reply, User } from '../database/entity';
 import { PostDto } from '../dtos/post-dto';
 import ApiError from '../exeptions/api-error';
 import UserError from '../exeptions/user-error';
@@ -94,21 +94,35 @@ class PostService {
   }
 
   async delete(postId: string): Promise<void> {
-    await Post.delete(postId);
-
-    const port = await Post.findOneBy({ postId });
-    if (!port) {
+    if (!postId) {
+      throw ApiError.NotFound();
+    }
+    const post = await Post.findOneBy({ postId });
+    if (!post) {
       throw UserError.UserNotFound();
     }
 
-    if (port.photo) {
-      const p = path.join(__dirname, '../../public/', port.photo);
-      await unlink(p);
+    if (post.photo) {
+      try {
+        const p = path.join(__dirname, '../../public/', post.photo);
+        await unlink(p);
 
-      port.photo = '';
+        post.photo = '';
+      } catch {}
     }
 
-    port.save();
+    const comments = await Comment.find({
+      where: {
+        post: Equal(post.postId),
+      },
+    });
+    await Promise.all(
+      comments.map(async com => {
+        await Reply.delete({ comment: Equal(com.commentId) });
+        await Comment.delete({ post: Equal(post.postId) });
+      })
+    );
+    await Post.delete(post.postId);
 
     return;
   }

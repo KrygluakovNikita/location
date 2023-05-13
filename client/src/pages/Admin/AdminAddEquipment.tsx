@@ -19,10 +19,6 @@ export const AdminAddEquipment = () => {
       await addEquipment({ title, description, count: +count })
         .unwrap()
         .then((res: EquipmentDto) => {
-          console.log('res');
-          console.log('res');
-          console.log(res);
-
           setIsOpen(true);
         })
         .catch(err => alert(err.data.message));
@@ -36,15 +32,6 @@ export const AdminAddEquipment = () => {
     setDescription('');
     setCount('');
   };
-
-  // const getMoreEquipmentHandler = async () => {
-  //   const result = await getEquipmentByDate({ date: new Date(playDate!) }).unwrap();
-  //   console.log('result');
-  //   console.log('result');
-  //   console.log(result);
-
-  //   setEquipments(result);
-  // };
 
   return (
     <div className=''>

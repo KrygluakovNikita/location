@@ -55,7 +55,9 @@ export const AnswerCard: FC<IAnswerCardProps> = ({
         <div>
           <p className='comment-user-nickname'>{userComment.nickname}</p>
           <div className='answer-user'>
-            <p className='comment-text'>{userReply.nickname},</p>
+            <p className='comment-text' style={{ marginRight: userReply?.nickname ? 5 : 0 }}>
+              {userReply?.nickname ? userReply?.nickname + ',  ' : ''}
+            </p>
             <p className='comment-text'>{message}</p>
           </div>
           <div className='comment-footer'>

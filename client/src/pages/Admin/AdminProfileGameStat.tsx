@@ -39,10 +39,10 @@ export const AdminProfileGameStat = () => {
                 className={styles.smallContainer}
                 type='date'
                 onChange={e => {
-                  setEndDate(new Date(e.currentTarget.value));
+                  setStartDate(new Date(e.currentTarget.value));
                 }}
-                value={endDate?.toISOString().substring(0, 10) ?? ''}
-                placeholder='Дата конца'
+                value={startDate?.toISOString().substring(0, 10) ?? ''}
+                placeholder='Дата начала'
               />
             </div>
             <div className=''>
@@ -51,10 +51,10 @@ export const AdminProfileGameStat = () => {
                 className={styles.smallContainer}
                 type='date'
                 onChange={e => {
-                  setStartDate(new Date(e.currentTarget.value));
+                  setEndDate(new Date(e.currentTarget.value));
                 }}
-                value={startDate?.toISOString().substring(0, 10) ?? ''}
-                placeholder='Дата начала'
+                value={endDate?.toISOString().substring(0, 10) ?? ''}
+                placeholder='Дата конца'
               />
             </div>
             <div>

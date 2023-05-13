@@ -4,13 +4,18 @@ import { ArrowLeft } from '../components/ArrowLeft';
 import { Sidebar } from '../components/Sidebar';
 import { useAppSelector } from '../hooks/redux';
 import { UserRole } from '../store/reducers/UserSlice';
-import { useDeletePostMutation, useGetPostQuery } from '../store/api/PostApi';
+import { useAddLikeMutation, useDeleteLikeMutation, useDeletePostMutation, useGetPostQuery } from '../store/api/PostApi';
 import './EditPost.css';
 import GoodCheckIcon from '../images/GoodCheck.svg';
 import TrashIcon from '../images/Trash.svg';
 import ImageIcon from '../images/Image.svg';
 import { IPostUploadImage, IUploadPost, useUpdatePhotoMutation, useUpdatePostMutation } from '../store/api/PostApi';
 import { PostDto } from '../store/reducers/PostSlice';
+import { Comments } from '../components/Comments';
+import { correctEnding } from '../utils/naming';
+import { Share } from '../components/Share';
+import Heart from '../images/Heart.svg';
+import FullHeartIcon from '../images/FullHeart.svg';
 
 export const EditPost = () => {
   const { postId } = useParams();
@@ -23,6 +28,9 @@ export const EditPost = () => {
   const { data, isSuccess } = useGetPostQuery(postId!);
   const [postObject, setPostObject] = useState<IUploadPost>({ postId: '', title: '', description: '', gameDate: new Date(Date.now()), location: '' });
   const navigate = useNavigate();
+  const [isLike, setIsLike] = useState(false);
+  const [addLike] = useAddLikeMutation();
+  const [deleteLike] = useDeleteLikeMutation();
 
   useEffect(() => {
     if (post) {
@@ -56,6 +64,7 @@ export const EditPost = () => {
 
   const deleteHandler = async (e: any) => {
     e.preventDefault();
+
     await deletePost(postId!)
       .unwrap()
       .then(() => {
@@ -66,6 +75,18 @@ export const EditPost = () => {
   if (user.role !== UserRole.ADMIN) {
     navigate('/');
   }
+
+  const likeHandler = async (e: any) => {
+    if (!user.userId) {
+      navigate('/login');
+    } else if (isLike) {
+      await deleteLike(postId!);
+      setIsLike(false);
+    } else {
+      await addLike(postId!);
+      setIsLike(true);
+    }
+  };
 
   return (
     <>
@@ -177,6 +198,29 @@ export const EditPost = () => {
                   </label>
                 </>
               )}
+            </div>
+            <div className='post-footer'>
+              <Share url={postId!} />
+
+              {isLike ? (
+                <div className='footer' onClick={e => likeHandler(e)}>
+                  <img src={FullHeartIcon} alt='' />
+                  <p>{post?.likes.length}</p>
+                </div>
+              ) : (
+                <div className='footer' onClick={e => likeHandler(e)}>
+                  <img src={Heart} alt='' />
+                  <p>{post?.likes.length ?? 0}</p>
+                </div>
+              )}
+            </div>
+            <div className='comments-container'>
+              <div className='comments-count'>
+                <p>
+                  {post?.comments.length ?? 0} комментар{correctEnding(post?.comments.length ?? 0)}
+                </p>
+              </div>
+              <Comments postId={postId!} comments={post?.comments ?? []} />
             </div>
           </div>
         </div>

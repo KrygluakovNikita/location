@@ -74,9 +74,8 @@ class GameController {
     try {
       const gameId = req.params.gameId;
       const { isPayed } = req.body;
-      const { userId } = req.user;
 
-      const game = await gameService.updatePayByGameId(userId, gameId, isPayed);
+      const game = await gameService.updatePayByGameId(gameId, isPayed);
 
       return res.json(game);
     } catch (e) {

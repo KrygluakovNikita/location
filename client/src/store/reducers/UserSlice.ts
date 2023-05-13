@@ -101,6 +101,10 @@ export const userSlice = createSlice({
     setData: (state: IUser, action: PayloadAction<IUser>) => {
       return action.payload;
     },
+    setUserData: (state: IUser, action: PayloadAction<IUser>) => {
+      if (action.payload?.email) state.email = action.payload.email;
+      if (action.payload?.city) state.city = action.payload.city;
+    },
     resetUserSlice: () => initialState,
     addGame: (state: IUser, action: PayloadAction<GameDto>) => {
       state.games?.push(action.payload);
@@ -164,6 +168,7 @@ export const {
   removeLike,
   addGame,
   addLike,
+  setUserData,
 } = userSlice.actions;
 
 export default userSlice.reducer;

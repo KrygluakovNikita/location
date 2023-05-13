@@ -37,7 +37,7 @@ export const ChangeValueItem: FC<IChangeValueItem> = ({ title, onChange, placeHo
             />
           </div>
           <div className={styles.changeValueBtnPencil}>
-            {isChange ? <img src={Pencil} alt='edit' onClick={onChange} className={styles.cursorPointer} /> : null}
+            {isChange ? <img src={Pencil} alt='edit' onClick={() => onChange(newValue)} className={styles.cursorPointer} /> : null}
           </div>
         </div>
       </div>
