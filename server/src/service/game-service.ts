@@ -1,12 +1,12 @@
 import { IGame, IStatChart, StatChartEnum } from './../interfaces/game-interface';
-import { Equal, LessThanOrEqual, MoreThanOrEqual, Between } from 'typeorm';
+import { Equal,  MoreThanOrEqual, Between } from 'typeorm';
 import { Game, User, UserRole } from '../database/entity';
 import { GameDto, GameDtoWithQr } from '../dtos/game-dto';
 import UserError from '../exeptions/user-error';
 import qr from 'qrcode';
 import ApiError from '../exeptions/api-error';
 import { Equipment } from '../database/entity/Equipment';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 class GameService {
   async upload(data: IGame): Promise<GameDto> {
     const game = new Game();

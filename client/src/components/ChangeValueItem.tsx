@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import  { FC, useState } from 'react';
 import styles from './ChangeValueItem.module.css';
 import Pencil from '../images/Pencil.svg';
 

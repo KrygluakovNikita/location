@@ -124,6 +124,20 @@ class PostService {
     );
     await Post.delete(post.postId);
 
+    const port = await Post.findOneBy({ postId });
+    if (!port) {
+      throw UserError.UserNotFound();
+    }
+
+    if (port.photo) {
+      const p = path.join(__dirname, '../../public/', port.photo);
+      await unlink(p);
+
+      port.photo = '';
+    }
+
+    port.save();
+
     return;
   }
 

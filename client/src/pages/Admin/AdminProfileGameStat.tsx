@@ -3,7 +3,6 @@ import { Sidebar } from '../../components/Sidebar';
 import { useGetGamesStatMutation } from '../../store/api/GameApi';
 import { GameDto } from '../../store/reducers/UserSlice';
 import styles from './AdminProfileGameStat.module.css';
-import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 
 export const AdminProfileGameStat = () => {

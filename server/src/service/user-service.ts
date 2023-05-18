@@ -1,4 +1,4 @@
-import { User, Token, DB_DEFAULT_PHOTO, RefreshToken } from '../database/entity';
+import { User, Token, DB_DEFAULT_PHOTO } from '../database/entity';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import { UserDto } from '../dtos/user-dto';

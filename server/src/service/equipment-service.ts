@@ -1,9 +1,5 @@
-import { Equal, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import { ILike } from '../controller/like-controller';
-import { Like, Post, User } from '../database/entity';
 import { EquipmentDto } from '../dtos/equipment-dto';
 import ApiError from '../exeptions/api-error';
-import UserError from '../exeptions/user-error';
 import { IEquipment } from '../controller/equipment-controller';
 import { Equipment } from '../database/entity/Equipment';
 

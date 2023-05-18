@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addGame, GameDto, IGame } from '../reducers/UserSlice';
+import {  GameDto } from '../reducers/UserSlice';
 
 export interface EquipmentDto {
   title: string;

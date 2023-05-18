@@ -64,7 +64,6 @@ export const EditPost = () => {
 
   const deleteHandler = async (e: any) => {
     e.preventDefault();
-
     await deletePost(postId!)
       .unwrap()
       .then(() => {
