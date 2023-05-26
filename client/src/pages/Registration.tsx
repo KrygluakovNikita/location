@@ -14,7 +14,7 @@ export const Registration = () => {
   const [city, setCity] = useState('');
   const [agree, setAgree] = useState(false);
   const [UpdatePhoto] = useUpdatePhotoMutation();
-  const [registration, { isError, error }] = useRegistrationMutation();
+  const [registration, { isError, error, isSuccess }] = useRegistrationMutation();
   const [selectedImage, setSelectedImage] = useState<File | string>(defaultImage);
   const navigate = useNavigate();
 
@@ -26,27 +26,33 @@ export const Registration = () => {
   const RegistrationHandler = async () => {
     const userDto: IRegistration = { nickname, city, email, password };
     if (!validateEmail(email)) {
-      setEmail('');
+      alert('Не правильно введена почта');
     } else if (password.length < 6) {
-      setPassword('');
+      alert('Пароль не может быть меньше 6 символов');
     } else {
-      await registration(userDto);
-
-      if (selectedImage !== defaultImage) {
-        const photo = new FormData();
-        photo.append('photo', selectedImage);
-        await UpdatePhoto(photo);
-      }
-
-      navigate('/');
+      await registration(userDto).then(async () => {
+        if (selectedImage !== defaultImage) {
+          const photo = new FormData();
+          photo.append('photo', selectedImage);
+          await UpdatePhoto(photo);
+          setPassword('');
+          setEmail('');
+        }
+      });
     }
   };
 
   useEffect(() => {
-    if (isError) {
-      alert(error);
+    if (isSuccess) {
+      navigate('/');
     }
-  }, [error, isError]);
+    if (isError && error) {
+      console.log('error');
+      console.log(error);
+
+      alert((error as any).data.message);
+    }
+  }, [error, isError, isSuccess]);
 
   return (
     <div>

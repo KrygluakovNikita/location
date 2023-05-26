@@ -16,6 +16,7 @@ class EquipmentService {
     if (available && available.disabled) {
       available.disabled = false;
       available.count = data.count ?? 1;
+      available.price = data.price;
       await available.save();
 
       const equipmentDto = new EquipmentDto(available);
@@ -27,6 +28,7 @@ class EquipmentService {
     equipment.title = data.title;
     equipment.description = data.description;
     equipment.count = data.count ?? 1;
+    equipment.price = data.price;
 
     await equipment.save();
 
@@ -65,6 +67,26 @@ class EquipmentService {
     equipment.disabled = true;
     await equipment.save();
     return equipment;
+  }
+
+  async updateById(equipmentId: string, data: IEquipment): Promise<EquipmentDto> {
+    const available = await Equipment.findOne({ where: { equipmentId } });
+    if (!available && !available.disabled) {
+      throw ApiError.BadRequest('Вы не можете обновить данные удалённого оборудования');
+    }
+
+    if (typeof data.count !== 'undefined' && data.count < 1) {
+      throw ApiError.BadRequest('Вы не можете указать количество меньше 1');
+    }
+    if (typeof data.description !== 'undefined' && data.description !== null) available.description = data.description;
+    if (typeof data.title !== 'undefined' && data.title !== null) available.title = data.title;
+    if (typeof data.count !== 'undefined' && data.count !== null) available.count = data.count ?? 1;
+    if (typeof data.price !== 'undefined' && data.price !== null) available.price = data.price;
+    await available.save();
+
+    const equipmentDto = new EquipmentDto(available);
+
+    return equipmentDto;
   }
 }
 

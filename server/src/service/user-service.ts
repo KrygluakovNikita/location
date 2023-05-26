@@ -27,6 +27,7 @@ export interface IServerData {
 class UserService {
   async registration(dto: IUser): Promise<IServerData> {
     const candidate = await User.findOne({ where: [{ email: dto.email }, { nickname: dto.nickname }] });
+
     if (candidate) {
       throw UserError.UniqValues();
     }

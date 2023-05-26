@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-
+require('dotenv').config();
 class MailService {
   transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
 

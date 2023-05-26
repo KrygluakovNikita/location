@@ -33,7 +33,9 @@ export const Login = () => {
         .then((data: UserDto) => {
           navigate(`${data.role === 'admin' ? '/admin' : '/'}profile/`);
         })
-        .catch(err => alert(JSON.stringify(err)));
+        .catch(err => {
+          alert(err.message);
+        });
       if (isError) {
         const err = error as FetchBaseQueryError;
         if (err.status === 406) {

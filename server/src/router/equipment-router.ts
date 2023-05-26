@@ -8,5 +8,6 @@ router.post('/', isAuth, isAdmin, equipmentController.upload);
 router.post('/by-date', equipmentController.getAllEquipmentByDate);
 router.get('/', isAuth, isAdmin, equipmentController.getAllEquipment);
 router.delete('/:equipmentId', isAuth, isAdmin, equipmentController.deleteById);
+router.put('/:equipmentId', isAuth, isAdmin, equipmentController.updateById);
 
 export default router;

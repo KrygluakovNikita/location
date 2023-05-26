@@ -10,6 +10,9 @@ export class Equipment extends BaseEntity {
   @Column({ type: 'int', nullable: false })
   count: number;
 
+  @Column({ type: 'float', nullable: false, default: 0 })
+  price: number;
+
   @Column('text')
   title: string;
 
