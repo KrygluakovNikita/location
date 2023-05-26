@@ -92,6 +92,18 @@ export const Profile = () => {
                     <option value='4'>4 часа</option>
                   </select>
                 </div>
+                <div className={styles.profileSelectDate}>
+                  <input
+                    type='datetime-local'
+                    onChange={e => {
+                      if (moment(e.currentTarget.value) >= moment()) {
+                        setPlayDate(e.currentTarget.value);
+                      }
+                    }}
+                    className={styles.profileDateTimeContainer}
+                    value={playDate ?? ''}
+                  />
+                </div>
                 <div className={styles.profileSelectPayTypeMainContainer}>
                   <select
                     className={styles.selectContainer}
@@ -125,19 +137,6 @@ export const Profile = () => {
                       : null}
                   </select>
                 </div>
-                <div className={styles.profileSelectDate}>
-                  <input
-                    type='datetime-local'
-                    onChange={e => {
-                      if (moment(e.currentTarget.value) >= moment()) {
-                        setPlayDate(e.currentTarget.value);
-                      }
-                    }}
-                    className={styles.profileDateTimeContainer}
-                    value={playDate ?? ''}
-                  />
-                </div>
-
                 <div className={styles.profileGenerateQRBtnContainer}>
                   <button
                     className={hours && payType && playDate ? styles.profileGenerateQRBtn : styles.profileGenerateQRBtnContainerDisabled}

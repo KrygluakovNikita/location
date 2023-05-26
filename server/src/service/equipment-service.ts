@@ -69,6 +69,15 @@ class EquipmentService {
     return equipment;
   }
 
+  async getById(equipmentId: string): Promise<EquipmentDto> {
+    const equipment = await Equipment.findOneBy({ equipmentId });
+    if (!equipment) {
+      throw ApiError.BadRequest('Такого оборудования не существует');
+    }
+
+    return equipment;
+  }
+
   async updateById(equipmentId: string, data: IEquipment): Promise<EquipmentDto> {
     const available = await Equipment.findOne({ where: { equipmentId } });
     if (!available && !available.disabled) {

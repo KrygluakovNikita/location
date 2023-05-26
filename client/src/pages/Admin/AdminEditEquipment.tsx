@@ -1,23 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '../../components/Sidebar';
-import styles from './AdminAddEquipment.module.css';
-import { useNavigate } from 'react-router-dom';
+import styles from './AdminEditEquipment.module.css';
+import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../../components/Modal';
-import { EquipmentDto, useAddEquipmentMutation } from '../../store/api/EquipmentApi';
+import { EquipmentDto, useChangeEquipmentMutation, useGetEquipmentByIdQuery } from '../../store/api/EquipmentApi';
 
-export const AdminAddEquipment = () => {
+export const AdminEditEquipment = () => {
   const navigate = useNavigate();
+  const { equipmentId } = useParams();
+  const { data: equipment } = useGetEquipmentByIdQuery(equipmentId!);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [addEquipment] = useAddEquipmentMutation();
+  const [changeEquipment] = useChangeEquipmentMutation();
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [count, setCount] = useState<string>('');
+  const [count, setCount] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
 
-  const createGame = async () => {
-    if (title && description && count) {
-      await addEquipment({ title, description, count: +count, price })
+  const changeEquipmentHandler = async () => {
+    if (title && description && count && equipmentId) {
+      await changeEquipment({ title, description, count: +count, price, equipmentId })
         .unwrap()
         .then((res: EquipmentDto) => {
           setIsOpen(true);
@@ -31,9 +33,21 @@ export const AdminAddEquipment = () => {
     navigate(`/profile`);
     setTitle('');
     setDescription('');
-    setCount('');
+    setCount(0);
     setPrice(0);
   };
+
+  useEffect(() => {
+    console.log('equipment');
+    console.log(equipment);
+
+    if (equipment) {
+      setTitle(equipment.title);
+      setDescription(equipment.description);
+      setCount(+equipment.count ?? 0);
+      setPrice(+equipment.price);
+    }
+  }, [equipment]);
 
   return (
     <div className=''>
@@ -53,16 +67,16 @@ export const AdminAddEquipment = () => {
                 <input placeholder='Описание' value={description} onChange={e => setDescription(e.target.value)} />
               </div>
               <div className={styles.addInput}>
-                <input placeholder='Количетсво оборудования' type='number' value={count} onChange={e => setCount(e.target.value)} />
+                <input placeholder='Количетсво оборудования' type='number' value={count} onChange={e => setCount(+e.target.value)} />
               </div>
               <div className={styles.addInput}>
-                <input placeholder='Цена оборудования за час' type='number' value={price} onChange={e => setPrice(+e.target.value ?? '')} />
+                <input placeholder='Цена оборудования за час' type='number' value={price} onChange={e => setPrice(+e.target.value)} />
               </div>
               <div className={styles.profileGenerateQRBtnContainer}>
                 <button
                   className={title && description && count ? styles.profileGenerateQRBtn : styles.profileGenerateQRBtnContainerDisabled}
-                  onClick={createGame}>
-                  <p className={styles.profileGenerateQRBtnText}>Создать оборудование</p>
+                  onClick={changeEquipmentHandler}>
+                  <p className={styles.profileGenerateQRBtnText}>Изменить оборудование</p>
                 </button>
               </div>
             </div>

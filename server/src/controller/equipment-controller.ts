@@ -42,6 +42,16 @@ class EquipmentController {
       next(e);
     }
   }
+  async getById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const equipmentId = req.params.equipmentId as string;
+
+      const equipment = await equipmentService.getById(equipmentId);
+      return res.json(equipment);
+    } catch (e) {
+      next(e);
+    }
+  }
   async deleteById(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const equipmentId = req.params.equipmentId;

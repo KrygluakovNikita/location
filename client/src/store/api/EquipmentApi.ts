@@ -1,18 +1,20 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import {  GameDto } from '../reducers/UserSlice';
+import { GameDto } from '../reducers/UserSlice';
 
 export interface EquipmentDto {
   title: string;
   equipmentId: string;
   description: string;
   count: number;
+  price: number;
 }
 
 export interface IEquipment {
   title: string;
   description: string;
   count?: number;
+  price: number;
 }
 export interface IUpdatePayByGameId {
   gameId: string;
@@ -45,11 +47,25 @@ export const equipmentApi = createApi({
             ]
           : [{ type: 'Equipments', id: 'LIST' }],
     }),
+    changeEquipment: build.mutation<EquipmentDto, EquipmentDto>({
+      query: body => ({ url: `/equipment/${body.equipmentId}`, method: 'PUT', body }),
+      invalidatesTags: result =>
+        result
+          ? [
+              { type: 'Equipments' as const, equipmentId: result.equipmentId },
+              { type: 'Equipments', id: 'LIST' },
+            ]
+          : [{ type: 'Equipments', id: 'LIST' }],
+    }),
     getByDate: build.mutation<EquipmentDto[], IGetEquipmentByDate>({
       query: (body: IGetEquipmentByDate) => ({ url: `/equipment/by-date`, method: 'POST', body }),
     }),
     getEquipments: build.query<EquipmentDto[], void>({
       query: () => ({ url: `/equipment/`, method: 'GET' }),
+      providesTags: ['Equipments'],
+    }),
+    getEquipmentById: build.query<EquipmentDto, string>({
+      query: (equipmentId: string) => ({ url: `/equipment/${equipmentId}`, method: 'GET' }),
       providesTags: ['Equipments'],
     }),
     deleteById: build.mutation<EquipmentDto, string>({
@@ -59,4 +75,11 @@ export const equipmentApi = createApi({
   }),
 });
 
-export const { useAddEquipmentMutation, useDeleteByIdMutation, useGetByDateMutation, useGetEquipmentsQuery } = equipmentApi;
+export const {
+  useAddEquipmentMutation,
+  useDeleteByIdMutation,
+  useGetByDateMutation,
+  useGetEquipmentsQuery,
+  useGetEquipmentByIdQuery,
+  useChangeEquipmentMutation,
+} = equipmentApi;

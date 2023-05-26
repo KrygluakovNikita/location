@@ -17,6 +17,7 @@ import { EditPost } from './pages/EditPost';
 import { AdminProfileGameStat } from './pages/Admin/AdminProfileGameStat';
 import { AdminAddEquipment } from './pages/Admin/AdminAddEquipment';
 import { AdminProfileDiagram } from './pages/Admin/AdminProfileDiagram';
+import { AdminEditEquipment } from './pages/Admin/AdminEditEquipment';
 
 function App() {
   const user = useAppSelector(state => state.user);
@@ -111,6 +112,7 @@ function App() {
         <Route path='/admin/:postId' element={<EditPost />} />
         <Route path='/' element={<Feed />} />
         <Route path='/*' element={<PageNotFound />} />
+        <Route path='/admin/add-equipment/:equipmentId' element={!user?.userId ? <Navigate to='/login' replace={true} /> : <AdminEditEquipment />} />
       </Routes>
     </>
   );

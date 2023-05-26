@@ -7,6 +7,7 @@ const router = Router();
 router.post('/', isAuth, isAdmin, equipmentController.upload);
 router.post('/by-date', equipmentController.getAllEquipmentByDate);
 router.get('/', isAuth, isAdmin, equipmentController.getAllEquipment);
+router.get('/:equipmentId', isAuth, isAdmin, equipmentController.getById);
 router.delete('/:equipmentId', isAuth, isAdmin, equipmentController.deleteById);
 router.put('/:equipmentId', isAuth, isAdmin, equipmentController.updateById);
 

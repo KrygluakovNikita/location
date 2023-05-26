@@ -47,6 +47,9 @@ export const AdminProfileSettings = () => {
   const deleteEquipmentHandler = async (equipmentId: string) => {
     await deleteEquipmentById(equipmentId);
   };
+  const changeEquipmentHandler = async (equipmentId: string) => {
+    navigator(`/admin/add-equipment/${equipmentId}`);
+  };
 
   const equipmentItem = (equipment: EquipmentDto) => {
     return (
@@ -55,9 +58,15 @@ export const AdminProfileSettings = () => {
         <td>{equipment.title}</td>
         <td>{equipment.description}</td>
         <td>{equipment.count}</td>
+        <td>{equipment.price}</td>
         <td>
           <div className={styles.deleteButton}>
             <button onClick={() => deleteEquipmentHandler(equipment.equipmentId)}>Удалить</button>
+          </div>
+        </td>
+        <td>
+          <div className={styles.deleteButton}>
+            <button onClick={() => changeEquipmentHandler(equipment.equipmentId)}>Редактировать</button>
           </div>
         </td>
       </tr>
@@ -108,10 +117,12 @@ export const AdminProfileSettings = () => {
               <div>
                 <table className={styles.profileHistoryItems}>
                   <tr className={styles.historyItemIdContainer}>
-                    <td>ID</td>
-                    <td>Название</td>
-                    <td>Описание</td>
-                    <td>Количество</td>
+                    <td style={{ paddingRight: 10 }}>ID</td>
+                    <td style={{ paddingRight: 10 }}>Название</td>
+                    <td style={{ paddingRight: 10 }}>Описание</td>
+                    <td style={{ paddingRight: 10 }}>Количество</td>
+                    <td style={{ paddingRight: 10 }}>Цена</td>
+                    <td></td>
                     <td></td>
                   </tr>
                   {equipments.map(equipment => equipmentItem(equipment))}
