@@ -13,6 +13,7 @@ import { CommentDto } from '../store/reducers/PostSlice';
 import { useAddLikeMutation, useDeleteLikeMutation } from '../store/api/PostApi';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
+import moment from 'moment';
 
 interface IPostProps {
   postId: string;
@@ -22,12 +23,24 @@ interface IPostProps {
   title: string;
   description: string;
   postDate: Date;
+  updatedPostDate: Date;
   gameDate: Date;
   location: string;
   photo: string;
 }
 
-export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate, title, user: postUser, description, photo, likes }) => {
+export const PostCard: FC<IPostProps> = ({
+  postId,
+  location,
+  postDate,
+  updatedPostDate,
+  gameDate,
+  title,
+  user: postUser,
+  description,
+  photo,
+  likes,
+}) => {
   const user = useAppSelector(state => state.user);
   const { postLocaleDate, postLocaleTime } = convertPostDate(postDate);
   const { gameLocaleDate, gameLocaleTime } = convertGameDate(gameDate);
@@ -59,7 +72,12 @@ export const PostCard: FC<IPostProps> = ({ postId, location, postDate, gameDate,
   return (
     <div className='post'>
       <div className='info'>
-        <UserInfo postLocaleDate={postLocaleDate} postLocaleTime={postLocaleTime} user={postUser} />
+        <UserInfo
+          postLocaleDate={postLocaleDate}
+          postLocaleTime={postLocaleTime}
+          user={postUser}
+          isEdited={!!moment(postDate).diff(updatedPostDate, 'seconds')}
+        />
         <p className='title'>{title}</p>
         <p className='description post-text'>
           {description.length > maxDescriptionLength ? description.slice(0, maxDescriptionLength) + '...' : description}

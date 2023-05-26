@@ -11,6 +11,7 @@ export class PostDto {
   title: string;
   description: string;
   postDate: Date;
+  updatedPostDate: Date;
   gameDate: Date;
   location: string;
   photo: string;
@@ -23,6 +24,7 @@ export class PostDto {
     this.title = model.title;
     this.gameDate = model.gameDate;
     this.postDate = model.postDate;
+    this.updatedPostDate = model.updatedPostDate;
     this.location = model.location;
     this.photo = model.photo;
   }

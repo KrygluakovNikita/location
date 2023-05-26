@@ -10,6 +10,7 @@ export interface PostDto {
   title: string;
   description: string;
   postDate: Date;
+  updatedPostDate: Date;
   gameDate: Date;
   location: string;
   photo: string;

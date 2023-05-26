@@ -14,6 +14,7 @@ import { Comments } from '../components/Comments';
 import { useAppSelector } from '../hooks/redux';
 import { ArrowLeft } from '../components/ArrowLeft';
 import { useAddLikeMutation, useDeleteLikeMutation } from '../store/api/PostApi';
+import moment from 'moment';
 
 export const Post = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export const Post = () => {
   const [isLike, setIsLike] = useState(false);
   const [addLike] = useAddLikeMutation();
   const [deleteLike] = useDeleteLikeMutation();
+
   useEffect(() => {
     if (post?.likes.findIndex(like => like.user.userId === user.userId) !== -1) {
       setIsLike(true);
@@ -63,7 +65,12 @@ export const Post = () => {
         {post ? (
           <div className='container'>
             <div className='post-card'></div>
-            <UserInfo postLocaleDate={postDate.postLocaleDate} postLocaleTime={postDate.postLocaleTime} user={post!.user} />
+            <UserInfo
+              postLocaleDate={postDate.postLocaleDate}
+              postLocaleTime={postDate.postLocaleTime}
+              isEdited={!!moment(post.postDate).diff(post.updatedPostDate, 'minutes')}
+              user={post!.user}
+            />
             <p className='post-title'>{post.title}</p>
             <div className='post-text'>
               <p>{post.description}</p>

@@ -27,6 +27,9 @@ export class Post extends BaseEntity {
   @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'post_date' })
   postDate: Date;
 
+  @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'updated_post_date' })
+  updatedPostDate: Date;
+
   @Column({ type: 'timestamptz', name: 'game_date', nullable: true })
   gameDate: Date;
 

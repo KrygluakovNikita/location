@@ -42,7 +42,6 @@ class PostService {
     if (previousPhoto) {
       const p = path.join(__dirname, '../../public/', previousPhoto);
       await unlink(p);
-
       if (newPhoto) {
         post.photo = newPhoto;
       } else {
@@ -51,6 +50,8 @@ class PostService {
     } else {
       post.photo = newPhoto;
     }
+    const updatedPostDate = new Date();
+    post.updatedPostDate = updatedPostDate;
 
     await post.save();
 
@@ -157,8 +158,8 @@ class PostService {
     if (!post) {
       throw ApiError.NotFound();
     }
-
-    const data: Post = { ...post, ...postDto } as Post;
+    const updatedPostDate = new Date();
+    const data: Post = { ...post, updatedPostDate, ...postDto } as Post;
     const updatedPost = await Post.save(data);
     const result = new PostDto(updatedPost);
 

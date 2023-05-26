@@ -25,15 +25,18 @@
 
 .post-image-wrapper {
   display: flex;
-  align-items: center;
+  overflow: hidden;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 .post-image-wrapper img {
   margin-bottom: 5px;
-  width: 100%;
-  height: 100%;
+  width: 440px;
+  height: 170px;
   max-width: 752px;
   max-height: 307px;
+  object-fit: contain;
 }
 
 .post-text {
