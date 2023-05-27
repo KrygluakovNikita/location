@@ -51,7 +51,7 @@ export const AddPost = () => {
 
   return (
     <>
-      <Sidebar isProfile={false} />
+      <Sidebar isFeed={true} isProfile={false} isEquipment={false} />
       <div className='main'>
         <div className='top-wrapper'>
           <ArrowLeft />

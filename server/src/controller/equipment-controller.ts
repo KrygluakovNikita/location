@@ -7,17 +7,30 @@ export interface IEquipment {
   description: string;
   count?: number;
   price: number;
+  descriptionAboutStaff: string;
 }
 
 class EquipmentController {
   async upload(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, count = 1, price } = req.body;
+      const { title, description, count = 1, price, descriptionAboutStaff } = req.body;
 
-      const equipmentDto: IEquipment = { title, description, count, price };
+      const equipmentDto: IEquipment = { title, description, count, price, descriptionAboutStaff };
       const equipment = await equipmentService.upload(equipmentDto);
 
       return res.json(equipment);
+    } catch (e) {
+      next(e);
+    }
+  }
+  async updatePhoto(req: IUserRequest, res: Response, next: NextFunction) {
+    try {
+      const { equipmentId } = req.params;
+      const newPhoto = req.file?.filename;
+
+      await equipmentService.updatePhoto(equipmentId, newPhoto);
+
+      return res.end();
     } catch (e) {
       next(e);
     }
@@ -65,8 +78,8 @@ class EquipmentController {
   async updateById(req: IUserRequest, res: Response, next: NextFunction) {
     try {
       const equipmentId = req.params.equipmentId;
-      const { title, description, count, price } = req.body;
-      const equipmentDto: IEquipment = { title, description, count, price };
+      const { title, description, count, price, descriptionAboutStaff } = req.body;
+      const equipmentDto: IEquipment = { title, description, count, price, descriptionAboutStaff };
       const deleted = await equipmentService.updateById(equipmentId, equipmentDto);
 
       return res.json(deleted);

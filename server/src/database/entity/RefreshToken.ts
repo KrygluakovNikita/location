@@ -11,6 +11,6 @@ export class RefreshToken extends BaseEntity {
   @JoinColumn()
   user: User;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true, default: '' })
   refreshToken: string;
 }

@@ -17,7 +17,7 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'post' })
   post: Post;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'varchar', nullable: false, default: '' })
   message: string;
 
   @Column({ type: 'timestamptz', default: new Date(Date.now()), nullable: false })

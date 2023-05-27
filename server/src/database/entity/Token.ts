@@ -15,7 +15,7 @@ export class Token extends BaseEntity {
   @Column({ type: 'varchar', length: 6, unique: true })
   pin: string;
 
-  @Column({ type: 'text', name: 'token', default: null })
+  @Column({ type: 'varchar', name: 'token', default: null })
   token: string | null;
 
   @Column({ type: 'boolean', name: 'is_reset_password', default: false })

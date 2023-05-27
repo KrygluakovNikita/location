@@ -21,7 +21,7 @@ export class Post extends BaseEntity {
   @JoinColumn({ name: 'likes' })
   likes: Like[] | null;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', default: '' })
   title: string;
 
   @Column({ type: 'timestamptz', default: new Date(Date.now()), name: 'post_date' })
@@ -33,12 +33,12 @@ export class Post extends BaseEntity {
   @Column({ type: 'timestamptz', name: 'game_date', nullable: true })
   gameDate: Date;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true, default: '' })
   location: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', default: '' })
   description: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true, default: '' })
   photo: string;
 }

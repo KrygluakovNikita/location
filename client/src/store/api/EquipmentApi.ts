@@ -8,6 +8,8 @@ export interface EquipmentDto {
   description: string;
   count: number;
   price: number;
+  descriptionAboutStaff: string;
+  photo?: string;
 }
 
 export interface IEquipment {
@@ -15,6 +17,7 @@ export interface IEquipment {
   description: string;
   count?: number;
   price: number;
+  descriptionAboutStaff: string;
 }
 export interface IUpdatePayByGameId {
   gameId: string;
@@ -31,6 +34,11 @@ export interface IGetStatGameResponse {
 
 export interface IGetEquipmentByDate {
   date: Date;
+}
+
+export interface IEquipmentUploadImage {
+  photo: FormData;
+  equipmentId: string;
 }
 export const equipmentApi = createApi({
   reducerPath: 'equipmentApi',
@@ -72,6 +80,13 @@ export const equipmentApi = createApi({
       query: (equipmentId: string) => ({ url: `/equipment/${equipmentId}`, method: 'DELETE' }),
       invalidatesTags: [{ type: 'Equipments' }],
     }),
+    UpdateEquipmentPhoto: build.mutation({
+      query: (body: IEquipmentUploadImage) => ({
+        url: `/equipment/upload-photo/${body.equipmentId}`,
+        method: 'POST',
+        body: body.photo,
+      }),
+    }),
   }),
 });
 
@@ -82,4 +97,5 @@ export const {
   useGetEquipmentsQuery,
   useGetEquipmentByIdQuery,
   useChangeEquipmentMutation,
+  useUpdateEquipmentPhotoMutation,
 } = equipmentApi;

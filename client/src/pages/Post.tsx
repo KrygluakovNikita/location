@@ -59,7 +59,7 @@ export const Post = () => {
 
   return (
     <>
-      <Sidebar isProfile={false} />
+      <Sidebar isFeed={true} isProfile={false} isEquipment={false} />
       <div className='main'>
         <ArrowLeft />
         {post ? (

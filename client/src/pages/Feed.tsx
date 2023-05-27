@@ -33,7 +33,7 @@ export const Feed = () => {
 
   return (
     <>
-      <Sidebar isProfile={false} />
+      <Sidebar isFeed={true} isProfile={false} isEquipment={false} />
       <div className='main'>
         {user.role === UserRole.ADMIN && (
           <div className='feed-add-button'>

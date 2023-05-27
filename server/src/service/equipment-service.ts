@@ -2,6 +2,8 @@ import { EquipmentDto } from '../dtos/equipment-dto';
 import ApiError from '../exeptions/api-error';
 import { IEquipment } from '../controller/equipment-controller';
 import { Equipment } from '../database/entity/Equipment';
+import path from 'path';
+import { unlink } from 'fs/promises';
 
 class EquipmentService {
   async upload(data: IEquipment): Promise<EquipmentDto> {
@@ -17,6 +19,7 @@ class EquipmentService {
       available.disabled = false;
       available.count = data.count ?? 1;
       available.price = data.price;
+      available.descriptionAboutStaff = data.descriptionAboutStaff;
       await available.save();
 
       const equipmentDto = new EquipmentDto(available);
@@ -29,6 +32,7 @@ class EquipmentService {
     equipment.description = data.description;
     equipment.count = data.count ?? 1;
     equipment.price = data.price;
+    equipment.descriptionAboutStaff = data.descriptionAboutStaff;
 
     await equipment.save();
 
@@ -37,6 +41,31 @@ class EquipmentService {
     return equipmentDto;
   }
 
+  async updatePhoto(equipmentId: string, newPhoto: string): Promise<void> {
+    const equipment = await Equipment.findOneBy({ equipmentId });
+    if (!equipment) {
+      throw ApiError.NotFound();
+    }
+
+    const previousPhoto = equipment.photo;
+
+    if (previousPhoto) {
+      const p = path.join(__dirname, '../../public/', previousPhoto);
+      await unlink(p);
+
+      if (newPhoto) {
+        equipment.photo = newPhoto;
+      } else {
+        equipment.photo = '';
+      }
+    } else {
+      equipment.photo = newPhoto;
+    }
+
+    await equipment.save();
+
+    return;
+  }
   async getAllEquipmentByDate(date: Date): Promise<EquipmentDto[]> {
     const equipments = await Equipment.createQueryBuilder('equipment')
       .leftJoinAndSelect('equipment.games', 'game')
@@ -91,6 +120,8 @@ class EquipmentService {
     if (typeof data.title !== 'undefined' && data.title !== null) available.title = data.title;
     if (typeof data.count !== 'undefined' && data.count !== null) available.count = data.count ?? 1;
     if (typeof data.price !== 'undefined' && data.price !== null) available.price = data.price;
+    if (typeof data.descriptionAboutStaff !== 'undefined' && data.descriptionAboutStaff !== null)
+      available.descriptionAboutStaff = data.descriptionAboutStaff;
     await available.save();
 
     const equipmentDto = new EquipmentDto(available);

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Game } from './Game';
+import { DB_DEFAULT_PHOTO } from './User';
 
 @Entity({ name: 'equipment' })
 export class Equipment extends BaseEntity {
@@ -13,10 +14,10 @@ export class Equipment extends BaseEntity {
   @Column({ type: 'float', nullable: false, default: 0 })
   price: number;
 
-  @Column('text')
+  @Column({ type: 'varchar', default: '' })
   title: string;
 
-  @Column('text')
+  @Column({ type: 'varchar', default: '' })
   description: string;
 
   @Column('boolean', { default: false })
@@ -28,4 +29,10 @@ export class Equipment extends BaseEntity {
   @OneToMany(() => Game, game => game.equipment, { nullable: true })
   @JoinColumn({ name: 'games' })
   games: Game[];
+
+  @Column({ type: 'varchar', default: '' })
+  descriptionAboutStaff: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  photo: string;
 }

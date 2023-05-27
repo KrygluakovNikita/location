@@ -59,25 +59,25 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'reset_token' })
   resetToken: User;
 
-  @Column({ type: 'text', unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false, default: '' })
   email: string;
 
-  @Column({ type: 'text', default: DB_DEFAULT_PHOTO })
+  @Column({ type: 'varchar', default: DB_DEFAULT_PHOTO })
   photo: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true, default: '' })
   password: string | null;
 
   @Column({ type: 'boolean', default: false, name: 'is_google' })
   isGoogle: boolean;
 
-  @Column({ type: 'text', name: 'google_id', nullable: true })
+  @Column({ type: 'varchar', name: 'google_id', nullable: true, default: '' })
   googleId: string | null;
 
-  @Column({ type: 'text', unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false, default: '' })
   nickname: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true, default: '' })
   city: string;
 
   @Column({
@@ -87,13 +87,13 @@ export class User extends BaseEntity {
   })
   role: UserRole;
 
-  @Column({ type: 'text', nullable: true, name: 'activation_link' })
+  @Column({ type: 'varchar', nullable: true, name: 'activation_link', default: '' })
   activationLink: string | null;
 
   @Column({ type: 'boolean', default: false, name: 'is_activated' })
   isActivated: boolean;
 
-  @Column({ type: 'text', nullable: true, name: 'reset_link' })
+  @Column({ type: 'varchar', nullable: true, name: 'reset_link', default: '' })
   resetLink: string | null;
 
   @OneToOne(type => RefreshToken, token => token.user, {

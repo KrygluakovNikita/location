@@ -16,7 +16,7 @@ export class Reply extends BaseEntity {
   @JoinColumn({ name: 'comment' })
   comment: Comment;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'varchar', nullable: false, default: '' })
   message: string;
 
   @Column({ type: 'timestamptz', default: new Date(Date.now()), nullable: false })

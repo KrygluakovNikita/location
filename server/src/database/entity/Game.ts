@@ -20,7 +20,7 @@ export class Game extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: false })
   date: Date;
 
-  @Column('text')
+  @Column({ type: 'varchar', default: '1' })
   hours: string;
 
   @Column({

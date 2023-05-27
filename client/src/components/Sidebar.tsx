@@ -1,4 +1,4 @@
-import { useState, FC, MouseEvent } from 'react';
+import { useState, FC, MouseEvent, useEffect } from 'react';
 import './Sidebar.css';
 import LogoImg from '../images/Logo.svg';
 import { useNavigate } from 'react-router-dom';
@@ -7,12 +7,15 @@ import { useAppSelector } from '../hooks/redux';
 
 interface ISideBarProps {
   isProfile: boolean;
+  isFeed?: boolean;
+  isEquipment?: boolean;
 }
 
-export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
+export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue, isFeed: feedValue, isEquipment: additionalValue = false }) => {
   const user = useAppSelector(state => state.user);
   const [isProfile, setIsProfile] = useState(defaultValue);
-  const [isFeed, setIsFeed] = useState(!defaultValue);
+  const [isFeed, setIsFeed] = useState(feedValue);
+  const [isEquipment, setIsEquipment] = useState(additionalValue);
   const navigate = useNavigate();
   const [Logout] = useLogoutMutation();
 
@@ -31,6 +34,15 @@ export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
     navigate('/');
     setIsFeed(true);
     setIsProfile(false);
+    setIsEquipment(false);
+  };
+
+  const clickEquipmentHandler = (e: MouseEvent<HTMLParagraphElement>) => {
+    e.preventDefault();
+    navigate('/equipments');
+    setIsFeed(false);
+    setIsProfile(false);
+    setIsEquipment(true);
   };
 
   const clickProfileHandler = (e: MouseEvent<HTMLParagraphElement>) => {
@@ -42,6 +54,7 @@ export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
     }
     setIsFeed(false);
     setIsProfile(true);
+    setIsEquipment(false);
   };
 
   return (
@@ -53,6 +66,9 @@ export const Sidebar: FC<ISideBarProps> = ({ isProfile: defaultValue }) => {
         </p>
         <p className={`menu ${isProfile ? 'selected' : ''}`} onClick={e => clickProfileHandler(e)}>
           Профиль
+        </p>
+        <p className={`menu ${isEquipment ? 'selected' : ''}`} onClick={e => clickEquipmentHandler(e)}>
+          Оборудование
         </p>
         <p className='menu' onClick={e => logoutHandler(e)}>
           Выйти
