@@ -75,7 +75,7 @@ export const AdminEditEquipment = () => {
         <div className={styles.secondContainer}>
           <div className={styles.sideContainer}></div>
           <div className={styles.cartContainer}>
-            {isOpen ? <Modal setIsOpen={onClickModal} title='Уведомление' text='Ваше оборудование успешно создано' /> : null}
+            {isOpen ? <Modal setIsOpen={onClickModal} title='Уведомление' text='Ваше оборудование успешно изменено' /> : null}
 
             <div className={styles.profileScanContainer}>
               <div className={styles.addContainer}></div>
