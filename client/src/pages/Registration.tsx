@@ -69,7 +69,7 @@ export const Registration = () => {
             <input placeholder='Email' type='email' value={email} onChange={e => setEmail(e.target.value)} />
           </div>
           <div className='input'>
-            <input placeholder='Пароль' type='text' value={password} onChange={e => setPassword(e.target.value)} />
+            <input placeholder='Пароль' type='password' value={password} onChange={e => setPassword(e.target.value)} />
           </div>
           <div className='input'>
             <input placeholder='Никнейм' type='text' value={nickname} onChange={e => setNickname(e.target.value)} />

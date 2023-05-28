@@ -21,7 +21,7 @@ export const Login = () => {
 
   const LoginHandler = async () => {
     if (!validateEmail(emailRef.current.value)) {
-      alert('Почта не верная, исправтье её и попробуйте снова');
+      alert('Почта не верная, исправьте её и попробуйте снова');
       emailRef.current.style.color = 'red';
     } else if (passwordRef.current.value.length < 6) {
       alert('Длина пароля не может быть меньше 6 символов');
@@ -66,7 +66,7 @@ export const Login = () => {
         <input placeholder='Email' type='email' ref={emailRef} onChange={changeEmailHandler} />
       </div>
       <div className='input'>
-        <input placeholder='Пароль' type='text' ref={passwordRef} onChange={changePasswordHandler} />
+        <input placeholder='Пароль' type='password' ref={passwordRef} onChange={changePasswordHandler} />
       </div>
 
       <a className='underline-end' href='/forgot-password'>

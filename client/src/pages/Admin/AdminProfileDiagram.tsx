@@ -157,11 +157,6 @@ export const AdminProfileDiagram = () => {
                 placeholder='Дата начала'
               />
             </div>
-            {/* <div>
-              <button className={styles.btnStatContainer} onClick={clickHandler}>
-                <p className={styles.btnTextStat}>Создать</p>
-              </button>
-            </div> */}
           </div>
           <div className={styles.historyContainer}>
             {isLoading ? (
