@@ -15,6 +15,9 @@ export class CommentDto {
     this.date = model.date;
     this.postId = model.post.postId;
     this.message = model.message;
-    this.answers = model?.answers?.map(answer => new ReplyDto(answer)) ?? [];
+    if (model?.answers?.length) this.answers = model?.answers?.map(answer => new ReplyDto(answer))
+    else{
+      this.answers =[]
+    }
   }
 }

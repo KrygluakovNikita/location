@@ -1,12 +1,20 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBase } from '.';
-import { addComment, CommentDto } from '../reducers/PostSlice';
-import { IUser } from '../reducers/UserSlice';
+import { addAnswer, addComment, CommentDto, ReplyUpload } from '../reducers/PostSlice';
+import { IUser, UserDto } from '../reducers/UserSlice';
 
 export interface ICommentUpload {
   postId: string;
   user: IUser;
   message: string;
+}
+export interface IResponseAnswer {
+  replyId: string;
+  user: UserDto;
+  userReply: UserDto;
+  date: Date;
+  message: string;
+  comment: CommentDto;
 }
 
 export const commentApi = createApi({
@@ -23,7 +31,17 @@ export const commentApi = createApi({
       },
       invalidatesTags: [{ type: 'Comments', id: 'LIST' }],
     }),
+    uploadAnswer: build.mutation<IResponseAnswer, ReplyUpload>({
+      query: body => ({ url: `reply/${body.commentId}`, method: 'POST', body }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const data = await queryFulfilled;
+        const reply: IResponseAnswer = data.data;
+
+        dispatch(addAnswer(reply));
+      },
+      invalidatesTags: [{ type: 'Comments', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useAddCommentMutation } = commentApi;
+export const { useAddCommentMutation,useUploadAnswerMutation } = commentApi;

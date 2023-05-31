@@ -4,7 +4,7 @@ import Close from '../images/Close.svg';
 import './AnswerInput.css';
 import Send from '../images/Send.svg';
 import { ReplyUpload } from '../store/reducers/PostSlice';
-import { useUploadAnswerMutation } from '../store/api/AnswerApi';
+import { useUploadAnswerMutation } from '../store/api/CommentApi';
 
 interface IAnswerInputProps {
   user: UserDto | IUser;

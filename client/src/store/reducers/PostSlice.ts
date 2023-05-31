@@ -1,5 +1,5 @@
+import { IResponseAnswer } from './../api/CommentApi';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IResponseAnswer } from '../api/AnswerApi';
 import { LikeDto, UserDto } from './UserSlice';
 
 export interface PostDto {
@@ -95,9 +95,11 @@ export const postSlice = createSlice({
       }
     },
     addAnswer: (state: IPosts, { payload }: PayloadAction<IResponseAnswer>) => {
-      const ind = state.posts.findIndex(post => post.postId === payload.postId);
+      const ind = state.posts.findIndex(post => post.postId === payload.comment.postId);
+
       if (ind !== -1) {
-        const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.commentId);
+        const commentInd = state.posts[ind].comments.findIndex(comment => comment.commentId === payload.comment.commentId);
+       
         if (commentInd !== -1) {
           const dto: ReplyDto = {
             replyId: payload.replyId,
@@ -105,7 +107,7 @@ export const postSlice = createSlice({
             userReply: payload.userReply,
             date: payload.date,
             message: payload.message,
-            commentId: payload.commentId,
+            commentId: payload.comment.commentId,
           };
           state.posts[ind].comments[commentInd].answers.unshift(dto);
         }
