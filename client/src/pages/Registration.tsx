@@ -47,9 +47,6 @@ export const Registration = () => {
       navigate('/');
     }
     if (isError && error) {
-      console.log('error');
-      console.log(error);
-
       alert((error as any).data.message);
     }
   }, [error, isError, isSuccess]);

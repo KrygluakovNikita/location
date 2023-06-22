@@ -73,7 +73,11 @@ export const Profile = () => {
               <Modal
                 setIsOpen={onClickModal}
                 title='Игра успешно создана'
-                text={payType === PaymentType.CARD ? 'Оплата по ЕРИП AlfaBank BY59ALFA301430KLLT0070270000' : 'Оплата наличными'}
+                text={
+                  payType === PaymentType.CARD
+                    ? `Оплата по ЕРИП AlfaBank BY59ALFA301430KLLT0070270000\nЦена: ${(selectedEquipment?.price ?? 0) * (hours ? +hours : 0)} бел. руб`
+                    : 'Оплата наличными'
+                }
               />
             ) : (
               <div className={styles.profileScanContainer}>
@@ -136,6 +140,7 @@ export const Profile = () => {
                         ))
                       : null}
                   </select>
+                  <p style={{ marginTop: 10 }}>Цена: {(selectedEquipment?.price ?? 0) * (hours ? +hours : 0)} бел. руб</p>
                 </div>
                 <div className={styles.profileGenerateQRBtnContainer}>
                   <button

@@ -5,7 +5,9 @@
   margin-bottom: 10px;
   margin-left: 50px;
 }
-
+.pointer{
+  cursor: pointer;
+}
 .answer-user p {
   display: inline-block;
 }

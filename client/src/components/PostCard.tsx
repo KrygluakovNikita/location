@@ -79,9 +79,11 @@ export const PostCard: FC<IPostProps> = ({
           isEdited={!!moment(postDate).diff(updatedPostDate, 'seconds')}
         />
         <p className='title'>{title}</p>
-        <p className='description post-text'>
-          {description.length > maxDescriptionLength ? description.slice(0, maxDescriptionLength) + '...' : description}
-        </p>
+        <div className=' post-text'>
+          <textarea className='description'>
+            {description.length > maxDescriptionLength ? description.slice(0, maxDescriptionLength) + '...' : description}
+          </textarea>
+        </div>
         <div className='game-date'>
           <img src={Icon} alt='' />
           <p className='post-date'>

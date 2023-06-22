@@ -10,10 +10,11 @@ export class CommentDto {
   date: Date;
   answers: ReplyDto[];
   constructor(model: Comment) {
+   
     this.commentId = model.commentId;
-    this.user = new UserDto(model.user);
+    if (model.user) this.user = new UserDto(model.user);
     this.date = model.date;
-    this.postId = model.post.postId;
+    if(model?.post?.postId)    this.postId = model.post.postId;
     this.message = model.message;
     if (model?.answers?.length) this.answers = model?.answers?.map(answer => new ReplyDto(answer))
     else{

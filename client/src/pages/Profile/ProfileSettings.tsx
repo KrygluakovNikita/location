@@ -40,7 +40,7 @@ export const ProfileSettings = () => {
               </div>
               <div className={styles.profileHistoryItems}>
                 {games?.map(game => (
-                  <HistoryItem id={game.gameId} date={game.date} />
+                  <HistoryItem id={game.gameId} date={game.createdAt} gameDate={game.date} />
                 ))}
               </div>
             </div>

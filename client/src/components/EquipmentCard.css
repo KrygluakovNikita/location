@@ -7,7 +7,7 @@
   min-width: 340px;
   max-width: 440px;
   max-height: 500px;
-  min-height: 480px;
+  min-height: 600px;
   flex-direction: column;
 }
 
@@ -41,6 +41,7 @@
   overflow: auto;
 }
 .additional-description {
+  border: none;
   font-family: 'Lato', sans-serif;
   font-style: normal;
   font-weight: 300;
@@ -53,6 +54,7 @@
   border-radius: 10px;
   padding: 5px;
   overflow: auto;
+  width: 98%;
 }
 .price {
   font-family: 'Lato', sans-serif;
@@ -83,7 +85,7 @@
 .equipment-image-wrapper img {
   object-fit: contain;
   width: 440px;
-  height: 170px;
+  height: 250px;
 }
 
 .game-place img {

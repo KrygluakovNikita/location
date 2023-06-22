@@ -10,6 +10,7 @@ import { getUserData } from '../utils/cookie';
 import './Feed.css';
 import WhitePlusIcon from '../images/WhitePlus.svg';
 import { useNavigate } from 'react-router-dom';
+import { SearchByDate } from '../components/SearchByDate';
 export const Feed = () => {
   const user = useAppSelector(state => state.user);
   // const posts = useAppSelector(state => state.postSlice.posts);
@@ -17,7 +18,8 @@ export const Feed = () => {
   const [filteredPosts, setFilteredPosts] = useState<PostDto[]>(posts ?? []);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+const [playDate,setPlayDate]=useState('')
+  const [search, setSearch] = useState<string>('');
   useEffect(() => {
     const userData = getUserData();
     if (!user.userId && userData) {
@@ -30,6 +32,7 @@ export const Feed = () => {
   const clickHandler = () => {
     navigate('/add-post');
   };
+console.log(filteredPosts);
 
   return (
     <>
@@ -43,7 +46,24 @@ export const Feed = () => {
             </button>
           </div>
         )}
-        <Search setFilteredPosts={setFilteredPosts} posts={posts ?? []} />
+        <div className='search-posts-feed'>
+
+        <Search 
+        setFilteredPosts={setFilteredPosts}
+         posts={posts ?? []} 
+         setSearch={setSearch}
+          search={search}
+           playDate={playDate} setPlayDate={setPlayDate} 
+          />
+        {/* <SearchByDate 
+        setFilteredPosts={setFilteredPosts}
+         posts={posts ?? []}  
+        filteredPosts={filteredPosts} 
+        setPlayDate={setPlayDate} 
+        playDate={playDate}
+        search={search}
+        /> */}
+        </div>
         {filteredPosts?.length ? (
           <div className='posts'>{!isLoading && filteredPosts?.map(post => <PostCard key={post.postId} {...post} />)}</div>
         ) : (

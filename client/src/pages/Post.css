@@ -29,11 +29,45 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  max-height: 300px;
+}
+
+.add-textarea-post {
+  background: inherit;
+  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
+  border-radius: 10px;
+  padding: 15px 15px;
+  height: 120px;
+  resize: none;
+}
+.add-textarea-post textarea {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  color: #000000;
+  background: inherit;
+  min-height: 40px;
+  height: 100%;
+  resize: none;
+}
+
+.element::-webkit-scrollbar {
+  width: 0;
+}
+
+/*Убрать полосу прокрутки для всей страницы*/
+::-webkit-scrollbar {
+  width: 0;
 }
 .post-image-wrapper img {
   margin-bottom: 5px;
-  width: 440px;
-  height: 170px;
+  width: 100%;
+  height: 100%;
   max-width: 752px;
   max-height: 307px;
   object-fit: contain;

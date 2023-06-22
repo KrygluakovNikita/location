@@ -31,6 +31,8 @@ export const Post = () => {
   useEffect(() => {
     if (post?.likes.findIndex(like => like.user.userId === user.userId) !== -1) {
       setIsLike(true);
+    } else {
+      setIsLike(false);
     }
   }, []);
 
@@ -72,8 +74,11 @@ export const Post = () => {
               user={post!.user}
             />
             <p className='post-title'>{post.title}</p>
-            <div className='post-text'>
+            {/* <div className='post-text'>
               <p>{post.description}</p>
+            </div> */}
+            <div className='add-textarea-post'>
+              <textarea>{post.description}</textarea>
             </div>
             <div className='post-metadata'>
               <div className='post-game-date'>
@@ -87,7 +92,6 @@ export const Post = () => {
                 <p className='location-text'>{post.location}</p>
               </div>
             </div>
-
             <div className='post-image-wrapper'>
               {post.photo ? (
                 <img src={process.env.REACT_APP_SERVER_ENDPOINT + '/' + post.photo} alt='' />

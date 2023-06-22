@@ -10,7 +10,6 @@ export class GameDto {
   paymentType: PaymentType;
   isPayed: boolean;
   constructor(model: Game) {
-    console.log(model);
     this.createdAt = model.createdAt;
     this.gameId = model.gameId;
     this.isPayed = model.isPayed;

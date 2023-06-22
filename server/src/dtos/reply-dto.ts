@@ -11,7 +11,7 @@ export class ReplyDto {
   comment: CommentDto;
   constructor(model: Reply) {
     this.replyId = model.replyId;
-    this.user = new UserDto(model.user);
+    this.user = new UserDto(model.user);  
     if (model.userReply) this.userReply = new UserDto(model.userReply);
     this.comment=new CommentDto(model.comment)
     this.date = model.date;

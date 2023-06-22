@@ -88,9 +88,11 @@ export const AdminEditEquipment = () => {
               <div className={styles.addInput}>
                 <input placeholder='Описание оборудования' value={descriptionAboutStaff} onChange={e => setDescriptionAboutStaff(e.target.value)} />
               </div>
+              <p>Количетсво оборудования</p>
               <div className={styles.addInput}>
                 <input placeholder='Количетсво оборудования' type='number' value={count} onChange={e => setCount(+e.target.value)} />
               </div>
+              <p>Цена оборудования за час (бел. руб)</p>
               <div className={styles.addInput}>
                 <input placeholder='Цена оборудования за час' type='number' value={price} onChange={e => setPrice(+e.target.value)} />
               </div>

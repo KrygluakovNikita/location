@@ -5,32 +5,6 @@
   align-items: center;
 }
 
-.search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 550px;
-  background: #ffffff;
-  box-shadow: -1px -1px 2px 1px rgba(59, 58, 57, 0.07), 1px 1px 2px 1px rgba(59, 58, 57, 0.07);
-  border-radius: 10px;
-
-  padding: 10px;
-  font-family: 'Lato', sans-serif;
-
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 180%;
-  letter-spacing: 0.5px;
-  color: #808080;
-}
-
-.search img {
-  width: 17px;
-  height: 17px;
-}
-
-
 .search-by-date {
   display: flex;
   justify-content: center;

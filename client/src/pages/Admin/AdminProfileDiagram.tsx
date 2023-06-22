@@ -26,7 +26,6 @@ export const AdminProfileDiagram = () => {
       await getDiagramStat({ startDate, type })
         .unwrap()
         .then(data => {
-          console.log(data);
           if (data.games.length) {
             setGames(data.games);
           } else {

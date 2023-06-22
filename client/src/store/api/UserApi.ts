@@ -105,11 +105,8 @@ export const userApi = createApi({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const data = await queryFulfilled;
-        console.log('data.data');
-        console.log(data.data);
 
         const userDto: UserDto = { ...data.data };
-        console.log(userDto);
 
         dispatch(setUserData(userDto as any)); ///fix here
       },

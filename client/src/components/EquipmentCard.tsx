@@ -10,8 +10,10 @@ export const EquipmentCard: FC<EquipmentDto> = ({ title, description, equipmentI
       <div className='info'>
         <p className='title'>{title}</p>
         <p className='description post-text'>{description}</p>
-        <p className='additional-description post-text'>{descriptionAboutStaff}</p>
-        <p className='price post-text'>{price} руб. за 1 час</p>
+
+        <textarea className='additional-description post-text'>{descriptionAboutStaff}</textarea>
+
+        <p className='price post-text'>{price} бел. руб. за 1 час</p>
         <p className='count post-text'>Количество: {count} шт.</p>
       </div>
       <div className='equipment-image-wrapper'>

@@ -6,7 +6,7 @@
   margin: 30px;
   min-width: 340px;
   max-width: 440px;
-  max-height: 480px;
+  max-height: 600px;
   flex-direction: column;
 }
 
@@ -46,7 +46,8 @@
   font-size: 14px;
   line-height: 17px;
   color: #3b3a39;
-  height: 60px;
+  max-height:85px;
+  width:98%;resize: none
 }
 
 .game-date {
@@ -71,9 +72,9 @@
 }
 
 .image-wrapper img {
-  object-fit: contain;
+  object-fit: cover;
   width: 440px;
-  height: 170px;
+  height: 250px;
 }
 
 .game-place {

@@ -91,9 +91,9 @@ export const postApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const data = await queryFulfilled;
         const like: LikeDto = data.data;
-        if (like) {
+       
           dispatch(deleteLike(like));
-        }
+  
       },
 
       invalidatesTags: [{ type: 'Posts', id: 'LIST' }],

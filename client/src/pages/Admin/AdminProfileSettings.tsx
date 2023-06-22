@@ -92,7 +92,7 @@ export const AdminProfileSettings = () => {
               <table className={styles.profileHistoryItems}>
                 <tr className={styles.historyItemIdContainer}>
                   <td>ID</td>
-                  <td>Дата игры</td>
+                  <td>Дата аренды</td>
                   <td>Дата создания</td>
                   <td>Оплата</td>
                   <td></td>
@@ -121,7 +121,7 @@ export const AdminProfileSettings = () => {
                     <td style={{ paddingRight: 10 }}>Название</td>
                     <td style={{ paddingRight: 10 }}>Описание</td>
                     <td style={{ paddingRight: 10 }}>Количество</td>
-                    <td style={{ paddingRight: 10 }}>Цена</td>
+                    <td style={{ paddingRight: 10}}>Цена(бел.руб)</td>
                     <td></td>
                     <td></td>
                   </tr>

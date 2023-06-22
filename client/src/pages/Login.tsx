@@ -34,7 +34,7 @@ export const Login = () => {
           navigate(`${data.role === 'admin' ? '/admin' : '/'}profile/`);
         })
         .catch(err => {
-          alert(err.message);
+          alert('Ошибка, проверьте введённые данные');
         });
       if (isError) {
         const err = error as FetchBaseQueryError;

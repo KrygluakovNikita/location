@@ -43,3 +43,7 @@
   margin-top: 15px;
   text-align: left;
 }
+.search-posts-feed{
+  display: flex;
+  justify-content: center;
+}

@@ -48,9 +48,9 @@ class LikeController {
       const { userId } = req.user;
 
       const likeDto: ILike = { userId, postId };
-      await likeService.deleteByPostId(likeDto);
+      const previousLike=await likeService.deleteByPostId(likeDto);
 
-      return res.end();
+      return res.json(previousLike);
     } catch (e) {
       next(e);
     }

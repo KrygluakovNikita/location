@@ -64,7 +64,7 @@ export const AnswerCard: FC<IAnswerCardProps> = ({
             <p className='small-text'>
               {postLocaleDate} в {postLocaleTime}
             </p>
-            <p className='small-text' onClick={clickHandler}>
+            <p className='small-text pointer' onClick={clickHandler}>
               Ответить
             </p>
           </div>

@@ -71,7 +71,7 @@ export const AdminProfileGameStat = () => {
                 <thead>
                   <tr className={styles.historyItemIdContainer}>
                     <th>ID</th>
-                    <th>Дата игры</th>
+                    <th>Дата аренды</th>
                     <th>Дата создания</th>
                     <th>Часов</th>
                     <th>Способ оплаты</th>

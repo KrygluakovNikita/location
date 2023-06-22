@@ -24,14 +24,28 @@ class GameService {
     if (!equipment) {
       throw ApiError.BadRequest('Оборудование не найдено');
     }
+    console.log(data.date);
+    console.log(moment(data.date).add(data.hours, 'hours').toDate());
+    
     const dateOnThisTime = await Game.find({
       where: {
-        date: Between(data.date, moment(data.date).add(data.hours, 'hours').toDate()),
+        date: Between(moment(data.date).subtract(4, 'hours').toDate(),moment(data.date).add(data.hours, 'hours').toDate()),
         equipment: Equal(equipment.equipmentId),
       },
     });
-
-    if (equipment.count <= dateOnThisTime.length) {
+    console.log(dateOnThisTime.length);
+    
+   let equipmentOnThisTime=0
+   dateOnThisTime.forEach(eq=>{
+    console.log('----------');
+    
+    console.log(moment(data.date).diff(eq.date));
+    console.log(moment(data.date).add(data.hours, 'hours').diff(moment(eq.date).add(eq.hours, 'hours')));
+    
+    if(moment(data.date).diff(eq.date) <=0 || moment(data.date).add(data.hours, 'hours').diff(moment(eq.date).add(eq.hours, 'hours'))>=0)
+    equipmentOnThisTime++
+   })
+    if (equipment.count <= equipmentOnThisTime) {
       throw ApiError.BadRequest('Данное оборудование уже занято на это время');
     }
     game.date = data.date;

@@ -55,7 +55,7 @@ class LikeService {
     return likes;
   }
 
-  async deleteByPostId(data: ILike): Promise<void> {
+  async deleteByPostId(data: ILike): Promise<LikeDto> {
     const user = await User.findOneBy({ userId: data.userId });
     if (!user) {
       throw UserError.UserNotFound();
@@ -65,10 +65,11 @@ class LikeService {
     if (!post) {
       throw ApiError.NotFound();
     }
+    const currentLike = await Like.findOne({ where: { user: Equal(user.userId), post: Equal(post.postId) },relations:{user:true,post:true} });
 
     await Like.delete({ user: Equal(user.userId), post: Equal(post.postId) });
 
-    return;
+    return new LikeDto(currentLike);
   }
 }
 

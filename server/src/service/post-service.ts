@@ -86,7 +86,7 @@ class PostService {
           post: true,
         },
         likes: { user: true, post: true },
-      },
+      },order:{postDate:"DESC"}
     });
 
     const result = posts.map(post => new PostDto(post));

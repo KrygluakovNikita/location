@@ -53,7 +53,6 @@ export const postSlice = createSlice({
   initialState,
   reducers: {
     setPosts: (state: IPosts, { payload }: PayloadAction<PostDto[]>) => {
-      state.posts = [];
       state.posts = payload;
     },
     addPost: (state: IPosts, { payload }: PayloadAction<PostDto>) => {
@@ -62,7 +61,7 @@ export const postSlice = createSlice({
     deleteLike: (state: IPosts, { payload }: PayloadAction<LikeDto>) => {
       const ind = state.posts.findIndex(post => post.postId === payload.postId);
       if (ind !== -1) {
-        state.posts[ind].likes.filter(like => like.user.userId !== payload.user.userId);
+        state.posts[ind].likes=state.posts[ind].likes.filter(like => like.likeId !== payload.likeId);
       }
     },
     deletePost: (state: IPosts, { payload }: PayloadAction<string>) => {
